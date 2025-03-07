@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"database/sql"
 	"encoding/json"
 
 	"github.com/kyh0703/flow/internal/core/domain/model"
@@ -12,7 +11,7 @@ type MarkerEnd struct{}
 type Point struct{}
 
 type Edge struct {
-	ID        string
+	ID        int64
 	FlowID    int64
 	Source    string
 	Target    string
@@ -27,38 +26,34 @@ func (e *Edge) ToModel() (*model.Edge, error) {
 	model.FlowID = e.FlowID
 	model.Source = e.Source
 	model.Target = e.Target
-
-	model.Hidden = sql.NullInt64{
-		Int64: func() int64 {
-			if e.Hidden {
-				return 1
-			}
-			return 0
-		}(),
-		Valid: true,
+	if e.Hidden {
+		model.Hidden = 1
+	} else {
+		model.Hidden = 0
 	}
-
 	if e.MarkerEnd != nil {
-		markerEndJSON, err := json.Marshal(e.MarkerEnd)
+		markerEnd, err := json.Marshal(e.MarkerEnd)
 		if err != nil {
 			return nil, err
 		}
-		model.MarkerEnd = sql.NullString{
-			String: string(markerEndJSON),
-			Valid:  true,
-		}
+		model.MarkerEnd = string(markerEnd)
 	}
-
-	if len(e.Points) > 0 {
-		pointJSON, err := json.Marshal(e.Points)
-		if err != nil {
-			return nil, err
-		}
-		model.Points = sql.NullString{
-			String: string(pointJSON),
-			Valid:  true,
-		}
-	}
-
 	return &model, nil
+}
+
+func (e *Edge) FromModel(model *model.Edge) {
+	e.ID = model.ID
+	e.FlowID = model.FlowID
+	e.Source = model.Source
+	e.Target = model.Target
+	e.Hidden = model.Hidden == 1
+	if model.MarkerEnd != "" {
+		var markerEnd MarkerEnd
+		err := json.Unmarshal([]byte(model.MarkerEnd), &markerEnd)
+		if err == nil {
+			e.MarkerEnd = &markerEnd
+		} else {
+			e.MarkerEnd = nil
+		}
+	}
 }

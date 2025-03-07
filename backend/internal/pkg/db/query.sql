@@ -141,7 +141,6 @@ INSERT INTO nodes (
   id,
   flow_id,
   type,
-  parent,
   position,
   styles,
   width,
@@ -149,14 +148,13 @@ INSERT INTO nodes (
   hidden,
   description
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING *;
 
 -- name: UpdateNode :exec
 UPDATE nodes SET
 type = ?,
-parent = ?,
 position = ?,
 styles = ?,
 width = ?,

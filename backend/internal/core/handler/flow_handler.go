@@ -85,6 +85,10 @@ func (f *flowHandler) DeleteOne(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNoContent)
 }
 
+func (f *flowHandler) Undo(c *fiber.Ctx) error {
+	return nil
+}
+
 func (f *flowHandler) Redo(c *fiber.Ctx) error {
 	return nil
 }

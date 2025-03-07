@@ -15,9 +15,9 @@ type Edge struct {
 	Source    string         `json:"source"`
 	Target    string         `json:"target"`
 	Type      string         `json:"type"`
-	Label     sql.NullString `json:"label"`
-	Hidden    sql.NullInt64  `json:"hidden"`
-	MarkerEnd sql.NullString `json:"markerEnd"`
+	Label     string         `json:"label"`
+	Hidden    int64          `json:"hidden"`
+	MarkerEnd string         `json:"markerEnd"`
 	UpdateAt  sql.NullString `json:"updateAt"`
 	CreateAt  sql.NullString `json:"createAt"`
 }
@@ -36,13 +36,12 @@ type Node struct {
 	Uuid        string         `json:"uuid"`
 	FlowID      int64          `json:"flowId"`
 	Type        string         `json:"type"`
-	Parent      sql.NullString `json:"parent"`
-	Position    sql.NullString `json:"position"`
-	Styles      sql.NullString `json:"styles"`
-	Width       sql.NullInt64  `json:"width"`
-	Height      sql.NullInt64  `json:"height"`
-	Hidden      sql.NullInt64  `json:"hidden"`
-	Description sql.NullString `json:"description"`
+	Position    interface{}    `json:"position"`
+	Styles      interface{}    `json:"styles"`
+	Width       int64          `json:"width"`
+	Height      int64          `json:"height"`
+	Hidden      int64          `json:"hidden"`
+	Description string         `json:"description"`
 	UpdateAt    sql.NullString `json:"updateAt"`
 	CreateAt    sql.NullString `json:"createAt"`
 }

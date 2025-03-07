@@ -9,9 +9,9 @@ import (
 //counterfeiter:generate . NodeRecorder
 type NodeRecorder interface {
 	CreateOne(ctx context.Context, arg model.CreateNodeParams) (model.Node, error)
-	FindOne(ctx context.Context, id string) (model.Node, error)
+	FindOne(ctx context.Context, id int64) (model.Node, error)
 	UpdateOne(ctx context.Context, arg model.UpdateNodeParams) error
-	DeleteOne(ctx context.Context, id string) error
+	DeleteOne(ctx context.Context, id int64) error
 }
 
 type nodeRecorder struct {
@@ -30,7 +30,7 @@ func (n *nodeRecorder) CreateOne(ctx context.Context, arg model.CreateNodeParams
 	return n.queries.CreateNode(ctx, arg)
 }
 
-func (n *nodeRecorder) FindOne(ctx context.Context, id string) (model.Node, error) {
+func (n *nodeRecorder) FindOne(ctx context.Context, id int64) (model.Node, error) {
 	return n.queries.GetNode(ctx, id)
 }
 
@@ -38,6 +38,6 @@ func (n *nodeRecorder) UpdateOne(ctx context.Context, arg model.UpdateNodeParams
 	return n.queries.UpdateNode(ctx, arg)
 }
 
-func (n *nodeRecorder) DeleteOne(ctx context.Context, id string) error {
+func (n *nodeRecorder) DeleteOne(ctx context.Context, id int64) error {
 	return n.queries.DeleteNode(ctx, id)
 }

@@ -23,7 +23,7 @@ func (n *nodeRepository) CreateOne(ctx context.Context, arg model.CreateNodePara
 	return n.queries.CreateNode(ctx, arg)
 }
 
-func (n *nodeRepository) FindOne(ctx context.Context, id string) (model.Node, error) {
+func (n *nodeRepository) FindOne(ctx context.Context, id int64) (model.Node, error) {
 	return n.queries.GetNode(ctx, id)
 }
 
@@ -31,6 +31,6 @@ func (n *nodeRepository) UpdateOne(ctx context.Context, arg model.UpdateNodePara
 	return n.queries.UpdateNode(ctx, arg)
 }
 
-func (n *nodeRepository) DeleteOne(ctx context.Context, id string) error {
+func (n *nodeRepository) DeleteOne(ctx context.Context, id int64) error {
 	return n.queries.DeleteNode(ctx, id)
 }

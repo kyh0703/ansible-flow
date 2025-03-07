@@ -27,14 +27,14 @@ RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, up
 `
 
 type CreateEdgeParams struct {
-	ID        int64          `json:"id"`
-	FlowID    int64          `json:"flowId"`
-	Source    string         `json:"source"`
-	Target    string         `json:"target"`
-	Type      string         `json:"type"`
-	Label     sql.NullString `json:"label"`
-	Hidden    sql.NullInt64  `json:"hidden"`
-	MarkerEnd sql.NullString `json:"markerEnd"`
+	ID        int64  `json:"id"`
+	FlowID    int64  `json:"flowId"`
+	Source    string `json:"source"`
+	Target    string `json:"target"`
+	Type      string `json:"type"`
+	Label     string `json:"label"`
+	Hidden    int64  `json:"hidden"`
+	MarkerEnd string `json:"markerEnd"`
 }
 
 func (q *Queries) CreateEdge(ctx context.Context, arg CreateEdgeParams) (Edge, error) {
@@ -99,7 +99,6 @@ INSERT INTO nodes (
   id,
   flow_id,
   type,
-  parent,
   position,
   styles,
   width,
@@ -107,22 +106,21 @@ INSERT INTO nodes (
   hidden,
   description
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
+RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
 
 type CreateNodeParams struct {
-	ID          int64          `json:"id"`
-	FlowID      int64          `json:"flowId"`
-	Type        string         `json:"type"`
-	Parent      sql.NullString `json:"parent"`
-	Position    sql.NullString `json:"position"`
-	Styles      sql.NullString `json:"styles"`
-	Width       sql.NullInt64  `json:"width"`
-	Height      sql.NullInt64  `json:"height"`
-	Hidden      sql.NullInt64  `json:"hidden"`
-	Description sql.NullString `json:"description"`
+	ID          int64       `json:"id"`
+	FlowID      int64       `json:"flowId"`
+	Type        string      `json:"type"`
+	Position    interface{} `json:"position"`
+	Styles      interface{} `json:"styles"`
+	Width       int64       `json:"width"`
+	Height      int64       `json:"height"`
+	Hidden      int64       `json:"hidden"`
+	Description string      `json:"description"`
 }
 
 func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, error) {
@@ -130,7 +128,6 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 		arg.ID,
 		arg.FlowID,
 		arg.Type,
-		arg.Parent,
 		arg.Position,
 		arg.Styles,
 		arg.Width,
@@ -144,7 +141,6 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 		&i.Uuid,
 		&i.FlowID,
 		&i.Type,
-		&i.Parent,
 		&i.Position,
 		&i.Styles,
 		&i.Width,
@@ -361,7 +357,7 @@ func (q *Queries) GetFlow(ctx context.Context, id int64) (Flow, error) {
 }
 
 const getNode = `-- name: GetNode :one
-SELECT id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
+SELECT id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE id = ? LIMIT 1
 `
 
@@ -373,7 +369,6 @@ func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 		&i.Uuid,
 		&i.FlowID,
 		&i.Type,
-		&i.Parent,
 		&i.Position,
 		&i.Styles,
 		&i.Width,
@@ -558,7 +553,7 @@ func (q *Queries) ListFlows(ctx context.Context, projectID int64) ([]Flow, error
 }
 
 const listNodes = `-- name: ListNodes :many
-SELECT id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
+SELECT id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE flow_id = ?
 ORDER BY create_time
 `
@@ -577,7 +572,6 @@ func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
 			&i.Uuid,
 			&i.FlowID,
 			&i.Type,
-			&i.Parent,
 			&i.Position,
 			&i.Styles,
 			&i.Width,
@@ -717,13 +711,13 @@ RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, up
 `
 
 type UpdateEdgeParams struct {
-	Source    string         `json:"source"`
-	Target    string         `json:"target"`
-	Type      string         `json:"type"`
-	Label     sql.NullString `json:"label"`
-	Hidden    sql.NullInt64  `json:"hidden"`
-	MarkerEnd sql.NullString `json:"markerEnd"`
-	ID        int64          `json:"id"`
+	Source    string `json:"source"`
+	Target    string `json:"target"`
+	Type      string `json:"type"`
+	Label     string `json:"label"`
+	Hidden    int64  `json:"hidden"`
+	MarkerEnd string `json:"markerEnd"`
+	ID        int64  `json:"id"`
 }
 
 func (q *Queries) UpdateEdge(ctx context.Context, arg UpdateEdgeParams) error {
@@ -761,7 +755,6 @@ func (q *Queries) UpdateFlow(ctx context.Context, arg UpdateFlowParams) error {
 const updateNode = `-- name: UpdateNode :exec
 UPDATE nodes SET
 type = ?,
-parent = ?,
 position = ?,
 styles = ?,
 width = ?,
@@ -769,25 +762,23 @@ height = ?,
 hidden = ?,
 description = ?
 WHERE id = ?
-RETURNING id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
+RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
 
 type UpdateNodeParams struct {
-	Type        string         `json:"type"`
-	Parent      sql.NullString `json:"parent"`
-	Position    sql.NullString `json:"position"`
-	Styles      sql.NullString `json:"styles"`
-	Width       sql.NullInt64  `json:"width"`
-	Height      sql.NullInt64  `json:"height"`
-	Hidden      sql.NullInt64  `json:"hidden"`
-	Description sql.NullString `json:"description"`
-	ID          int64          `json:"id"`
+	Type        string      `json:"type"`
+	Position    interface{} `json:"position"`
+	Styles      interface{} `json:"styles"`
+	Width       int64       `json:"width"`
+	Height      int64       `json:"height"`
+	Hidden      int64       `json:"hidden"`
+	Description string      `json:"description"`
+	ID          int64       `json:"id"`
 }
 
 func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) error {
 	_, err := q.db.ExecContext(ctx, updateNode,
 		arg.Type,
-		arg.Parent,
 		arg.Position,
 		arg.Styles,
 		arg.Width,
