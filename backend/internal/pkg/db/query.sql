@@ -188,10 +188,9 @@ INSERT INTO edges (
   type,
   label,
   hidden,
-  marker_end,
-  points
+  marker_end
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?
 )
 RETURNING *;
 
@@ -202,8 +201,7 @@ target = ?,
 type = ?,
 label = ?,
 hidden = ?,
-marker_end = ?,
-points = ?
+marker_end = ?
 WHERE id = ?
 RETURNING *;
 

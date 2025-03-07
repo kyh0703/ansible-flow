@@ -9,7 +9,8 @@ import (
 )
 
 type Edge struct {
-	ID        string         `json:"id"`
+	ID        int64          `json:"id"`
+	Uuid      string         `json:"uuid"`
 	FlowID    int64          `json:"flowId"`
 	Source    string         `json:"source"`
 	Target    string         `json:"target"`
@@ -17,7 +18,6 @@ type Edge struct {
 	Label     sql.NullString `json:"label"`
 	Hidden    sql.NullInt64  `json:"hidden"`
 	MarkerEnd sql.NullString `json:"markerEnd"`
-	Points    sql.NullString `json:"points"`
 	UpdateAt  sql.NullString `json:"updateAt"`
 	CreateAt  sql.NullString `json:"createAt"`
 }
@@ -32,7 +32,8 @@ type Flow struct {
 }
 
 type Node struct {
-	ID          string         `json:"id"`
+	ID          int64          `json:"id"`
+	Uuid        string         `json:"uuid"`
 	FlowID      int64          `json:"flowId"`
 	Type        string         `json:"type"`
 	Parent      sql.NullString `json:"parent"`
@@ -64,8 +65,8 @@ type Token struct {
 
 type User struct {
 	ID       int64          `json:"id"`
-	Email    string         `json:"email"`
-	Password string         `json:"password"`
+	Email    string         `json:"email" validate:"required,email"`
+	Password string         `json:"password" validate:"required,min=8,max=32"`
 	Name     string         `json:"name"`
 	Bio      sql.NullString `json:"bio"`
 	UpdateAt sql.NullString `json:"updateAt"`

@@ -11,7 +11,7 @@ type flowRepository struct {
 	queries *model.Queries
 }
 
-func NewSubFlowRepository(
+func NewFlowRepository(
 	queries *model.Queries,
 ) repository.FlowRepository {
 	return &flowRepository{

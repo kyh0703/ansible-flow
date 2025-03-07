@@ -19,16 +19,15 @@ INSERT INTO edges (
   type,
   label,
   hidden,
-  marker_end,
-  points
+  marker_end
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, flow_id, source, target, type, label, hidden, marker_end, points, update_at, create_at
+RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
 
 type CreateEdgeParams struct {
-	ID        string         `json:"id"`
+	ID        int64          `json:"id"`
 	FlowID    int64          `json:"flowId"`
 	Source    string         `json:"source"`
 	Target    string         `json:"target"`
@@ -36,7 +35,6 @@ type CreateEdgeParams struct {
 	Label     sql.NullString `json:"label"`
 	Hidden    sql.NullInt64  `json:"hidden"`
 	MarkerEnd sql.NullString `json:"markerEnd"`
-	Points    sql.NullString `json:"points"`
 }
 
 func (q *Queries) CreateEdge(ctx context.Context, arg CreateEdgeParams) (Edge, error) {
@@ -49,11 +47,11 @@ func (q *Queries) CreateEdge(ctx context.Context, arg CreateEdgeParams) (Edge, e
 		arg.Label,
 		arg.Hidden,
 		arg.MarkerEnd,
-		arg.Points,
 	)
 	var i Edge
 	err := row.Scan(
 		&i.ID,
+		&i.Uuid,
 		&i.FlowID,
 		&i.Source,
 		&i.Target,
@@ -61,7 +59,6 @@ func (q *Queries) CreateEdge(ctx context.Context, arg CreateEdgeParams) (Edge, e
 		&i.Label,
 		&i.Hidden,
 		&i.MarkerEnd,
-		&i.Points,
 		&i.UpdateAt,
 		&i.CreateAt,
 	)
@@ -112,11 +109,11 @@ INSERT INTO nodes (
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
-RETURNING id, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
+RETURNING id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
 `
 
 type CreateNodeParams struct {
-	ID          string         `json:"id"`
+	ID          int64          `json:"id"`
 	FlowID      int64          `json:"flowId"`
 	Type        string         `json:"type"`
 	Parent      sql.NullString `json:"parent"`
@@ -144,6 +141,7 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 	var i Node
 	err := row.Scan(
 		&i.ID,
+		&i.Uuid,
 		&i.FlowID,
 		&i.Type,
 		&i.Parent,
@@ -231,8 +229,8 @@ RETURNING id, email, password, name, bio, update_at, create_at
 `
 
 type CreateUserParams struct {
-	Email    string         `json:"email"`
-	Password string         `json:"password"`
+	Email    string         `json:"email" validate:"required,email"`
+	Password string         `json:"password" validate:"required,min=8,max=32"`
 	Name     string         `json:"name"`
 	Bio      sql.NullString `json:"bio"`
 	UpdateAt sql.NullString `json:"updateAt"`
@@ -264,7 +262,7 @@ DELETE FROM edges
 WHERE id = ?
 `
 
-func (q *Queries) DeleteEdge(ctx context.Context, id string) error {
+func (q *Queries) DeleteEdge(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteEdge, id)
 	return err
 }
@@ -284,7 +282,7 @@ DELETE FROM nodes
 WHERE id = ?
 `
 
-func (q *Queries) DeleteNode(ctx context.Context, id string) error {
+func (q *Queries) DeleteNode(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteNode, id)
 	return err
 }
@@ -320,15 +318,16 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getEdge = `-- name: GetEdge :one
-SELECT id, flow_id, source, target, type, label, hidden, marker_end, points, update_at, create_at FROM edges
+SELECT id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at FROM edges
 WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetEdge(ctx context.Context, id string) (Edge, error) {
+func (q *Queries) GetEdge(ctx context.Context, id int64) (Edge, error) {
 	row := q.db.QueryRowContext(ctx, getEdge, id)
 	var i Edge
 	err := row.Scan(
 		&i.ID,
+		&i.Uuid,
 		&i.FlowID,
 		&i.Source,
 		&i.Target,
@@ -336,7 +335,6 @@ func (q *Queries) GetEdge(ctx context.Context, id string) (Edge, error) {
 		&i.Label,
 		&i.Hidden,
 		&i.MarkerEnd,
-		&i.Points,
 		&i.UpdateAt,
 		&i.CreateAt,
 	)
@@ -363,15 +361,16 @@ func (q *Queries) GetFlow(ctx context.Context, id int64) (Flow, error) {
 }
 
 const getNode = `-- name: GetNode :one
-SELECT id, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
+SELECT id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetNode(ctx context.Context, id string) (Node, error) {
+func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 	row := q.db.QueryRowContext(ctx, getNode, id)
 	var i Node
 	err := row.Scan(
 		&i.ID,
+		&i.Uuid,
 		&i.FlowID,
 		&i.Type,
 		&i.Parent,
@@ -482,7 +481,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const listEdges = `-- name: ListEdges :many
-SELECT id, flow_id, source, target, type, label, hidden, marker_end, points, update_at, create_at FROM edges
+SELECT id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at FROM edges
 WHERE flow_id = ?
 ORDER BY create_time
 `
@@ -498,6 +497,7 @@ func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
 		var i Edge
 		if err := rows.Scan(
 			&i.ID,
+			&i.Uuid,
 			&i.FlowID,
 			&i.Source,
 			&i.Target,
@@ -505,7 +505,6 @@ func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
 			&i.Label,
 			&i.Hidden,
 			&i.MarkerEnd,
-			&i.Points,
 			&i.UpdateAt,
 			&i.CreateAt,
 		); err != nil {
@@ -559,7 +558,7 @@ func (q *Queries) ListFlows(ctx context.Context, projectID int64) ([]Flow, error
 }
 
 const listNodes = `-- name: ListNodes :many
-SELECT id, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
+SELECT id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE flow_id = ?
 ORDER BY create_time
 `
@@ -575,6 +574,7 @@ func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
 		var i Node
 		if err := rows.Scan(
 			&i.ID,
+			&i.Uuid,
 			&i.FlowID,
 			&i.Type,
 			&i.Parent,
@@ -711,10 +711,9 @@ target = ?,
 type = ?,
 label = ?,
 hidden = ?,
-marker_end = ?,
-points = ?
+marker_end = ?
 WHERE id = ?
-RETURNING id, flow_id, source, target, type, label, hidden, marker_end, points, update_at, create_at
+RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
 
 type UpdateEdgeParams struct {
@@ -724,8 +723,7 @@ type UpdateEdgeParams struct {
 	Label     sql.NullString `json:"label"`
 	Hidden    sql.NullInt64  `json:"hidden"`
 	MarkerEnd sql.NullString `json:"markerEnd"`
-	Points    sql.NullString `json:"points"`
-	ID        string         `json:"id"`
+	ID        int64          `json:"id"`
 }
 
 func (q *Queries) UpdateEdge(ctx context.Context, arg UpdateEdgeParams) error {
@@ -736,7 +734,6 @@ func (q *Queries) UpdateEdge(ctx context.Context, arg UpdateEdgeParams) error {
 		arg.Label,
 		arg.Hidden,
 		arg.MarkerEnd,
-		arg.Points,
 		arg.ID,
 	)
 	return err
@@ -772,7 +769,7 @@ height = ?,
 hidden = ?,
 description = ?
 WHERE id = ?
-RETURNING id, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
+RETURNING id, uuid, flow_id, type, parent, position, styles, width, height, hidden, description, update_at, create_at
 `
 
 type UpdateNodeParams struct {
@@ -784,7 +781,7 @@ type UpdateNodeParams struct {
 	Height      sql.NullInt64  `json:"height"`
 	Hidden      sql.NullInt64  `json:"hidden"`
 	Description sql.NullString `json:"description"`
-	ID          string         `json:"id"`
+	ID          int64          `json:"id"`
 }
 
 func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) error {
@@ -859,9 +856,9 @@ RETURNING id, email, password, name, bio, update_at, create_at
 `
 
 type UpdateUserParams struct {
-	Email    string         `json:"email"`
+	Email    string         `json:"email" validate:"required,email"`
 	Name     string         `json:"name"`
-	Password string         `json:"password"`
+	Password string         `json:"password" validate:"required,min=8,max=32"`
 	Bio      sql.NullString `json:"bio"`
 	UpdateAt sql.NullString `json:"updateAt"`
 	ID       int64          `json:"id"`

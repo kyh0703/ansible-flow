@@ -10,7 +10,7 @@ var Module = fx.Module(
 		AsHandler(NewAuthHandler),
 		AsHandler(NewEdgeHandler),
 		AsHandler(NewNodeHandler),
-		AsHandler(NewSubFlowHandler),
+		AsHandler(NewFlowHandler),
 		AsHandler(NewUserHandler),
 	),
 )
