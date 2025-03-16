@@ -10,7 +10,7 @@ export const getClipboard = async (ip: string) => {
       nodes: Node[]
       edges: Edge[]
     }>
-  >(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/edits/clipboard/node/recv`, {
+  >(`${import.meta.env.VITE_BASE_PATH}/edits/clipboard/node/recv`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -10,8 +10,8 @@ import (
 
 //counterfeiter:generate . Service
 type Service interface {
-	SignUp(ctx context.Context, req *auth.SignUp) (*auth.Token, error)
-	SignIn(ctx context.Context, req *auth.SignIn) (*auth.Token, error)
-	SignOut(ctx context.Context) error
-	RefreshToken(ctx context.Context, req *auth.Refresh) (*auth.Token, error)
+	Register(ctx context.Context, req *auth.Register) (*auth.Token, error)
+	Login(ctx context.Context, req *auth.Login) (*auth.Token, error)
+	Logout(ctx context.Context) error
+	Refresh(ctx context.Context, req *auth.Refresh) (*auth.Token, error)
 }

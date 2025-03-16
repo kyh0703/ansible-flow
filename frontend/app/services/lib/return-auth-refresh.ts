@@ -23,7 +23,7 @@ export const returnFetchAuthRefresh: ReturnFetch = (args) =>
 
         refreshing = true
         refreshPromise = fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/refresh`,
+          `${import.meta.env.VITE_BASE_PATH}/auth/refresh`,
           {
             method: 'POST',
             headers: {

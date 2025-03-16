@@ -4,7 +4,7 @@ import { CustomResponse } from '@/services/types'
 
 export const updateEdges = async (data: Edge[]) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/edges/list/update`,
+    `${import.meta.env.VITE_BASE_PATH}/edges/list/update`,
     {
       method: 'POST',
       headers: {

@@ -4,7 +4,7 @@ import type { ApiResponse } from '@/services/types'
 
 export const getNode = async (nodeId: number) => {
   const response = await fetchExtended<ApiResponse<Node>>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/nodes/${nodeId}`,
+    `${import.meta.env.VITE_BASE_PATH}/nodes/${nodeId}`,
     {
       method: 'GET',
     },

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator"
@@ -18,9 +19,9 @@ import (
 type AuthHandler interface {
 	Handler
 	Whoami(c *fiber.Ctx) error
-	SignUp(c *fiber.Ctx) error
-	SignIn(c *fiber.Ctx) error
-	SignOut(c *fiber.Ctx) error
+	Register(c *fiber.Ctx) error
+	Login(c *fiber.Ctx) error
+	Logout(c *fiber.Ctx) error
 	Refresh(c *fiber.Ctx) error
 }
 
@@ -42,32 +43,62 @@ func NewAuthHandler(
 	}
 }
 
-func (h *authHandler) Table() []Mapper {
+func (a *authHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodGet, "/auth/whoami", h.authMiddleware.CurrentUser(), h.Whoami),
-		Mapping(fiber.MethodPost, "/auth/signup", h.SignUp),
-		Mapping(fiber.MethodPost, "/auth/signin", h.SignIn),
-		Mapping(fiber.MethodPost, "/auth/signout", h.SignOut),
-		Mapping(fiber.MethodPost, "/auth/refresh", h.Refresh),
+		Mapping(fiber.MethodGet, "/auth/whoami", a.authMiddleware.CurrentUser(), a.Whoami),
+		Mapping(fiber.MethodPost, "/auth/register", a.Register),
+		Mapping(fiber.MethodPost, "/auth/login", a.Login),
+		Mapping(fiber.MethodPost, "/auth/logout", a.Logout),
+		Mapping(fiber.MethodPost, "/auth/refresh", a.Refresh),
 	}
 }
 
-func (h *authHandler) Whoami(c *fiber.Ctx) error {
+func (a *authHandler) Whoami(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	return response.Success(c, fiber.StatusOK, user)
 }
 
-func (h *authHandler) SignUp(c *fiber.Ctx) error {
-	var signup dto.SignUp
-	if err := c.BodyParser(&signup); err != nil {
+func (a *authHandler) Register(c *fiber.Ctx) error {
+	var register dto.Register
+	if err := c.BodyParser(&register); err != nil {
+		fmt.Println("Register1", err)
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.validate.Struct(signup); err != nil {
+	fmt.Println("Register2")
+	if err := a.validate.Struct(register); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	token, err := h.authService.SignUp(c.Context(), &signup)
+	fmt.Println("Register3")
+	token, err := a.authService.Register(c.Context(), &register)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Register4")
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token.Refresh.RefreshToken,
+		Expires:  time.Unix(token.Refresh.RefreshExpiresIn, 0),
+		HTTPOnly: true,
+		Secure:   false,
+	})
+
+	return response.Success(c, fiber.StatusOK, token.Access)
+}
+
+func (a *authHandler) Login(c *fiber.Ctx) error {
+	var login dto.Login
+	if err := c.BodyParser(&login); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := a.validate.Struct(login); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	token, err := a.authService.Login(c.Context(), &login)
 	if err != nil {
 		return err
 	}
@@ -83,47 +114,21 @@ func (h *authHandler) SignUp(c *fiber.Ctx) error {
 	return response.Success(c, fiber.StatusOK, token.Access)
 }
 
-func (h *authHandler) SignIn(c *fiber.Ctx) error {
-	var signin dto.SignIn
-	if err := c.BodyParser(&signin); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	if err := h.validate.Struct(signin); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	token, err := h.authService.SignIn(c.Context(), &signin)
-	if err != nil {
-		return err
-	}
-
-	c.Cookie(&fiber.Cookie{
-		Name:     "token",
-		Value:    token.Refresh.RefreshToken,
-		Expires:  time.Unix(token.Refresh.RefreshExpiresIn, 0),
-		HTTPOnly: true,
-		Secure:   false,
-	})
-
-	return response.Success(c, fiber.StatusOK, token.Access)
-}
-
-func (h *authHandler) SignOut(c *fiber.Ctx) error {
+func (a *authHandler) Logout(c *fiber.Ctx) error {
 	return response.Success(c, fiber.StatusOK, nil)
 }
 
-func (h *authHandler) Refresh(c *fiber.Ctx) error {
+func (a *authHandler) Refresh(c *fiber.Ctx) error {
 	var refresh dto.Refresh
 	if err := c.BodyParser(&refresh); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.validate.Struct(refresh); err != nil {
+	if err := a.validate.Struct(refresh); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	token, err := h.authService.RefreshToken(c.Context(), &refresh)
+	token, err := a.authService.Refresh(c.Context(), &refresh)
 	if err != nil {
 		return err
 	}

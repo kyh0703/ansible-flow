@@ -7,7 +7,7 @@ import (
 )
 
 func errorResponse(err error) (int, response.Error) {
-	logger.Error(err)
+	logger.Debug("error-response", err)
 
 	if ce, ok := err.(*Error); ok {
 		return fiber.StatusBadRequest, response.Error{

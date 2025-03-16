@@ -17,7 +17,7 @@ export const addHistory = async (
       undoCount: number
       redoCount: number
     }>
-  >(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/flow/do/${flowId}`, {
+  >(`${import.meta.env.VITE_BASE_PATH}/flow/do/${flowId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import { CustomResponse } from '@/services/types'
 
 export const updateNodeProperty = async <T>(id: number, data: T) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/nodeproperty/${id}`,
+    `${import.meta.env.VITE_BASE_PATH}/nodeproperty/${id}`,
     {
       method: 'PUT',
       headers: {

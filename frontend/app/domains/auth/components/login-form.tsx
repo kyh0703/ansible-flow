@@ -40,7 +40,7 @@ export function LoginForm() {
         name="email"
         className="rounded p-2"
         type="email"
-        placeholder="your@email.com"
+        placeholder="아이디(이메일)"
       />
       {errors.email && <p className="error-msg">{errors.email.message}</p>}
       <FormInput
@@ -48,7 +48,7 @@ export function LoginForm() {
         className="rounded p-2"
         name="password"
         type="password"
-        placeholder="••••••••"
+        placeholder="비밀번호"
       />
       {errors.password && (
         <p className="error-msg">{errors.password.message}</p>

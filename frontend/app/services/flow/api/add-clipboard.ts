@@ -1,5 +1,5 @@
-import { fetchExtended } from '@/services/lib/fetch'
-import { type CustomResponse } from '@/services/types'
+import { fetchExtended } from '~/services/lib/fetch'
+import { type CustomResponse } from '~/services/types'
 
 export const addClipboard = async (data: {
   ip: string
@@ -8,7 +8,7 @@ export const addClipboard = async (data: {
   edges: { id: number }[]
 }) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/edits/clipboard/node`,
+    `${import.meta.env.VITE_BASE_PATH}/edits/clipboard/node`,
     {
       method: 'POST',
       headers: {

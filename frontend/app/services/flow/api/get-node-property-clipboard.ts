@@ -7,7 +7,7 @@ export const getNodePropertyClipboard = async <T>(ip: string) => {
       type: 'cut' | 'copy'
       property: T[]
     }>
-  >(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/edits/clipboard/property/recv`, {
+  >(`${import.meta.env.VITE_BASE_PATH}/edits/clipboard/property/recv`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

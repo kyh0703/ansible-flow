@@ -7,7 +7,7 @@ export const getNodeProperty = async <T>(id: number) => {
       property: T
       updateTime: Date
     }>
-  >(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/nodeproperty/${id}`, {
+  >(`${import.meta.env.VITE_BASE_PATH}/nodeproperty/${id}`, {
     method: 'GET',
   })
 

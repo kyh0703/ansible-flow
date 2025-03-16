@@ -4,7 +4,7 @@ import type { ApiResponse } from '@/services/types'
 
 export const addEdges = async (flowId: number, data: Edge[]) => {
   const response = await fetchExtended<ApiResponse<Edge[]>>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/edges/list/create`,
+    `${import.meta.env.VITE_BASE_PATH}/edges/list/create`,
     {
       method: 'POST',
       headers: {

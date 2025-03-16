@@ -4,7 +4,7 @@ import type { ApiResponse } from '@/services/types'
 
 export const addNode = async (flowId: number, data: Omit<Node, 'id'>) => {
   const response = await fetchExtended<ApiResponse<number>>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/nodes`,
+    `${import.meta.env.VITE_BASE_PATH}/nodes`,
     {
       method: 'POST',
       headers: {

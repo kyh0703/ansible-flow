@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '~/ui/button'
 import {
   Card,
@@ -7,19 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from '~/ui/card'
-import { RegisterForm } from '../components/register-form'
+import { RegisterForm } from './components/register-form'
 
-export function RegisterPage() {
-  const [isLogin, setIsLogin] = useState(true)
+export default function RegisterPage() {
+  const navigate = useNavigate()
 
   return (
-    <Card className="bg-main mx-auto w-full max-w-2xl p-3 shadow-2xl">
+    <Card className="bg-background mx-auto w-full max-w-2xl p-6 shadow-2xl">
       <CardHeader className="space-y-2">
         <CardTitle className="text-center text-4xl font-bold">
-          {isLogin ? '로그인' : '회원가입'}
+          회원가입
         </CardTitle>
         <CardDescription className="text-center text-xl">
-          {isLogin ? '계정에 로그인하세요' : '새 계정을 만들어보세요'}
+          계정을 생성하세요
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
@@ -27,10 +27,10 @@ export function RegisterPage() {
         <div className="text-center">
           <Button
             variant="link"
-            onClick={() => setIsLogin(!isLogin)}
             className="text-lg"
+            onClick={() => navigate('/auth/login')}
           >
-            <p>이미 계정이 있으신가요? 로그인</p>
+            <span>계정이 있으신가요? 로그인</span>
           </Button>
         </div>
       </CardContent>

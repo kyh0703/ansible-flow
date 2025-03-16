@@ -13,7 +13,7 @@ export const getRedo = async (flowId: number) => {
       nodes: Node[]
       edges: Edge[]
     }>
-  >(`${process.env.NEXT_PUBLIC_API_BASE_PATH}/flow/history/redo/${flowId}`, {
+  >(`${import.meta.env.VITE_BASE_PATH}/flow/history/redo/${flowId}`, {
     method: 'GET',
   })
 

@@ -4,7 +4,7 @@ import { CustomResponse } from '@/services/types'
 
 export const updateFlow = async (id: number, data: Partial<Flow>) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/flows/${id}`,
+    `${import.meta.env.VITE_BASE_PATH}/flows/${id}`,
     {
       method: 'PUT',
       headers: {

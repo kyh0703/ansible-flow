@@ -1,5 +1,5 @@
-import { cn } from '~/lib/utils';
-import ThemeToggle from '~/ui/theme-toggle';
+import { cn } from '~/lib/utils'
+import { ThemeButton } from '~/ui/theme-button'
 
 export default function Header() {
   return (
@@ -7,26 +7,16 @@ export default function Header() {
       className={cn(
         'flex items-center justify-between',
         'sticky',
-        'font-noto text-xl font-medium leading-[26px]',
+        'font-noto text-xl leading-[26px] font-medium',
         'h-header',
         'px-[20px] py-[13px]',
-        'border-b border-solid'
+        'border-b border-solid',
       )}
     >
-      <section className='flex flex-1 items-center justify-center'>
-        <div
-          className={cn(
-            'flex h-9 min-w-[320px] items-center justify-center gap-4 rounded-lg px-5',
-            'bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5',
-            'border border-primary/20',
-            'shadow-sm shadow-primary/10',
-            'backdrop-blur-md'
-          )}
-        >
-          <ThemeToggle />
-        </div>
-      </section>
-      <nav className='flex items-center gap-5'></nav>
+      <nav></nav>
+      <nav className="flex items-center gap-5">
+        <ThemeButton />
+      </nav>
     </header>
-  );
+  )
 }

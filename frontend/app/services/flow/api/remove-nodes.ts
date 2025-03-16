@@ -3,7 +3,7 @@ import { CustomResponse } from '@/services/types'
 
 export const removeNodes = async (data: number[]) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/nodes/list/delete`,
+    `${import.meta.env.VITE_BASE_PATH}/nodes/list/delete`,
     {
       method: 'POST',
       headers: {

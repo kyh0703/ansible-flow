@@ -62,7 +62,7 @@ func (a *authService) generateNewTokens(ctx context.Context, user model.User) (*
 	}, nil
 }
 
-func (a *authService) SignUp(ctx context.Context, req *auth.SignUp) (*auth.Token, error) {
+func (a *authService) Register(ctx context.Context, req *auth.Register) (*auth.Token, error) {
 	existUser, err := a.userRepository.FindOneByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
@@ -85,7 +85,6 @@ func (a *authService) SignUp(ctx context.Context, req *auth.SignUp) (*auth.Token
 		Email:    req.Email,
 		Password: hash,
 		Name:     req.Name,
-		Bio:      req.Bio,
 	})
 	if err != nil {
 		return nil, fiber.NewError(500, err.Error())
@@ -94,7 +93,7 @@ func (a *authService) SignUp(ctx context.Context, req *auth.SignUp) (*auth.Token
 	return a.generateNewTokens(ctx, createdUser)
 }
 
-func (a *authService) SignIn(ctx context.Context, req *auth.SignIn) (*auth.Token, error) {
+func (a *authService) Login(ctx context.Context, req *auth.Login) (*auth.Token, error) {
 	user, err := a.userRepository.FindOneByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
@@ -141,11 +140,11 @@ func (a *authService) SignIn(ctx context.Context, req *auth.SignIn) (*auth.Token
 	}, nil
 }
 
-func (a *authService) SignOut(ctx context.Context) error {
+func (a *authService) Logout(ctx context.Context) error {
 	return nil
 }
 
-func (a *authService) RefreshToken(ctx context.Context, req *auth.Refresh) (*auth.Token, error) {
+func (a *authService) Refresh(ctx context.Context, req *auth.Refresh) (*auth.Token, error) {
 	mapClaims, err := jwt.ParseToken(req.RefreshToken)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, err.Error())

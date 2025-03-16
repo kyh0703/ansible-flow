@@ -7,7 +7,7 @@ export const addNodePropertyClipboard = async <T>(data: {
   property: T[]
 }) => {
   const response = await fetchExtended<CustomResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/edits/clipboard/property`,
+    `${import.meta.env.VITE_BASE_PATH}/edits/clipboard/property`,
     {
       method: 'POST',
       headers: {
