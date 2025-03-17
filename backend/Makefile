@@ -7,9 +7,8 @@ BUILD_DIR       = $(CURRENT_DIR)/build
 BUILD_BIN       = $(BUILD_DIR)/bin
 BUILD_PACKAGE   = $(BUILD_DIR)/package
 BUILD_REPORT    = $(BUILD_DIR)/report
-
 TARGET          = app
-PRIVATE_REPO    = gitlab.com/ipron-ne,gitlab.com/ipron-core
+PRIVATE_REPO    =
 
 CI_USER         := $(if $(CI_USER),$(CI_USER),"gitlab-ci-token")
 CI_TOKEN        := $(if $(CI_TOKEN),$(CI_TOKEN),"WjkhjLNzLUL76GBxTv9s")
@@ -34,6 +33,12 @@ build: dep
 run:
 	@echo "run:"
 	@$(BUILD_BIN)/$(TARGET)
+	@echo ""
+
+.PHONY: watch
+watch:
+	@echo "watch:"
+	@air -c .air.toml
 	@echo ""
 
 .PHONY: gen
