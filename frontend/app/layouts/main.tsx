@@ -1,11 +1,12 @@
 import { Outlet } from 'react-router'
-import { ThemeProvider } from '~/ui/theme-provider'
 import Header from './header'
 import { StatusBar } from './status-bar'
+import { ToastContainer } from 'react-toastify'
+import Provider from './provider'
 
 export default function Main() {
   return (
-    <ThemeProvider defaultTheme="system">
+    <Provider>
       <div className="flex h-full w-full flex-col overflow-hidden">
         <div className="flex h-full w-full overflow-hidden">
           <div className="flex h-full w-full flex-col overflow-hidden">
@@ -16,7 +17,8 @@ export default function Main() {
           </div>
         </div>
         <StatusBar />
+        <ToastContainer />
       </div>
-    </ThemeProvider>
+    </Provider>
   )
 }

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import * as z from 'zod'
 import { login } from '~/services/auth/api'
+import { setToken } from '~/services/lib/token'
 import { Button } from '~/ui/button'
 import FormInput from '~/ui/form-input'
 
@@ -26,8 +27,8 @@ export function LoginForm() {
   const onSubmit = async (data: Login) => {
     try {
       const response = await login(data)
-      console.log(response)
-      navigate('/dashboard')
+      setToken(response)
+      navigate('/auth/register')
     } catch (error) {
       console.log(error)
     }

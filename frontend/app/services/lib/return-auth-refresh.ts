@@ -1,7 +1,7 @@
 import type { ReturnFetch } from 'return-fetch'
 import returnFetch from 'return-fetch'
 import type { ApiResponse } from '..'
-import { setToken } from './token'
+import { setToken, type Token } from './token'
 
 let retryCount = 0
 let refreshing = false
@@ -36,12 +36,10 @@ export const returnFetchAuthRefresh: ReturnFetch = (args) =>
               throw Error('failed to refresh cookie')
             }
 
-            const newToken = (await responseToRefresh.json()) as ApiResponse<{
-              accessToken: string
-              accessExpiresIn: number
-            }>
+            const newToken =
+              (await responseToRefresh.json()) as ApiResponse<Token>
 
-            setToken(newToken.data.accessToken, newToken.data.accessExpiresIn)
+            setToken(newToken.data)
 
             retryCount += 1
             console.log(

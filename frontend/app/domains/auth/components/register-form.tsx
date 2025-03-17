@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import * as z from 'zod'
 import { register } from '~/services/auth/api'
+import { setToken } from '~/services/lib/token'
 import { Button } from '~/ui/button'
 import FormInput from '~/ui/form-input'
 
@@ -34,10 +35,9 @@ export function RegisterForm() {
 
   const onSubmit = async (data: Register) => {
     try {
-      console.log(data)
       const response = await register(data)
-      console.log(response)
-      navigate('/login')
+      setToken(response)
+      navigate('/auth/login')
     } catch (error) {
       console.log(error)
     }

@@ -11,7 +11,7 @@ export const returnFetchAuthHeader: ReturnFetch = (args) =>
           return args
         }
 
-        if (token.expiresIn < Math.floor(Date.now() / 1000)) {
+        if (token.accessExpiresIn < Math.floor(Date.now() / 1000)) {
           return args
         }
 

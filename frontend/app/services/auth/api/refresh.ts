@@ -2,20 +2,14 @@ import type { ApiResponse } from '~/services'
 import { fetchExtended } from '~/services/lib/fetch'
 import type { Token } from '~/services/lib/token'
 
-export const register = async (data: {
-  email: string
-  password: string
-  confirmPassword: string
-  name: string
-}) => {
+export const refresh = async () => {
   const response = await fetchExtended<ApiResponse<Token>>(
-    `${import.meta.env.VITE_BASE_PATH}/auth/register`,
+    `${import.meta.env.VITE_BASE_PATH}/auth/refresh`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
     },
   )
 

@@ -7,28 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from '~/ui/card'
-import { LoginForm } from './components/login-form'
+import { RegisterForm } from '../components/register-form'
 
-export default function LoginPage() {
+export default function Register() {
   const navigate = useNavigate()
 
   return (
     <Card className="bg-background mx-auto w-full max-w-2xl p-6 shadow-2xl">
       <CardHeader className="space-y-2">
-        <CardTitle className="text-center text-4xl font-bold">로그인</CardTitle>
+        <CardTitle className="text-center text-4xl font-bold">
+          회원가입
+        </CardTitle>
         <CardDescription className="text-center text-xl">
-          계정에 로그인하세요
+          계정을 생성하세요
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 p-8">
-        <LoginForm />
+        <RegisterForm />
         <div className="text-center">
           <Button
             variant="link"
             className="text-lg"
-            onClick={() => navigate('/auth/register')}
+            onClick={() => navigate('/auth/login')}
           >
-            <span>계정이 없으신가요? 회원가입</span>
+            <span>계정이 있으신가요? 로그인</span>
           </Button>
         </div>
       </CardContent>

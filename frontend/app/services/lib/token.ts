@@ -1,17 +1,14 @@
-let accessToken: Token | null = null
+let token: Token | null = null
 
 export type Token = {
-  token: string
-  expiresIn: number
+  accessToken: string
+  accessExpiresIn: number
 }
 
 export const getToken = (): Token | null => {
-  return accessToken
+  return token
 }
 
-export const setToken = (token: string, expiresIn: number) => {
-  accessToken = {
-    token: token,
-    expiresIn: expiresIn,
-  }
+export const setToken = (newToken: Token) => {
+  token = newToken
 }

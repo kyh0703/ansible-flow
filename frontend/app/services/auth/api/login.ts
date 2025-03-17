@@ -1,5 +1,6 @@
 import type { ApiResponse } from '~/services'
 import { fetchExtended } from '~/services/lib/fetch'
+import type { Token } from '~/services/lib/token'
 
 export const login = async ({
   email,
@@ -8,15 +9,16 @@ export const login = async ({
   email: string
   password: string
 }) => {
-  const response = await fetchExtended<
-    ApiResponse<{ name: string; desc: string }[]>
-  >(`${import.meta.env.VITE_BASE_PATH}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetchExtended<ApiResponse<Token>>(
+    `${import.meta.env.VITE_BASE_PATH}/auth/login`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     },
-    body: JSON.stringify({ email, password }),
-  })
+  )
 
   return response.body.data
 }
