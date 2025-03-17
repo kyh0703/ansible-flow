@@ -63,13 +63,9 @@ func (a *authService) generateNewTokens(ctx context.Context, user model.User) (*
 }
 
 func (a *authService) Register(ctx context.Context, req *auth.Register) (*auth.Token, error) {
-	existUser, err := a.userRepository.FindOneByEmail(ctx, req.Email)
-	if err != nil {
+	_, err := a.userRepository.FindOneByEmail(ctx, req.Email)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	if existUser.ID != 0 {
-		return nil, fiber.NewError(fiber.StatusConflict, "email already exists")
 	}
 
 	if req.Password != req.ConfirmPassword {

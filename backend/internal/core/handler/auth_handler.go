@@ -65,18 +65,15 @@ func (a *authHandler) Register(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	fmt.Println("Register2")
 	if err := a.validate.Struct(register); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	fmt.Println("Register3")
 	token, err := a.authService.Register(c.Context(), &register)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Register4")
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    token.Refresh.RefreshToken,
