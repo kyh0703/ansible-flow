@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTrigger } from '~/shared/ui/dialog'
 import { Button } from '~/shared/ui/button'
 import { LoginForm } from '../components/login-form'
+import AuthForm from '../components/auth-form'
 
 export default function HeroSection() {
   return (
@@ -25,7 +26,7 @@ export default function HeroSection() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
-                  <LoginForm />
+                  <AuthForm />
                 </DialogContent>
               </Dialog>
               <Button size="lg" variant="outline" className="px-8">

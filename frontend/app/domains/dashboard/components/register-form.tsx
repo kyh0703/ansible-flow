@@ -49,56 +49,41 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="space-y-4 py-2 pb-4">
-      <DialogHeader>
-        <DialogTitle>회원가입</DialogTitle>
-        <DialogDescription>계정을 생성하세요</DialogDescription>
-      </DialogHeader>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          control={control}
-          name="email"
-          type="email"
-          placeholder="아이디(이메일)"
-          required
-        />
-        {errors.email && <p className="error-msg">{errors.email.message}</p>}
-        <FormInput
-          control={control}
-          name="password"
-          type="password"
-          placeholder="비밀번호"
-          required
-        />
-        {errors.password && (
-          <p className="error-msg">{errors.password.message}</p>
-        )}
-        <FormInput
-          control={control}
-          name={'confirmPassword'}
-          id="confirmPassword"
-          type="password"
-          placeholder="비밀번호 확인"
-          required
-        />
-        {errors.confirmPassword && (
-          <p className="error-msg">{errors.confirmPassword.message}</p>
-        )}
-        <FormInput control={control} name="name" placeholder="이름" />
-        {errors.name && <p className="error-msg">{errors.name.message}</p>}
-        <Button className="w-full" type="submit">
-          동의하고 가입하기
-        </Button>
-      </form>
-      <div className="text-center">
-        <Button
-          variant="link"
-          className="text-lg"
-          onClick={() => navigate('/auth/login')}
-        >
-          <span>계정이 있으신가요? 로그인</span>
-        </Button>
-      </div>
-    </div>
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <FormInput
+        control={control}
+        name="email"
+        type="email"
+        placeholder="아이디(이메일)"
+        required
+      />
+      {errors.email && <p className="error-msg">{errors.email.message}</p>}
+      <FormInput
+        control={control}
+        name="password"
+        type="password"
+        placeholder="비밀번호"
+        required
+      />
+      {errors.password && (
+        <p className="error-msg">{errors.password.message}</p>
+      )}
+      <FormInput
+        control={control}
+        name={'confirmPassword'}
+        id="confirmPassword"
+        type="password"
+        placeholder="비밀번호 확인"
+        required
+      />
+      {errors.confirmPassword && (
+        <p className="error-msg">{errors.confirmPassword.message}</p>
+      )}
+      <FormInput control={control} name="name" placeholder="이름" />
+      {errors.name && <p className="error-msg">{errors.name.message}</p>}
+      <Button className="w-full" type="submit">
+        동의하고 가입하기
+      </Button>
+    </form>
   )
 }

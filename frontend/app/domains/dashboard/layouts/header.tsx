@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from '~/shared/ui/dialog'
 import { Link } from 'react-router-dom'
 import { LoginForm } from '../components/login-form'
 import { Sheet, SheetContent, SheetTrigger } from '~/shared/ui/sheet'
+import AuthForm from '../components/auth-form'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -56,7 +57,7 @@ export default function Header() {
               <Button>Login</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-              <LoginForm />
+              <AuthForm />
             </DialogContent>
           </Dialog>
           <Sheet open={open} onOpenChange={setOpen}>
