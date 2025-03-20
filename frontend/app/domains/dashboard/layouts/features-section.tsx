@@ -3,7 +3,7 @@ import { CheckCircle, Code, GitBranch, Layers } from 'lucide-react'
 export default function FeaturesSection() {
   return (
     <section className="py-16 md:py-24" id="features">
-      <div className="container px-4 md:px-6">
+      <div className="px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
             <div className="bg-muted inline-block rounded-lg px-3 py-1 text-sm">

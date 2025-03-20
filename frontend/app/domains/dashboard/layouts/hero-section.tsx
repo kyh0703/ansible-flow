@@ -5,8 +5,8 @@ import { LoginForm } from '../components/login-form'
 export default function HeroSection() {
   return (
     <section className="from-background to-muted/50 bg-gradient-to-b py-20 md:py-28">
-      <div className="container px-4 md:px-6">
-        <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
+      <div className="px-4 md:px-20">
+        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
