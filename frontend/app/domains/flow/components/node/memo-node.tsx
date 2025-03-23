@@ -1,5 +1,3 @@
-'use client'
-
 import ColorPickerIcon from '@/app/_components/color-picker'
 import { Textarea } from '@/app/_components/textarea'
 import { useNodeDimensions, useNodes } from '@/hooks/xyflow'
@@ -248,7 +246,7 @@ export function MemoNode({ id, selected, data }: CustomNodeProps) {
             'absolute',
             'flex items-center justify-center',
             'h-full w-full',
-            'left-1/2 top-1/2',
+            'top-1/2 left-1/2',
             'z-[1] rounded-2xl',
             '-translate-x-1/2 -translate-y-1/2 transform',
           )}
@@ -264,7 +262,7 @@ export function MemoNode({ id, selected, data }: CustomNodeProps) {
         </div>
         <div
           className={twJoin(
-            'absolute left-0 top-0 p-0',
+            'absolute top-0 left-0 p-0',
             'flex flex-col items-center justify-center',
             'h-full w-full',
             editMode === 'grab' && 'z-10',
