@@ -5,11 +5,6 @@ import * as z from 'zod'
 import { login } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '~/shared/ui/dialog'
 import FormInput from '~/shared/ui/form-input'
 
 const LoginSchema = z.object({
@@ -33,7 +28,7 @@ export function LoginForm() {
     try {
       const response = await login(data)
       setToken(response)
-      navigate('/auth/register')
+      navigate('/project')
     } catch (error) {
       console.log(error)
     }

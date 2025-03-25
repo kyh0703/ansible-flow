@@ -1,8 +1,7 @@
 import { Outlet } from 'react-router'
+import { ToastContainer } from 'react-toastify'
 import Header from './header'
 import { StatusBar } from './status-bar'
-import { ToastContainer } from 'react-toastify'
-import Panel from './panel'
 
 export default function Main() {
   return (

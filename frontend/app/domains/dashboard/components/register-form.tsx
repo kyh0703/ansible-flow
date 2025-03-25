@@ -5,20 +5,16 @@ import * as z from 'zod'
 import { register } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '~/shared/ui/dialog'
 import FormInput from '~/shared/ui/form-input'
 
 const SignupSchema = z
   .object({
     email: z.string().email('유효한 이메일을 입력해 주세요.'),
-    password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
-    confirmPassword: z
+    password: z
       .string()
-      .min(8, '비밀번호 확인은 8자 이상이어야 합니다.'),
+      .min(8, '비밀번호는 8자 이상이어야 합니다.')
+      .max(32, '비밀번호는 32자 이하여야 합니다.'),
+    confirmPassword: z.string(),
     name: z.string().nonempty('이름은 필수입니다.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -42,7 +38,7 @@ export function RegisterForm() {
     try {
       const response = await register(data)
       setToken(response)
-      navigate('/auth/login')
+      navigate('/project')
     } catch (error) {
       console.log(error)
     }

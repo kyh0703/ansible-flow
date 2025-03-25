@@ -40,7 +40,7 @@ type FlowProps = {
   focusNode?: string
 }
 
-export default function Flow({
+export default function BasicFlow({
   flowId,
   initialNodes,
   initialEdges,

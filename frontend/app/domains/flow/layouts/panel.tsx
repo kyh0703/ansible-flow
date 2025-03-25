@@ -2,7 +2,7 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '../ui/resizable'
+} from '../../../shared/ui/resizable'
 
 export default function Panel({ children }: { children: React.ReactNode }) {
   return (

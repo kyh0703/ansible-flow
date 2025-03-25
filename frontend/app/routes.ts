@@ -15,7 +15,7 @@ export default [
     //     route('register', './domains/auth/pages/register.tsx'),
     //   ]),
     // ]),
-    layout('./shared/layouts/main.tsx', [
+    layout('./domains/flow/layouts/main.tsx', [
       ...prefix('flow', [route(':flowId', './domains/flow/pages/detail.tsx')]),
     ]),
   ]),
