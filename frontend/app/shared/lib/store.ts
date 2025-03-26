@@ -10,34 +10,30 @@ import { immer } from 'zustand/middleware/immer'
 export const createStore = <T extends object>(
   initializer: StateCreator<
     T,
-    [['zustand/devtools', never], ['zustand/immer', never]]
+    [['zustand/immer', never], ['zustand/devtools', never]]
   >,
   options: DevtoolsOptions,
 ) =>
-  create<T, [['zustand/devtools', never], ['zustand/immer', never]]>(
-    devtools(immer(initializer), options),
+  create<T, [['zustand/immer', never], ['zustand/devtools', never]]>(
+    immer(devtools(initializer, options)),
   )
 
-export const createPersistStore = <T extends object, U = T>(
+export const createPersistStore = <T extends object>(
   initializer: StateCreator<
     T,
     [
-      ['zustand/devtools', never],
       ['zustand/immer', never],
+      ['zustand/devtools', never],
       ['zustand/persist', unknown],
     ]
   >,
-  options: PersistOptions<T, U>,
+  options: PersistOptions<T, Partial<T>>,
 ) =>
   create<
     T,
     [
-      ['zustand/devtools', never],
       ['zustand/immer', never],
+      ['zustand/devtools', never],
       ['zustand/persist', unknown],
     ]
-  >(
-    devtools(immer(persist(initializer, options)), {
-      ...options,
-    }),
-  )
+  >(immer(devtools(persist(initializer, options), options)))
