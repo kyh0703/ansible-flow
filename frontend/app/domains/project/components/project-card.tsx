@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import type { Project } from '~/shared/model/project'
+import type { Project } from '~/shared/models/project'
 import { Button } from '~/shared/ui/button'
 import {
   Card,

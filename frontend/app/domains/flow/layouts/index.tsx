@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import Header from './header'
 import { StatusBar } from './status-bar'
 
-export default function Main() {
+export default function Layout() {
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       <div className="flex h-full w-full flex-col">

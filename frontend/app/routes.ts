@@ -9,13 +9,13 @@ import {
 export default [
   layout('./shared/providers/index.tsx', [
     index('./domains/dashboard/pages/home.tsx'),
-    // ...prefix('auth', [
-    //   layout('./domains/auth/layout.tsx', [
-    //     route('login', './domains/auth/pages/login.tsx'),
-    //     route('register', './domains/auth/pages/register.tsx'),
-    //   ]),
-    // ]),
-    layout('./domains/flow/layouts/main.tsx', [
+    layout('./domains/project/layouts/index.tsx', [
+      ...prefix('project', [
+        index('./domains/project/pages/index.tsx'),
+        route(':projectId', './domains/project/pages/detail.tsx'),
+      ]),
+    ]),
+    layout('./domains/flow/layouts/index.tsx', [
       ...prefix('flow', [route(':flowId', './domains/flow/pages/detail.tsx')]),
     ]),
   ]),
