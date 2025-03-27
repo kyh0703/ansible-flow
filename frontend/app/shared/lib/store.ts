@@ -2,6 +2,7 @@ import { create, type StateCreator } from 'zustand'
 import {
   devtools,
   persist,
+  subscribeWithSelector,
   type DevtoolsOptions,
   type PersistOptions,
 } from 'zustand/middleware'
@@ -10,19 +11,29 @@ import { immer } from 'zustand/middleware/immer'
 export const createStore = <T extends object>(
   initializer: StateCreator<
     T,
-    [['zustand/immer', never], ['zustand/devtools', never]]
+    [
+      ['zustand/immer', never],
+      ['zustand/subscribeWithSelector', never],
+      ['zustand/devtools', never],
+    ]
   >,
   options: DevtoolsOptions,
 ) =>
-  create<T, [['zustand/immer', never], ['zustand/devtools', never]]>(
-    immer(devtools(initializer, options)),
-  )
+  create<
+    T,
+    [
+      ['zustand/immer', never],
+      ['zustand/subscribeWithSelector', never],
+      ['zustand/devtools', never],
+    ]
+  >(immer(subscribeWithSelector(devtools(initializer, options))))
 
 export const createPersistStore = <T extends object>(
   initializer: StateCreator<
     T,
     [
       ['zustand/immer', never],
+      ['zustand/subscribeWithSelector', never],
       ['zustand/devtools', never],
       ['zustand/persist', unknown],
     ]
@@ -33,7 +44,12 @@ export const createPersistStore = <T extends object>(
     T,
     [
       ['zustand/immer', never],
+      ['zustand/subscribeWithSelector', never],
       ['zustand/devtools', never],
       ['zustand/persist', unknown],
     ]
-  >(immer(devtools(persist(initializer, options), options)))
+  >(
+    immer(
+      subscribeWithSelector(devtools(persist(initializer, options), options)),
+    ),
+  )
