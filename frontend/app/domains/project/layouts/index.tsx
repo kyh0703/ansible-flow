@@ -1,13 +1,16 @@
 import { Outlet } from 'react-router'
-import { Sidebar } from '~/shared/ui/sidebar'
+import { SidebarProvider } from '~/shared/ui/sidebar'
+import AppSidebar from './sidebar'
 
 export default function Layout() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="flex h-full w-full">
+        <AppSidebar />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   )
 }

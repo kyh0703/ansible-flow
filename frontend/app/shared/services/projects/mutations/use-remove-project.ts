@@ -1,18 +1,17 @@
-import type { CustomResponse } from '@/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { removeFlow } from '..'
+import type { CustomResponse } from '../../types'
+import { removeProject } from '../api'
 
-type Response = unknown
+type Response = CustomResponse
 type Variables = number
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
-export const useRemoveFlow = (options?: MutationOptions) => {
+export const useRemoveProject = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    throwOnError: false,
-    mutationFn: (flowId) => {
-      return removeFlow(flowId)
+    mutationFn: (id) => {
+      return removeProject(id)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {

@@ -1,3 +1,10 @@
+import type { Route } from './+types'
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const { flowId } = params
+  return { flowId }
+}
+
 export default function Detail() {
   return (
     <div>

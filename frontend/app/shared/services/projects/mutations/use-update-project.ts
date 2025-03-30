@@ -1,28 +1,30 @@
-import { FlowTree } from '@/models/subflow-list'
-import { CustomResponse } from '@/services/types'
 import {
   useMutation,
   useQueryClient,
   type UseMutationOptions,
 } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { flowKeys, updateSubFlowTree } from '..'
+import type { Project } from '~/shared/models/project'
+import type { CustomResponse } from '../../types'
+import { updateProject } from '../api'
+import { projectKey } from '../keys'
 
-type Response = unknown
-type Variables = { flowtree: FlowTree[] }
+type Response = CustomResponse
+type Variables = { id: number; data: Partial<Project> }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
-export const useUpdateSubFlowTree = (options?: MutationOptions) => {
+export const useUpdateProject = (options?: MutationOptions) => {
   const queryClient = useQueryClient()
 
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    throwOnError: false,
-    mutationFn: (payload) => {
-      return updateSubFlowTree(payload)
+    mutationFn: ({ id, data }) => {
+      return updateProject(id, data)
     },
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: [flowKeys.subFlowTree] })
+      queryClient.invalidateQueries({
+        queryKey: [projectKey.detail(variables.id)],
+      })
 
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
