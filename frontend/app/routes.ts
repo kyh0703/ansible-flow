@@ -8,7 +8,7 @@ import {
 
 export default [
   layout('./shared/providers/index.tsx', [
-    // index('./domains/dashboard/pages/home.tsx'),
+    index('./domains/dashboard/pages/home.tsx'),
     layout('./domains/project/layouts/index.tsx', [
       ...prefix('project', [
         index('./domains/project/pages/index.tsx'),

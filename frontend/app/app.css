@@ -135,6 +135,6 @@ body {
   }
   html,
   body {
-    @apply h-dvh w-dvw overflow-hidden;
+    @apply box-border h-dvh w-dvw overflow-hidden;
   }
 }
