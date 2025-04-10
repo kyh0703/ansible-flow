@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { type Project } from '~/shared/models/project'
 import { Button } from '~/shared/ui/button'
 import ProjectCard from './project-card'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { useQueryProjects } from '~/shared/services/\bprojects'
 
 export default function ProjectList() {
-  const [projects, setProjects] = useState<Project[]>([])
+  const { data: projects } = useSuspenseQuery(useQueryProjects())
 
   return (
     <div>

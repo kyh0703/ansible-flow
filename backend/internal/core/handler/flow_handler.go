@@ -1,17 +1,18 @@
 package handler
 
 import (
+	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
+	"github.com/kyh0703/flow/internal/core/middleware"
 )
 
-//counterfeiter:generate .type flowHandler struct{}
-
+//counterfeiter:generate . flowHandler
 type FlowHandler interface {
 	Table() []Mapper
 	CreateOne(c *fiber.Ctx) error
-	GetOne(c *fiber.Ctx) error
+	FindOne(c *fiber.Ctx) error
 	DeleteOne(c *fiber.Ctx) error
 	UpdateOne(c *fiber.Ctx) error
 	Undo(c *fiber.Ctx) error
@@ -19,13 +20,19 @@ type FlowHandler interface {
 }
 
 type flowHandler struct {
+	validate       *validator.Validate
+	AuthMiddleware middleware.AuthMiddleware
 	flowRepository repository.FlowRepository
 }
 
 func NewFlowHandler(
+	validate *validator.Validate,
+	AuthMiddleware middleware.AuthMiddleware,
 	flowRepository repository.FlowRepository,
 ) FlowHandler {
 	return &flowHandler{
+		validate:       validate,
+		AuthMiddleware: AuthMiddleware,
 		flowRepository: flowRepository,
 	}
 }
@@ -33,7 +40,7 @@ func NewFlowHandler(
 func (f *flowHandler) Table() []Mapper {
 	return []Mapper{
 		Mapping(fiber.MethodPost, "/flow", f.CreateOne),
-		Mapping(fiber.MethodGet, "/flow/:id", f.GetOne),
+		Mapping(fiber.MethodGet, "/flow/:id", f.FindOne),
 		Mapping(fiber.MethodPut, "/flow/:id", f.UpdateOne),
 		Mapping(fiber.MethodDelete, "/flow/:id", f.DeleteOne),
 		Mapping(fiber.MethodPost, "/flow/:id/undo", f.Undo),
@@ -55,7 +62,7 @@ func (f *flowHandler) CreateOne(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(flow)
 }
 
-func (f *flowHandler) GetOne(c *fiber.Ctx) error {
+func (f *flowHandler) FindOne(c *fiber.Ctx) error {
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())

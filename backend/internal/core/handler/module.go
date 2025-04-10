@@ -11,6 +11,7 @@ var Module = fx.Module(
 		AsHandler(NewEdgeHandler),
 		AsHandler(NewNodeHandler),
 		AsHandler(NewFlowHandler),
+		AsHandler(NewProjectHandler),
 		AsHandler(NewUserHandler),
 	),
 )

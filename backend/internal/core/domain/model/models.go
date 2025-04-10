@@ -48,10 +48,11 @@ type Node struct {
 
 type Project struct {
 	ID          int64          `json:"id"`
+	UserID      int64          `json:"userId"`
 	Name        string         `json:"name"`
 	Description sql.NullString `json:"description"`
 	UpdateAt    sql.NullString `json:"updateAt"`
-	CreateAt    sql.NullString `json:"createAt"`
+	CreateAt    interface{}    `json:"createAt"`
 }
 
 type Token struct {

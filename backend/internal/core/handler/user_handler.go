@@ -6,7 +6,7 @@ import "github.com/gofiber/fiber/v2"
 type UserHandler interface {
 	Handler
 	CreateOne(c *fiber.Ctx) error
-	GetOne(c *fiber.Ctx) error
+	FindOne(c *fiber.Ctx) error
 	UpdateOne(c *fiber.Ctx) error
 	DeleteOne(c *fiber.Ctx) error
 }
@@ -20,7 +20,7 @@ func NewUserHandler() UserHandler {
 func (u *userHandler) Table() []Mapper {
 	return []Mapper{
 		Mapping(fiber.MethodPost, "/user", u.CreateOne),
-		Mapping(fiber.MethodGet, "/user/:id", u.GetOne),
+		Mapping(fiber.MethodGet, "/user/:id", u.FindOne),
 		Mapping(fiber.MethodPut, "/user/:id", u.UpdateOne),
 		Mapping(fiber.MethodDelete, "/user/:id", u.DeleteOne),
 	}
@@ -30,7 +30,7 @@ func (u *userHandler) CreateOne(c *fiber.Ctx) error {
 	panic("unimplemented")
 }
 
-func (u *userHandler) GetOne(c *fiber.Ctx) error {
+func (u *userHandler) FindOne(c *fiber.Ctx) error {
 	panic("unimplemented")
 }
 

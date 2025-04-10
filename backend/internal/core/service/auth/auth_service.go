@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jinzhu/copier"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 	"github.com/kyh0703/flow/internal/core/dto/auth"
@@ -76,14 +77,14 @@ func (a *authService) Register(ctx context.Context, req *auth.Register) (*auth.T
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
+	req.Password = hash
 
-	createdUser, err := a.userRepository.CreateOne(ctx, model.CreateUserParams{
-		Email:    req.Email,
-		Password: hash,
-		Name:     req.Name,
-	})
+	var newUser model.CreateUserParams
+	copier.Copy(&newUser, req)
+
+	createdUser, err := a.userRepository.CreateOne(ctx, newUser)
 	if err != nil {
-		return nil, fiber.NewError(500, err.Error())
+		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	return a.generateNewTokens(ctx, createdUser)

@@ -6,7 +6,7 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type CreateEdge struct {
+type CreateEdgeRequest struct {
 	ID        uuid.UUID      `json:"id" validate:"required"`
 	FlowID    int64          `json:"flow_id" validate:"required"`
 	Source    int64          `json:"source" validate:"required"`

@@ -72,10 +72,11 @@ WHERE id = ?;
 
 -- name: CreateProject :one
 INSERT INTO projects (
+  user_id,
   name,
   description
 ) VALUES (
-  ?, ?
+  ?, ?, ?
 )
 RETURNING *;
 

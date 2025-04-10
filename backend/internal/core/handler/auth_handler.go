@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-playground/validator"
@@ -61,7 +60,6 @@ func (a *authHandler) Whoami(c *fiber.Ctx) error {
 func (a *authHandler) Register(c *fiber.Ctx) error {
 	var register dto.Register
 	if err := c.BodyParser(&register); err != nil {
-		fmt.Println("Register1", err)
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
