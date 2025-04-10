@@ -20,7 +20,6 @@ type ProjectHandler interface {
 	UpdateOne(c *fiber.Ctx) error
 }
 
-//counterfeiter:generate . ProjectHandler
 type projectHandler struct {
 	validate          *validator.Validate
 	authMiddleware    middleware.AuthMiddleware
