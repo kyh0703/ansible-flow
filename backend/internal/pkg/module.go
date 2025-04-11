@@ -8,5 +8,8 @@ import (
 
 var Module = fx.Module("pkg",
 	fx.Provide(validate.NewValidator),
-	fx.Provide(db.NewDB, db.NewQueries),
+	fx.Provide(
+		db.NewDB,
+		db.NewQueries,
+	),
 )

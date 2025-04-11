@@ -9,6 +9,7 @@ var Module = fx.Module(
 		NewUserRepository,
 		NewFlowRepository,
 		NewNodeRepository,
+		NewProjectRepository,
 		NewEdgeRepository,
 	),
 )

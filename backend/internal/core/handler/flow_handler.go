@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"database/sql"
+	"errors"
+
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/copier"
@@ -8,6 +11,7 @@ import (
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 	"github.com/kyh0703/flow/internal/core/dto/flows"
 	"github.com/kyh0703/flow/internal/core/middleware"
+	"github.com/kyh0703/flow/internal/pkg/db"
 	"github.com/kyh0703/flow/internal/pkg/response"
 )
 
@@ -113,18 +117,22 @@ func (f *flowHandler) UpdateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	var params model.PatchFlowParams
-	copier.Copy(&params, &req)
-	params.ID = int64(id)
-
-	if err := f.flowRepository.UpdateOne(c.Context(), params); err != nil {
+	if _, err := f.flowRepository.FindOne(c.Context(), int64(id)); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res flows.FlowResponse
-	copier.Copy(&res, &params)
+	if err := f.flowRepository.UpdateOne(c.Context(), model.PatchFlowParams{
+		ID:          int64(id),
+		Name:        db.ToNullString(req.Name),
+		Description: db.ToNullString(req.Description),
+	}); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
-	return response.Success(c, fiber.StatusOK, res)
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 func (f *flowHandler) DeleteOne(c *fiber.Ctx) error {

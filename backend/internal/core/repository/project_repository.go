@@ -31,8 +31,8 @@ func (p *projectRepository) FindOne(ctx context.Context, id int64) (model.Projec
 	return p.queries.GetProject(ctx, id)
 }
 
-func (p *projectRepository) GetList(ctx context.Context) ([]model.Project, error) {
-	return p.queries.ListProjects(ctx)
+func (p *projectRepository) GetList(ctx context.Context, userID int64) ([]model.Project, error) {
+	return p.queries.ListProjects(ctx, userID)
 }
 
 func (p *projectRepository) UpdateOne(ctx context.Context, arg model.PatchProjectParams) error {

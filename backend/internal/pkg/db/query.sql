@@ -99,12 +99,14 @@ WHERE id = ? LIMIT 1;
 
 -- name: ListProjects :many
 SELECT * FROM projects
+WHERE user_id = ?
 ORDER BY name;
 
 -- name: PatchProject :exec
 UPDATE projects SET
 name = COALESCE(sqlc.narg(name), name),
-description = COALESCE(sqlc.narg(description), description)
+description = COALESCE(sqlc.narg(description), description),
+update_at = now()
 WHERE id = ?
 RETURNING *;
 

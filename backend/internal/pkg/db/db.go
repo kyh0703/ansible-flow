@@ -31,6 +31,6 @@ func NewDB(config *configs.Config) (*sql.DB, error) {
 	return db, nil
 }
 
-func NewQueries(db model.DBTX) *model.Queries {
+func NewQueries(db *sql.DB) *model.Queries {
 	return model.New(db)
 }

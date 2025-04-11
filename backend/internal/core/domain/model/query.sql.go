@@ -606,11 +606,12 @@ func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
 
 const listProjects = `-- name: ListProjects :many
 SELECT id, user_id, name, description, update_at, create_at FROM projects
+WHERE user_id = ?
 ORDER BY name
 `
 
-func (q *Queries) ListProjects(ctx context.Context) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, listProjects)
+func (q *Queries) ListProjects(ctx context.Context, userID int64) ([]Project, error) {
+	rows, err := q.db.QueryContext(ctx, listProjects, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -807,7 +808,8 @@ func (q *Queries) PatchNode(ctx context.Context, arg PatchNodeParams) error {
 const patchProject = `-- name: PatchProject :exec
 UPDATE projects SET
 name = COALESCE(?2, name),
-description = COALESCE(?3, description)
+description = COALESCE(?3, description),
+update_at = now()
 WHERE id = ?
 RETURNING id, user_id, name, description, update_at, create_at
 `

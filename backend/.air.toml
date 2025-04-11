@@ -4,8 +4,8 @@ tmp_dir = ".air"
 
 [build]
   args_bin = []
-  bin = ".air/main"
-  cmd = "go build -o ./.air/main ./cmd/flow"
+  bin = ".air/main.exe"
+  cmd = "go build -o .air/main.exe ./cmd/flow"
   delay = 1000
   exclude_dir = ["assets", ".air", "vendor", "testdata"]
   exclude_file = []

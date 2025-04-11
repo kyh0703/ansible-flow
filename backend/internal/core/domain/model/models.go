@@ -52,7 +52,7 @@ type Project struct {
 	Name        string         `json:"name"`
 	Description sql.NullString `json:"description"`
 	UpdateAt    sql.NullString `json:"updateAt"`
-	CreateAt    interface{}    `json:"createAt"`
+	CreateAt    sql.NullString `json:"createAt"`
 }
 
 type Token struct {
