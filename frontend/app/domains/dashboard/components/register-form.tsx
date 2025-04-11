@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { register } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
 import FormInput from '~/shared/ui/form-input'
+import logger from '~/shared/utils/logger'
 
 const SignupSchema = z
   .object({
@@ -40,7 +42,8 @@ export function RegisterForm() {
       setToken(response)
       navigate('/project')
     } catch (error) {
-      console.log(error)
+      toast.error('회원가입에 실패하였습니다.')
+      logger.error(error)
     }
   }
 

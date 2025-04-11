@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { login } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
 import FormInput from '~/shared/ui/form-input'
+import logger from '~/shared/utils/logger'
 
 const LoginSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
@@ -30,7 +32,8 @@ export function LoginForm() {
       setToken(response)
       navigate('/project')
     } catch (error) {
-      console.log(error)
+      toast.error('로그인에 실패하였습니다.')
+      logger.error(error)
     }
   }
 

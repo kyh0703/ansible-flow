@@ -8,6 +8,8 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
+
+import 'react-toastify/dist/ReactToastify.css'
 import './app.css'
 
 export const links: Route.LinksFunction = () => [
