@@ -19,9 +19,11 @@ INSERT INTO edges (
   type,
   label,
   hidden,
-  marker_end
+  marker_end,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
 )
 RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
@@ -104,9 +106,11 @@ INSERT INTO nodes (
   width,
   height,
   hidden,
-  description
+  description,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
 )
 RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
@@ -157,9 +161,11 @@ const createProject = `-- name: CreateProject :one
 INSERT INTO projects (
   user_id,
   name,
-  description
+  description,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, now(), now()
 )
 RETURNING id, user_id, name, description, update_at, create_at
 `
@@ -188,9 +194,10 @@ const createToken = `-- name: CreateToken :one
 INSERT INTO tokens (
   user_id,
   refresh_token,
-  expires_in
+  expires_in,
+  create_at
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, now()
 )
 RETURNING id, user_id, refresh_token, expires_in, create_at
 `
@@ -220,9 +227,10 @@ INSERT INTO users (
   password,
   name,
   bio,
-  update_at
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?
+  ?, ?, ?, ?, now(), now()
 )
 RETURNING id, email, password, name, bio, update_at, create_at
 `
@@ -232,7 +240,6 @@ type CreateUserParams struct {
 	Password string         `json:"password" validate:"required,min=8,max=32"`
 	Name     string         `json:"name"`
 	Bio      sql.NullString `json:"bio"`
-	UpdateAt sql.NullString `json:"updateAt"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -241,7 +248,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Password,
 		arg.Name,
 		arg.Bio,
-		arg.UpdateAt,
 	)
 	var i User
 	err := row.Scan(
@@ -482,7 +488,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 const listEdges = `-- name: ListEdges :many
 SELECT id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at FROM edges
 WHERE flow_id = ?
-ORDER BY create_time
+ORDER BY create_at
 `
 
 func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
@@ -559,7 +565,7 @@ func (q *Queries) ListFlows(ctx context.Context, projectID int64) ([]Flow, error
 const listNodes = `-- name: ListNodes :many
 SELECT id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE flow_id = ?
-ORDER BY create_time
+ORDER BY create_at
 `
 
 func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
@@ -703,30 +709,31 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
-const updateEdge = `-- name: UpdateEdge :exec
+const patchEdge = `-- name: PatchEdge :exec
 UPDATE edges SET
-source = ?,
-target = ?,
-type = ?,
-label = ?,
-hidden = ?,
-marker_end = ?
+source = COALESCE(?2, source),
+target = COALESCE(?3, target),
+type = COALESCE(?4, type),
+label = COALESCE(?5, label),
+hidden = COALESCE(?6, hidden),
+marker_end = COALESCE(?7, marker_end),
+update_at = now()
 WHERE id = ?
 RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
 
-type UpdateEdgeParams struct {
-	Source    string `json:"source"`
-	Target    string `json:"target"`
-	Type      string `json:"type"`
-	Label     string `json:"label"`
-	Hidden    int64  `json:"hidden"`
-	MarkerEnd string `json:"markerEnd"`
-	ID        int64  `json:"id"`
+type PatchEdgeParams struct {
+	Source    sql.NullString `json:"source"`
+	Target    sql.NullString `json:"target"`
+	Type      sql.NullString `json:"type"`
+	Label     sql.NullString `json:"label"`
+	Hidden    sql.NullInt64  `json:"hidden"`
+	MarkerEnd sql.NullString `json:"markerEnd"`
+	ID        int64          `json:"id"`
 }
 
-func (q *Queries) UpdateEdge(ctx context.Context, arg UpdateEdgeParams) error {
-	_, err := q.db.ExecContext(ctx, updateEdge,
+func (q *Queries) PatchEdge(ctx context.Context, arg PatchEdgeParams) error {
+	_, err := q.db.ExecContext(ctx, patchEdge,
 		arg.Source,
 		arg.Target,
 		arg.Type,
@@ -738,51 +745,53 @@ func (q *Queries) UpdateEdge(ctx context.Context, arg UpdateEdgeParams) error {
 	return err
 }
 
-const updateFlow = `-- name: UpdateFlow :exec
+const patchFlow = `-- name: PatchFlow :exec
 UPDATE flows SET
-name = ?,
-description = ?
+name = COALESCE(?2, name),
+description = COALESCE(?3, description),
+update_at = now()
 WHERE id = ?
 RETURNING id, project_id, name, description, update_at, create_at
 `
 
-type UpdateFlowParams struct {
-	Name        string         `json:"name"`
+type PatchFlowParams struct {
+	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`
 	ID          int64          `json:"id"`
 }
 
-func (q *Queries) UpdateFlow(ctx context.Context, arg UpdateFlowParams) error {
-	_, err := q.db.ExecContext(ctx, updateFlow, arg.Name, arg.Description, arg.ID)
+func (q *Queries) PatchFlow(ctx context.Context, arg PatchFlowParams) error {
+	_, err := q.db.ExecContext(ctx, patchFlow, arg.Name, arg.Description, arg.ID)
 	return err
 }
 
-const updateNode = `-- name: UpdateNode :exec
+const patchNode = `-- name: PatchNode :exec
 UPDATE nodes SET
-type = ?,
-position = ?,
-styles = ?,
-width = ?,
-height = ?,
-hidden = ?,
-description = ?
+type = COALESCE(?2, type),
+position = COALESCE(?3, position),
+styles = COALESCE(?4, styles),
+width = COALESCE(?5, width),
+height = COALESCE(?6, height),
+hidden = COALESCE(?7, hidden),
+description = COALESCE(?8, description),
+update_at = now()
 WHERE id = ?
 RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
 
-type UpdateNodeParams struct {
-	Type        string      `json:"type"`
-	Position    interface{} `json:"position"`
-	Styles      interface{} `json:"styles"`
-	Width       int64       `json:"width"`
-	Height      int64       `json:"height"`
-	Hidden      int64       `json:"hidden"`
-	Description string      `json:"description"`
-	ID          int64       `json:"id"`
+type PatchNodeParams struct {
+	Type        sql.NullString `json:"type"`
+	Position    interface{}    `json:"position"`
+	Styles      interface{}    `json:"styles"`
+	Width       sql.NullInt64  `json:"width"`
+	Height      sql.NullInt64  `json:"height"`
+	Hidden      sql.NullInt64  `json:"hidden"`
+	Description sql.NullString `json:"description"`
+	ID          int64          `json:"id"`
 }
 
-func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) error {
-	_, err := q.db.ExecContext(ctx, updateNode,
+func (q *Queries) PatchNode(ctx context.Context, arg PatchNodeParams) error {
+	_, err := q.db.ExecContext(ctx, patchNode,
 		arg.Type,
 		arg.Position,
 		arg.Styles,
@@ -795,22 +804,49 @@ func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) error {
 	return err
 }
 
-const updateProject = `-- name: UpdateProject :exec
+const patchProject = `-- name: PatchProject :exec
 UPDATE projects SET
-name = ?,
-description = ?
+name = COALESCE(?2, name),
+description = COALESCE(?3, description)
 WHERE id = ?
 RETURNING id, user_id, name, description, update_at, create_at
 `
 
-type UpdateProjectParams struct {
-	Name        string         `json:"name"`
+type PatchProjectParams struct {
+	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`
 	ID          int64          `json:"id"`
 }
 
-func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) error {
-	_, err := q.db.ExecContext(ctx, updateProject, arg.Name, arg.Description, arg.ID)
+func (q *Queries) PatchProject(ctx context.Context, arg PatchProjectParams) error {
+	_, err := q.db.ExecContext(ctx, patchProject, arg.Name, arg.Description, arg.ID)
+	return err
+}
+
+const patchUser = `-- name: PatchUser :exec
+UPDATE users SET
+name = COALESCE(?2, name),
+password = COALESCE(?3, password),
+bio = COALESCE(?4, bio),
+update_at = now()
+WHERE id = ?
+RETURNING id, email, password, name, bio, update_at, create_at
+`
+
+type PatchUserParams struct {
+	Name     sql.NullString `json:"name"`
+	Password sql.NullString `json:"password" validate:"required,min=8,max=32"`
+	Bio      sql.NullString `json:"bio"`
+	ID       int64          `json:"id"`
+}
+
+func (q *Queries) PatchUser(ctx context.Context, arg PatchUserParams) error {
+	_, err := q.db.ExecContext(ctx, patchUser,
+		arg.Name,
+		arg.Password,
+		arg.Bio,
+		arg.ID,
+	)
 	return err
 }
 
@@ -846,7 +882,7 @@ email = ?,
 name = ?,
 password = ?,
 bio = ?,
-update_at = ?
+update_at = now()
 WHERE id = ?
 RETURNING id, email, password, name, bio, update_at, create_at
 `
@@ -856,7 +892,6 @@ type UpdateUserParams struct {
 	Name     string         `json:"name"`
 	Password string         `json:"password" validate:"required,min=8,max=32"`
 	Bio      sql.NullString `json:"bio"`
-	UpdateAt sql.NullString `json:"updateAt"`
 	ID       int64          `json:"id"`
 }
 
@@ -866,7 +901,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 		arg.Name,
 		arg.Password,
 		arg.Bio,
-		arg.UpdateAt,
 		arg.ID,
 	)
 	return err

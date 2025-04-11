@@ -8,8 +8,8 @@ import (
 
 //counterfeiter:generate . EdgeRepository
 type EdgeRepository interface {
-	CreateOne(ctx context.Context, param entity.Edge) (*entity.Edge, error)
+	CreateOne(ctx context.Context, arg entity.Edge) (*entity.Edge, error)
 	FindOne(ctx context.Context, id int64) (*entity.Edge, error)
-	UpdateOne(ctx context.Context, param entity.Edge) error
+	UpdateOne(ctx context.Context, arg entity.Edge) error
 	DeleteOne(ctx context.Context, id int64) error
 }

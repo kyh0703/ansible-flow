@@ -21,7 +21,7 @@ func (u *userHandler) Table() []Mapper {
 	return []Mapper{
 		Mapping(fiber.MethodPost, "/user", u.CreateOne),
 		Mapping(fiber.MethodGet, "/user/:id", u.FindOne),
-		Mapping(fiber.MethodPut, "/user/:id", u.UpdateOne),
+		Mapping(fiber.MethodPatch, "/user/:id", u.UpdateOne),
 		Mapping(fiber.MethodDelete, "/user/:id", u.DeleteOne),
 	}
 }

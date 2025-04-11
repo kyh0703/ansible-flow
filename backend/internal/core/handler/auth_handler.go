@@ -44,11 +44,16 @@ func NewAuthHandler(
 
 func (a *authHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodGet, "/auth/whoami", a.authMiddleware.CurrentUser(), a.Whoami),
-		Mapping(fiber.MethodPost, "/auth/register", a.Register),
-		Mapping(fiber.MethodPost, "/auth/login", a.Login),
-		Mapping(fiber.MethodPost, "/auth/logout", a.Logout),
-		Mapping(fiber.MethodPost, "/auth/refresh", a.Refresh),
+		Mapping(fiber.MethodGet, "/auth/whoami",
+			a.authMiddleware.CurrentUser(), a.Whoami),
+		Mapping(fiber.MethodPost, "/auth/register",
+			a.Register),
+		Mapping(fiber.MethodPost, "/auth/login",
+			a.Login),
+		Mapping(fiber.MethodPost, "/auth/logout",
+			a.Logout),
+		Mapping(fiber.MethodPost, "/auth/refresh",
+			a.Refresh),
 	}
 }
 

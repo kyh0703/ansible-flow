@@ -27,8 +27,8 @@ func (n *nodeRepository) FindOne(ctx context.Context, id int64) (model.Node, err
 	return n.queries.GetNode(ctx, id)
 }
 
-func (n *nodeRepository) UpdateOne(ctx context.Context, arg model.UpdateNodeParams) error {
-	return n.queries.UpdateNode(ctx, arg)
+func (n *nodeRepository) UpdateOne(ctx context.Context, arg model.PatchNodeParams) error {
+	return n.queries.PatchNode(ctx, arg)
 }
 
 func (n *nodeRepository) DeleteOne(ctx context.Context, id int64) error {

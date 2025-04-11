@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/kyh0703/flow/configs"
-	"github.com/kyh0703/flow/internal/core/dto/transaction"
 )
 
 type Tx struct {
@@ -17,7 +16,7 @@ type Tx struct {
 	cfg    *configs.Config
 }
 
-func NewTx(inner *transaction.TxData, cfg *configs.Config) *Tx {
+func NewTx(inner interface{}, cfg *configs.Config) *Tx {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.App.TxTimeout))
 	id := uuid.NewString()
 	return &Tx{

@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"github.com/gofrs/uuid"
-	"github.com/kyh0703/flow/internal/core/dto/transaction"
 )
 
 type TxPool struct {
@@ -31,7 +30,7 @@ func (p *TxPool) PrintTx() {
 	}
 }
 
-func (p *TxPool) BeginTx(inner *transaction.TxData) {
+func (p *TxPool) BeginTx(inner *interface{}) {
 	// create tx data.
 	p.mutex.Lock()
 	defer p.mutex.Unlock()

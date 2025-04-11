@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/kyh0703/flow/internal/core/domain/entity"
 	"github.com/kyh0703/flow/internal/core/domain/model"
@@ -56,22 +55,23 @@ func (e *edgeRepository) FindOne(ctx context.Context, id int64) (*entity.Edge, e
 }
 
 func (e *edgeRepository) UpdateOne(ctx context.Context, arg entity.Edge) error {
-	var updateEdgeParams model.UpdateEdgeParams
-	updateEdgeParams.ID = arg.ID
-	updateEdgeParams.Source = arg.Source
-	updateEdgeParams.Target = arg.Target
-	if arg.Hidden {
-		updateEdgeParams.Hidden = int64(1)
-	} else {
-		updateEdgeParams.Hidden = int64(0)
-	}
-	markerEnd, err := json.Marshal(arg.MarkerEnd)
-	if err != nil {
-		return err
-	}
-	updateEdgeParams.MarkerEnd = string(markerEnd)
+	// var updateEdgeParams model.PatchEdgeParams
+	// updateEdgeParams.ID = arg.ID
+	// updateEdgeParams.Source = arg.Source
+	// updateEdgeParams.Target = arg.Target
+	// if arg.Hidden {
+	// 	updateEdgeParams.Hidden = int64(1)
+	// } else {
+	// 	updateEdgeParams.Hidden = int64(0)
+	// }
+	// markerEnd, err := json.Marshal(arg.MarkerEnd)
+	// if err != nil {
+	// 	return err
+	// }
+	// updateEdgeParams.MarkerEnd = string(markerEnd)
 
-	return e.edgeRecorder.UpdateOne(ctx, updateEdgeParams)
+	// return e.edgeRecorder.UpdateOne(ctx, updateEdgeParams)
+	return nil
 }
 
 func (e *edgeRepository) DeleteOne(ctx context.Context, id int64) error {

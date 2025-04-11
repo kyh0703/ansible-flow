@@ -15,7 +15,7 @@ import (
 //go:embed schema.sql
 var ddl string
 
-func NewDB(config *configs.Config) (model.DBTX, error) {
+func NewDB(config *configs.Config) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", ":memory:")
 	if err != nil {
 		return nil, err

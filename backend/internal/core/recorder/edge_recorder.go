@@ -13,7 +13,7 @@ type EdgeRecorder interface {
 	CreateOne(ctx context.Context, arg model.CreateEdgeParams) (model.Edge, error)
 	FindOne(ctx context.Context, id int64) (model.Edge, error)
 	GetList(ctx context.Context, flowID int64) ([]model.Edge, error)
-	UpdateOne(ctx context.Context, arg model.UpdateEdgeParams) error
+	UpdateOne(ctx context.Context, arg model.PatchEdgeParams) error
 	DeleteOne(ctx context.Context, id int64) error
 }
 
@@ -41,8 +41,8 @@ func (e *edgeRecorder) GetList(ctx context.Context, flowID int64) ([]model.Edge,
 	return e.queries.ListEdges(ctx, flowID)
 }
 
-func (e *edgeRecorder) UpdateOne(ctx context.Context, param model.UpdateEdgeParams) error {
-	return e.queries.UpdateEdge(ctx, param)
+func (e *edgeRecorder) UpdateOne(ctx context.Context, param model.PatchEdgeParams) error {
+	return e.queries.PatchEdge(ctx, param)
 }
 
 func (e *edgeRecorder) DeleteOne(ctx context.Context, id int64) error {

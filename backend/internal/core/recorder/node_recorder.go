@@ -10,7 +10,7 @@ import (
 type NodeRecorder interface {
 	CreateOne(ctx context.Context, arg model.CreateNodeParams) (model.Node, error)
 	FindOne(ctx context.Context, id int64) (model.Node, error)
-	UpdateOne(ctx context.Context, arg model.UpdateNodeParams) error
+	UpdateOne(ctx context.Context, arg model.PatchNodeParams) error
 	DeleteOne(ctx context.Context, id int64) error
 }
 
@@ -34,8 +34,8 @@ func (n *nodeRecorder) FindOne(ctx context.Context, id int64) (model.Node, error
 	return n.queries.GetNode(ctx, id)
 }
 
-func (n *nodeRecorder) UpdateOne(ctx context.Context, arg model.UpdateNodeParams) error {
-	return n.queries.UpdateNode(ctx, arg)
+func (n *nodeRecorder) UpdateOne(ctx context.Context, arg model.PatchNodeParams) error {
+	return n.queries.PatchNode(ctx, arg)
 }
 
 func (n *nodeRecorder) DeleteOne(ctx context.Context, id int64) error {

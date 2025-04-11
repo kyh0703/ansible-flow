@@ -2,19 +2,23 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 )
 
 type projectRepository struct {
+	db      *sql.DB
 	queries *model.Queries
 }
 
 func NewProjectRepository(
+	db *sql.DB,
 	queries *model.Queries,
 ) repository.ProjectRepository {
 	return &projectRepository{
+		db:      db,
 		queries: queries,
 	}
 }
@@ -31,8 +35,8 @@ func (p *projectRepository) GetList(ctx context.Context) ([]model.Project, error
 	return p.queries.ListProjects(ctx)
 }
 
-func (p *projectRepository) UpdateOne(ctx context.Context, arg model.UpdateProjectParams) error {
-	return p.queries.UpdateProject(ctx, arg)
+func (p *projectRepository) UpdateOne(ctx context.Context, arg model.PatchProjectParams) error {
+	return p.queries.PatchProject(ctx, arg)
 }
 
 func (p *projectRepository) DeleteOne(ctx context.Context, id int64) error {

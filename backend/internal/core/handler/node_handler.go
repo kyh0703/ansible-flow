@@ -32,10 +32,14 @@ func NewNodeHandler(
 
 func (h *nodeHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodPost, "/node", h.CreateOne),
-		Mapping(fiber.MethodGet, "/node/:id", h.FindOne),
-		Mapping(fiber.MethodPut, "/node/:id", h.UpdateOne),
-		Mapping(fiber.MethodDelete, "/node/:id", h.DeleteOne),
+		Mapping(fiber.MethodPost, "/node",
+			h.authMiddleware.CurrentUser(), h.CreateOne),
+		Mapping(fiber.MethodGet, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.FindOne),
+		Mapping(fiber.MethodPatch, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.UpdateOne),
+		Mapping(fiber.MethodDelete, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.DeleteOne),
 	}
 }
 

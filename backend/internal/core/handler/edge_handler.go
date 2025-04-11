@@ -36,10 +36,14 @@ func NewEdgeHandler(
 
 func (h *edgeHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodPost, "/edge", h.CreateOne),
-		Mapping(fiber.MethodGet, "/edge/:id", h.FindOne),
-		Mapping(fiber.MethodPut, "/edge/:id", h.UpdateOne),
-		Mapping(fiber.MethodDelete, "/edge/:id", h.DeleteOne),
+		Mapping(fiber.MethodPost, "/edge",
+			h.authMiddleware.CurrentUser(), h.CreateOne),
+		Mapping(fiber.MethodGet, "/edge/:id",
+			h.authMiddleware.CurrentUser(), h.FindOne),
+		Mapping(fiber.MethodPatch, "/edge/:id",
+			h.authMiddleware.CurrentUser(), h.UpdateOne),
+		Mapping(fiber.MethodDelete, "/edge/:id",
+			h.authMiddleware.CurrentUser(), h.DeleteOne),
 	}
 }
 

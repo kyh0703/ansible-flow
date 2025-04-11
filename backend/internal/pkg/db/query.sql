@@ -16,9 +16,10 @@ INSERT INTO users (
   password,
   name,
   bio,
-  update_at
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?
+  ?, ?, ?, ?, now(), now()
 )
 RETURNING *;
 
@@ -28,7 +29,16 @@ email = ?,
 name = ?,
 password = ?,
 bio = ?,
-update_at = ?
+update_at = now()
+WHERE id = ?
+RETURNING *;
+
+-- name: PatchUser :exec
+UPDATE users SET
+name = COALESCE(sqlc.narg(name), name),
+password = COALESCE(sqlc.narg(password), password),
+bio = COALESCE(sqlc.narg(bio), bio),
+update_at = now()
 WHERE id = ?
 RETURNING *;
 
@@ -52,9 +62,10 @@ ORDER BY create_at;
 INSERT INTO tokens (
   user_id,
   refresh_token,
-  expires_in
+  expires_in,
+  create_at
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, now()
 )
 RETURNING *;
 
@@ -74,9 +85,11 @@ WHERE id = ?;
 INSERT INTO projects (
   user_id,
   name,
-  description
+  description,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, now(), now()
 )
 RETURNING *;
 
@@ -88,10 +101,10 @@ WHERE id = ? LIMIT 1;
 SELECT * FROM projects
 ORDER BY name;
 
--- name: UpdateProject :exec
+-- name: PatchProject :exec
 UPDATE projects SET
-name = ?,
-description = ?
+name = COALESCE(sqlc.narg(name), name),
+description = COALESCE(sqlc.narg(description), description)
 WHERE id = ?
 RETURNING *;
 
@@ -117,10 +130,11 @@ SELECT * FROM flows
 WHERE project_id = ?
 ORDER BY name;
 
--- name: UpdateFlow :exec
+-- name: PatchFlow :exec
 UPDATE flows SET
-name = ?,
-description = ?
+name = COALESCE(sqlc.narg(name), name),
+description = COALESCE(sqlc.narg(description), description),
+update_at = now()
 WHERE id = ?
 RETURNING *;
 
@@ -135,7 +149,7 @@ WHERE id = ? LIMIT 1;
 -- name: ListNodes :many
 SELECT * FROM nodes
 WHERE flow_id = ?
-ORDER BY create_time;
+ORDER BY create_at;
 
 -- name: CreateNode :one
 INSERT INTO nodes (
@@ -147,21 +161,24 @@ INSERT INTO nodes (
   width,
   height,
   hidden,
-  description
+  description,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
 )
 RETURNING *;
 
--- name: UpdateNode :exec
+-- name: PatchNode :exec
 UPDATE nodes SET
-type = ?,
-position = ?,
-styles = ?,
-width = ?,
-height = ?,
-hidden = ?,
-description = ?
+type = COALESCE(sqlc.narg(type), type),
+position = COALESCE(sqlc.narg(position), position),
+styles = COALESCE(sqlc.narg(styles), styles),
+width = COALESCE(sqlc.narg(width), width),
+height = COALESCE(sqlc.narg(height), height),
+hidden = COALESCE(sqlc.narg(hidden), hidden),
+description = COALESCE(sqlc.narg(description), description),
+update_at = now()
 WHERE id = ?
 RETURNING *;
 
@@ -176,7 +193,7 @@ WHERE id = ? LIMIT 1;
 -- name: ListEdges :many
 SELECT * FROM edges
 WHERE flow_id = ?
-ORDER BY create_time;
+ORDER BY create_at;
 
 -- name: CreateEdge :one
 INSERT INTO edges (
@@ -187,20 +204,23 @@ INSERT INTO edges (
   type,
   label,
   hidden,
-  marker_end
+  marker_end,
+  update_at,
+  create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
 )
 RETURNING *;
 
--- name: UpdateEdge :exec
+-- name: PatchEdge :exec
 UPDATE edges SET
-source = ?,
-target = ?,
-type = ?,
-label = ?,
-hidden = ?,
-marker_end = ?
+source = COALESCE(sqlc.narg(source), source),
+target = COALESCE(sqlc.narg(target), target),
+type = COALESCE(sqlc.narg(type), type),
+label = COALESCE(sqlc.narg(label), label),
+hidden = COALESCE(sqlc.narg(hidden), hidden),
+marker_end = COALESCE(sqlc.narg(marker_end), marker_end),
+update_at = now()
 WHERE id = ?
 RETURNING *;
 

@@ -40,10 +40,14 @@ func NewProjectHandler(
 
 func (h *projectHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodPost, "/node", h.authMiddleware.CurrentUser(), h.CreateOne),
-		Mapping(fiber.MethodGet, "/node/:id", h.authMiddleware.CurrentUser(), h.FindOne),
-		Mapping(fiber.MethodPut, "/node/:id", h.authMiddleware.CurrentUser(), h.UpdateOne),
-		Mapping(fiber.MethodDelete, "/node/:id", h.authMiddleware.CurrentUser(), h.DeleteOne),
+		Mapping(fiber.MethodPost, "/node",
+			h.authMiddleware.CurrentUser(), h.CreateOne),
+		Mapping(fiber.MethodGet, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.FindOne),
+		Mapping(fiber.MethodPatch, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.UpdateOne),
+		Mapping(fiber.MethodDelete, "/node/:id",
+			h.authMiddleware.CurrentUser(), h.DeleteOne),
 	}
 }
 
@@ -68,8 +72,9 @@ func (h *projectHandler) CreateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res projects.Response
+	var res projects.ProjectResponse
 	copier.Copy(&res, &newProject)
+
 	return response.Success(c, fiber.StatusCreated, res)
 }
 
@@ -84,13 +89,19 @@ func (h *projectHandler) FindOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res projects.Response
+	var res projects.ProjectResponse
 	copier.Copy(&res, &project)
+
 	return response.Success(c, fiber.StatusOK, res)
 }
 
 func (h *projectHandler) UpdateOne(c *fiber.Ctx) error {
-	panic("unimplemented")
+	_, err := c.ParamsInt("id")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	return nil
 }
 
 func (h *projectHandler) DeleteOne(c *fiber.Ctx) error {

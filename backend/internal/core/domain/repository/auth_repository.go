@@ -10,10 +10,10 @@ import (
 
 //counterfeiter:generate . AuthRepository
 type AuthRepository interface {
-	CreateOne(ctx context.Context, params model.CreateTokenParams) (model.Token, error)
+	CreateOne(ctx context.Context, arg model.CreateTokenParams) (model.Token, error)
 	FindOne(ctx context.Context, id int64) (model.Token, error)
 	FindOneByUserID(ctx context.Context, userID int64) (model.Token, error)
 	GetList(ctx context.Context) ([]model.Token, error)
-	UpdateOne(ctx context.Context, params model.UpdateTokenParams) error
+	UpdateOne(ctx context.Context, arg model.UpdateTokenParams) error
 	DeleteOne(ctx context.Context, id int64) error
 }
