@@ -2,7 +2,7 @@ import { errorMessages, type ErrorCode } from '~/shared/constants/http-error'
 
 export type CustomResponse = {
   code: number
-  message: number
+  message: string
 }
 
 export type ApiResponse<T> = {
@@ -14,10 +14,10 @@ export class CustomError extends Error {
   public message: string
   public status: number
 
-  constructor(code: number, status: number) {
-    super(errorMessages.get(code) || 'Unknown error')
+  constructor(code: number, status: number, message: string) {
+    super(message || errorMessages.get(code) || 'Unknown error')
     this.code = code
-    this.message = errorMessages.get(code) || 'Unknown error'
+    this.message = errorMessages.get(code) || message || 'Unknown error'
     this.status = status
     this.name = 'CustomError'
   }

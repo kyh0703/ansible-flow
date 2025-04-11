@@ -3,15 +3,20 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
+import { CustomError } from '~/shared/services'
 import { login } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
 import FormInput from '~/shared/ui/form-input'
+import { extractErrorMessage } from '~/shared/utils/errors'
 import logger from '~/shared/utils/logger'
 
 const LoginSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
-  password: z.string({ required_error: '패스워드를 입력하여 주세요' }).min(6),
+  password: z
+    .string({ required_error: '패스워드를 입력하여 주세요' })
+    .min(8, '비밀번호는 8자 이상이어야 합니다.')
+    .max(32, '비밀번호는 32자 이하여야 합니다.'),
 })
 
 type Login = z.infer<typeof LoginSchema>
@@ -32,7 +37,7 @@ export function LoginForm() {
       setToken(response)
       navigate('/project')
     } catch (error) {
-      toast.error('로그인에 실패하였습니다.')
+      toast.error(extractErrorMessage(error))
       logger.error(error)
     }
   }

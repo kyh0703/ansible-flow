@@ -7,6 +7,7 @@ import { register } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
 import FormInput from '~/shared/ui/form-input'
+import { extractErrorMessage } from '~/shared/utils/errors'
 import logger from '~/shared/utils/logger'
 
 const SignupSchema = z
@@ -17,7 +18,7 @@ const SignupSchema = z
       .min(8, '비밀번호는 8자 이상이어야 합니다.')
       .max(32, '비밀번호는 32자 이하여야 합니다.'),
     confirmPassword: z.string(),
-    name: z.string().nonempty('이름은 필수입니다.'),
+    name: z.string().nonempty('이름을 입력해 주세요.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: '비밀번호가 일치하지 않습니다.',
@@ -42,7 +43,7 @@ export function RegisterForm() {
       setToken(response)
       navigate('/project')
     } catch (error) {
-      toast.error('회원가입에 실패하였습니다.')
+      toast.error(extractErrorMessage(error))
       logger.error(error)
     }
   }
