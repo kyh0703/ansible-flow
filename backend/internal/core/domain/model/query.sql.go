@@ -23,7 +23,7 @@ INSERT INTO edges (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
@@ -110,7 +110,7 @@ INSERT INTO nodes (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
@@ -165,7 +165,7 @@ INSERT INTO projects (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, now(), now()
+  ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING id, user_id, name, description, update_at, create_at
 `
@@ -197,7 +197,7 @@ INSERT INTO tokens (
   expires_in,
   create_at
 ) VALUES (
-  ?, ?, ?, now()
+  ?, ?, ?, CURRENT_TIMESTAMP
 )
 RETURNING id, user_id, refresh_token, expires_in, create_at
 `
@@ -230,7 +230,7 @@ INSERT INTO users (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING id, email, password, name, bio, update_at, create_at
 `
@@ -718,7 +718,7 @@ type = COALESCE(?4, type),
 label = COALESCE(?5, label),
 hidden = COALESCE(?6, hidden),
 marker_end = COALESCE(?7, marker_end),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at
 `
@@ -750,7 +750,7 @@ const patchFlow = `-- name: PatchFlow :exec
 UPDATE flows SET
 name = COALESCE(?2, name),
 description = COALESCE(?3, description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, project_id, name, description, update_at, create_at
 `
@@ -775,7 +775,7 @@ width = COALESCE(?5, width),
 height = COALESCE(?6, height),
 hidden = COALESCE(?7, hidden),
 description = COALESCE(?8, description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at
 `
@@ -809,7 +809,7 @@ const patchProject = `-- name: PatchProject :exec
 UPDATE projects SET
 name = COALESCE(?2, name),
 description = COALESCE(?3, description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, user_id, name, description, update_at, create_at
 `
@@ -830,7 +830,7 @@ UPDATE users SET
 name = COALESCE(?2, name),
 password = COALESCE(?3, password),
 bio = COALESCE(?4, bio),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, email, password, name, bio, update_at, create_at
 `
@@ -884,7 +884,7 @@ email = ?,
 name = ?,
 password = ?,
 bio = ?,
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING id, email, password, name, bio, update_at, create_at
 `

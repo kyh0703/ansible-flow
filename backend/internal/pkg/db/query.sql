@@ -19,7 +19,7 @@ INSERT INTO users (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -29,7 +29,7 @@ email = ?,
 name = ?,
 password = ?,
 bio = ?,
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 
@@ -38,7 +38,7 @@ UPDATE users SET
 name = COALESCE(sqlc.narg(name), name),
 password = COALESCE(sqlc.narg(password), password),
 bio = COALESCE(sqlc.narg(bio), bio),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 
@@ -65,7 +65,7 @@ INSERT INTO tokens (
   expires_in,
   create_at
 ) VALUES (
-  ?, ?, ?, now()
+  ?, ?, ?, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -89,7 +89,7 @@ INSERT INTO projects (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, now(), now()
+  ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -106,7 +106,7 @@ ORDER BY name;
 UPDATE projects SET
 name = COALESCE(sqlc.narg(name), name),
 description = COALESCE(sqlc.narg(description), description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 
@@ -136,7 +136,7 @@ ORDER BY name;
 UPDATE flows SET
 name = COALESCE(sqlc.narg(name), name),
 description = COALESCE(sqlc.narg(description), description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 
@@ -167,7 +167,7 @@ INSERT INTO nodes (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -180,7 +180,7 @@ width = COALESCE(sqlc.narg(width), width),
 height = COALESCE(sqlc.narg(height), height),
 hidden = COALESCE(sqlc.narg(hidden), hidden),
 description = COALESCE(sqlc.narg(description), description),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 
@@ -210,7 +210,7 @@ INSERT INTO edges (
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, now(), now()
+  ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -222,7 +222,7 @@ type = COALESCE(sqlc.narg(type), type),
 label = COALESCE(sqlc.narg(label), label),
 hidden = COALESCE(sqlc.narg(hidden), hidden),
 marker_end = COALESCE(sqlc.narg(marker_end), marker_end),
-update_at = now()
+update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
 

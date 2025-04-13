@@ -16,7 +16,7 @@ func GenerateToken(email string, expire time.Time) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"exp":   expire,
+		"exp":   expire.Unix(),
 	})
 
 	tokenString, err := token.SignedString(mySigningKey)
@@ -32,7 +32,6 @@ func ParseToken(tokenString string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
-
 		return []byte("AllYourBase"), nil
 	})
 	if err != nil {

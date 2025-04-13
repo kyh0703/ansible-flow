@@ -22,7 +22,7 @@ type ProjectHandler interface {
 	FindOne(c *fiber.Ctx) error
 	DeleteOne(c *fiber.Ctx) error
 	UpdateOne(c *fiber.Ctx) error
-	FindList(c *fiber.Ctx) error
+	FindAll(c *fiber.Ctx) error
 }
 
 type projectHandler struct {
@@ -53,8 +53,8 @@ func (h *projectHandler) Table() []Mapper {
 			h.authMiddleware.CurrentUser(), h.UpdateOne),
 		Mapping(fiber.MethodDelete, "/project/:id",
 			h.authMiddleware.CurrentUser(), h.DeleteOne),
-		Mapping(fiber.MethodPost, "/projects",
-			h.authMiddleware.CurrentUser(), h.FindList),
+		Mapping(fiber.MethodGet, "/projects",
+			h.authMiddleware.CurrentUser(), h.FindAll),
 	}
 }
 
@@ -148,7 +148,7 @@ func (h *projectHandler) DeleteOne(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNoContent)
 }
 
-func (h *projectHandler) FindList(c *fiber.Ctx) error {
+func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 	user := c.Locals("user").(model.User)
 
 	projectList, err := h.projectRepository.GetList(c.Context(), user.ID)

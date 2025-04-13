@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator"
@@ -77,6 +78,8 @@ func (a *authHandler) Register(c *fiber.Ctx) error {
 		return err
 	}
 
+	fmt.Println("token", token)
+
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    token.Refresh.RefreshToken,
@@ -119,19 +122,18 @@ func (a *authHandler) Logout(c *fiber.Ctx) error {
 }
 
 func (a *authHandler) Refresh(c *fiber.Ctx) error {
-	var refresh dto.Refresh
-	if err := c.BodyParser(&refresh); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	fmt.Println("refresh1")
+	refreshToken := c.Cookies("token")
+	if refreshToken == "" {
+		return fiber.NewError(fiber.StatusUnauthorized, "Refresh token not found")
 	}
 
-	if err := a.validate.Struct(refresh); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	token, err := a.authService.Refresh(c.Context(), &refresh)
+	fmt.Println("refresh2")
+	token, err := a.authService.Refresh(c.Context(), refreshToken)
 	if err != nil {
 		return err
 	}
 
+	fmt.Println("refresh3")
 	return response.Success(c, fiber.StatusOK, token)
 }
