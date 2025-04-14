@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -47,9 +48,9 @@ func init() {
 	}
 	z, err := zapConfig.Build()
 	if err != nil {
-		_ = zap.NewExample()
+		Zap = zap.NewExample()
 	} else {
-		_ = z
+		Zap = z
 	}
 }
 
@@ -71,6 +72,7 @@ func getLogLevel(level string) zap.AtomicLevel {
 }
 
 func Debug(args ...interface{}) {
+	fmt.Println("Debug", args, Zap)
 	Zap.Sugar().Debug(args...)
 }
 
