@@ -2,6 +2,7 @@ package logger
 
 import (
 	"os"
+	"strings"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -13,8 +14,23 @@ type Sugared struct {
 	*zap.SugaredLogger
 }
 
+func getLogLevel(level string) zapcore.Level {
+	switch strings.ToLower(level) {
+	case "debug":
+		return zapcore.DebugLevel
+	case "info":
+		return zapcore.InfoLevel
+	case "warn":
+		return zapcore.WarnLevel
+	case "error":
+		return zapcore.ErrorLevel
+	default:
+		return zapcore.InfoLevel // 기본값은 Info
+	}
+}
+
 func init() {
-	level := zap.InfoLevel
+	level := getLogLevel("debug")
 
 	var encoderConfig zapcore.EncoderConfig
 	var encoding string
@@ -52,8 +68,12 @@ func init() {
 		InitialFields: map[string]interface{}{},
 	}
 
-	Logger = &Sugared{
-		zap.Must(zapConfig.Build()).Sugar(),
+	logger, err := zapConfig.Build()
+	if err != nil {
+		// 로거 생성 실패 시 기본 로거로 대체
+		Logger = &Sugared{zap.NewExample().Sugar()}
+	} else {
+		Logger = &Sugared{logger.Sugar()}
 	}
 }
 
@@ -66,7 +86,7 @@ func Debugf(template string, args ...interface{}) {
 }
 
 func Info(args ...interface{}) {
-	Logger.Info(args...)
+	Logger.SugaredLogger.Info(args...)
 }
 
 func Infof(template string, args ...interface{}) {

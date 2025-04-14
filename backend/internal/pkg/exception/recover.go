@@ -1,11 +1,16 @@
 package exception
 
 import (
+	"fmt"
+	"os"
+	"runtime/debug"
+
 	"github.com/gofiber/fiber/v2"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func defaultStackTraceHandler(_ *fiber.Ctx, e interface{}) {
+	_, _ = os.Stderr.WriteString(fmt.Sprintf("panic: %v\n%s\n", e, debug.Stack())) //nolint:errcheck
 }
 
 func configDefault(config ...fiberRecover.Config) fiberRecover.Config {
@@ -24,24 +29,27 @@ func configDefault(config ...fiberRecover.Config) fiberRecover.Config {
 func Recover(config ...fiberRecover.Config) fiber.Handler {
 	cfg := configDefault(config...)
 
-	return func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) (err error) { //nolint:nonamedreturns
+		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
 
+		// Catch panics
 		defer func() {
 			if r := recover(); r != nil {
-				if cfg.StackTraceHandler != nil {
+				if cfg.EnableStackTrace {
 					cfg.StackTraceHandler(c, r)
 				}
 
-				if _, ok := r.(error); ok {
+				var ok bool
+				if _, ok = r.(error); ok {
+					// sentry.CaptureException(c, err)
 				}
-
-				c.SendStatus(fiber.StatusInternalServerError)
 			}
 		}()
 
+		// Return err if exist, else move to next handler
 		return c.Next()
 	}
 }

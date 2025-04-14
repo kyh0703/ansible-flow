@@ -64,20 +64,19 @@ func (a *authService) generateNewTokens(ctx context.Context, user model.User) (*
 }
 
 func (a *authService) Register(ctx context.Context, req *auth.Register) (*auth.Token, error) {
-	_, err := a.userRepository.FindOneByEmail(ctx, req.Email)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	if _, err := a.userRepository.FindOneByEmail(ctx, req.Email); err == nil {
+		return nil, fiber.NewError(500, "이미 사용중인 이름입니다")
 	}
 
 	if req.Password != req.ConfirmPassword {
-		return nil, fiber.NewError(fiber.StatusNotFound, "password and password confirm do not match")
+		return nil, fiber.NewError(404, "password and password confirm do not match")
 	}
 
-	hash, err := password.Hashed(req.Password)
+	hashedPassword, err := password.Hashed(req.Password)
 	if err != nil {
-		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		return nil, fiber.NewError(500, err.Error())
 	}
-	req.Password = hash
+	req.Password = hashedPassword
 
 	var newUser model.CreateUserParams
 	copier.Copy(&newUser, req)
@@ -96,7 +95,7 @@ func (a *authService) Login(ctx context.Context, req *auth.Login) (*auth.Token, 
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	ok, err := password.Compare(req.Password, user.Password)
+	ok, err := password.Compare(user.Password, req.Password)
 	if err != nil || !ok {
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "invalid email or password")
 	}

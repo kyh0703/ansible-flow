@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
 	"github.com/kyh0703/flow/internal/core/handler"
 	"github.com/kyh0703/flow/internal/pkg/exception"
@@ -19,24 +18,17 @@ func NewFiber(handlers ...handler.Handler) *fiber.App {
 		UnescapePath: true,
 		ErrorHandler: exception.ErrorHandler,
 	})
-
 	app.Get("/swagger/*", swagger.HandlerDefault)
-	app = setupHandlers(app, handlers...)
 	app = setupMiddleware(app)
+	app = setupHandlers(app, handlers...)
 	return app
 }
 
 func setupMiddleware(app *fiber.App) *fiber.App {
-	app.Use(cors.New())
 	app.Use(exception.Recover())
-	app.Use(logger.New())
-	// app.Use(fiberzap.New(fiberzap.Config{
-	// 	Logger: logger.Logger.Desugar(),
-	// }))
+	app.Use(cors.New())
 	app.Use(pprof.New())
-	app.Use(recover.New(recover.Config{
-		EnableStackTrace: true,
-	}))
+	app.Use(logger.New())
 	return app
 }
 

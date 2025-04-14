@@ -8,7 +8,6 @@ export const returnFetchAuthHeader: ReturnFetch = (args) =>
       request: async (args) => {
         const token = getToken()
         if (!token) {
-          console.log('token이 없어')
           return args
         }
 

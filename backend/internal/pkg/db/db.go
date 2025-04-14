@@ -17,7 +17,12 @@ import (
 var ddl string
 
 func NewDB(config *configs.Config) (*sql.DB, error) {
-	db, err := sql.Open("sqlite", "file:flow.db?cache=shared&mode=rwc")
+	dbPath := config.Infra.DB.FilePath
+	if dbPath == "" {
+		dbPath = ":memory"
+	}
+
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		fmt.Println("Error opening database:", err)
 		return nil, err
