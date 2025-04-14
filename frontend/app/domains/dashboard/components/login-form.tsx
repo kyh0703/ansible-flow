@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { CustomError } from '~/shared/services'
 import { login } from '~/shared/services/auth/api'
 import { setToken } from '~/shared/services/lib/token'
 import { Button } from '~/shared/ui/button'
@@ -62,6 +61,11 @@ export function LoginForm() {
       {errors.password && (
         <p className="error-msg">{errors.password.message}</p>
       )}
+      <div className="flex">
+        <Button className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+        </Button>
+      </div>
       <Button className="w-full" type="submit">
         로그인
       </Button>
