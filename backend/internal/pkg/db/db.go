@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	_ "embed"
+	"fmt"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -16,8 +17,9 @@ import (
 var ddl string
 
 func NewDB(config *configs.Config) (*sql.DB, error) {
-	db, err := sql.Open("sqlite", ":memory:")
+	db, err := sql.Open("sqlite", "file:flow.db?cache=shared&mode=rwc")
 	if err != nil {
+		fmt.Println("Error opening database:", err)
 		return nil, err
 	}
 
