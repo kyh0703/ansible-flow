@@ -8,6 +8,7 @@ export const returnFetchAuthHeader: ReturnFetch = (args) =>
       request: async (args) => {
         const token = getToken()
         if (!token) {
+          console.log('token이 없어')
           return args
         }
 
@@ -16,7 +17,7 @@ export const returnFetchAuthHeader: ReturnFetch = (args) =>
         }
 
         const headers = new Headers(args[1]?.headers || {})
-        headers.set('Authorization', `Bearer ${token}`)
+        headers.set('Authorization', `Bearer ${token.accessToken}`)
 
         return [
           args[0],
