@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -82,7 +81,6 @@ func (a *authService) Register(ctx context.Context, req *auth.Register) (*auth.T
 
 	var newUser model.CreateUserParams
 	copier.Copy(&newUser, req)
-	fmt.Println("newUser", newUser)
 
 	createdUser, err := a.userRepository.CreateOne(ctx, newUser)
 	if err != nil {
