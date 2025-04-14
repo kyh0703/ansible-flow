@@ -1,6 +1,6 @@
-package projects
+package flow
 
-type ProjectResponse struct {
+type FlowResponse struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	UpdateAt    string `json:"updateAt"`

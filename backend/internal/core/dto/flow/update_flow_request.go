@@ -1,4 +1,4 @@
-package flows
+package flow
 
 type UpdateFlowRequest struct {
 	Name        *string `json:"name"`

@@ -1,4 +1,4 @@
-package edges
+package edge
 
 import (
 	"database/sql"

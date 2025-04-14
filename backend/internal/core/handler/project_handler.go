@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
-	"github.com/kyh0703/flow/internal/core/dto/projects"
+	"github.com/kyh0703/flow/internal/core/dto/project"
 	"github.com/kyh0703/flow/internal/core/middleware"
 	"github.com/kyh0703/flow/internal/pkg/db"
 	"github.com/kyh0703/flow/internal/pkg/response"
@@ -59,7 +59,7 @@ func (h *projectHandler) Table() []Mapper {
 }
 
 func (h *projectHandler) CreateOne(c *fiber.Ctx) error {
-	var req projects.CreateProjectRequest
+	var req project.CreateProjectRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -79,7 +79,7 @@ func (h *projectHandler) CreateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res projects.ProjectResponse
+	var res project.ProjectResponse
 	copier.Copy(&res, &newProject)
 
 	return response.Success(c, fiber.StatusCreated, res)
@@ -91,13 +91,13 @@ func (h *projectHandler) FindOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	project, err := h.projectRepository.FindOne(c.Context(), int64(id))
+	finedProject, err := h.projectRepository.FindOne(c.Context(), int64(id))
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res projects.ProjectResponse
-	copier.Copy(&res, &project)
+	var res project.ProjectResponse
+	copier.Copy(&res, &finedProject)
 
 	return response.Success(c, fiber.StatusOK, res)
 }
@@ -108,7 +108,7 @@ func (h *projectHandler) UpdateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	var req projects.UpdateProjectRequest
+	var req project.UpdateProjectRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -156,7 +156,7 @@ func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res []projects.ProjectResponse
+	var res []project.ProjectResponse
 	copier.Copy(&res, &projectList)
 
 	return response.Success(c, fiber.StatusOK, res)

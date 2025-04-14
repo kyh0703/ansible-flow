@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
-	"github.com/kyh0703/flow/internal/core/dto/flows"
+	"github.com/kyh0703/flow/internal/core/dto/flow"
 	"github.com/kyh0703/flow/internal/core/middleware"
 	"github.com/kyh0703/flow/internal/pkg/db"
 	"github.com/kyh0703/flow/internal/pkg/response"
@@ -62,7 +62,7 @@ func (f *flowHandler) Table() []Mapper {
 }
 
 func (f *flowHandler) CreateOne(c *fiber.Ctx) error {
-	var req flows.CreateFlowRequest
+	var req flow.CreateFlowRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -79,7 +79,7 @@ func (f *flowHandler) CreateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res flows.FlowResponse
+	var res flow.FlowResponse
 	copier.Copy(&res, &newFlow)
 
 	return response.Success(c, fiber.StatusCreated, res)
@@ -91,13 +91,13 @@ func (f *flowHandler) FindOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	flow, err := f.flowRepository.FindOne(c.Context(), int64(id))
+	finedFlow, err := f.flowRepository.FindOne(c.Context(), int64(id))
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	var res flows.FlowResponse
-	copier.Copy(&res, &flow)
+	var res flow.FlowResponse
+	copier.Copy(&res, &finedFlow)
 
 	return response.Success(c, fiber.StatusOK, res)
 }
@@ -108,7 +108,7 @@ func (f *flowHandler) UpdateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	var req flows.UpdateFlowRequest
+	var req flow.UpdateFlowRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

@@ -1,4 +1,4 @@
-package flows
+package flow
 
 type CreateFlowRequest struct {
 	ProjectID   int    `json:"project_id" validate:"required"`
