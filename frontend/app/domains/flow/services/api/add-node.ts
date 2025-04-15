@@ -1,8 +1,7 @@
-import type { Node } from '@/models/node'
-import { fetchExtended } from '@/services/lib/fetch'
-import type { ApiResponse } from '@/services/types'
+import { fetchExtended, type ApiResponse } from '~/shared/services'
+import type { ModelNode } from '~/shared/models/node'
 
-export const addNode = async (flowId: number, data: Omit<Node, 'id'>) => {
+export const addNode = async (node: Omit<ModelNode, 'id'>) => {
   const response = await fetchExtended<ApiResponse<number>>(
     `${import.meta.env.VITE_BASE_PATH}/nodes`,
     {
@@ -10,10 +9,7 @@ export const addNode = async (flowId: number, data: Omit<Node, 'id'>) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        flowId,
-        data,
-      }),
+      body: JSON.stringify(node),
     },
   )
 

@@ -1,9 +1,9 @@
-import type { CustomResponse } from '@/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import type { CustomResponse } from '~/shared/services'
 import { removeNode } from '..'
 
-type Response = unknown
+type Response = CustomResponse
 type Variables = number
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
@@ -19,7 +19,7 @@ export const useRemoveNode = (options?: MutationOptions) => {
       }
     },
     onError: (error, variables, context) => {
-      toast.error(error.errormsg)
+      toast.error(error.message)
 
       if (options?.onError) {
         options?.onError(error, variables, context)

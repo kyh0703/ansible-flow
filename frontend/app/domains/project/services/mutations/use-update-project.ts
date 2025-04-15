@@ -1,27 +1,31 @@
-import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
-import type { AppEdge } from '@xyflow/react'
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+} from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { updateEdges } from '..'
+import type { Project } from '~/shared/models/project'
 import type { CustomResponse } from '~/shared/services'
-import { toModelEdge } from '../../utils'
+import { updateProject } from '../api'
+import { projectKey } from '../keys'
 
 type Response = CustomResponse
-type Variables = { flowId: number; edges: Partial<AppEdge>[] }
+type Variables = { id: number; data: Partial<Project> }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
-export const useUpdateEdges = (options?: MutationOptions) => {
+export const useUpdateProject = (options?: MutationOptions) => {
+  const queryClient = useQueryClient()
+
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: ({ flowId, edges }) => {
-      if (edges.length === 0) {
-        return Promise.resolve()
-      }
-      return updateEdges(
-        flowId,
-        edges.map((edge) => toModelEdge(edge as AppEdge)),
-      )
+    mutationFn: ({ id, data }) => {
+      return updateProject(id, data)
     },
     onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [projectKey.detail(variables.id)],
+      })
+
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

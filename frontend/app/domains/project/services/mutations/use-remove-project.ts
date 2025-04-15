@@ -1,19 +1,17 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
-import { type AppEdge } from '@xyflow/react'
 import { toast } from 'react-toastify'
 import type { CustomResponse } from '~/shared/services'
-import { addEdge } from '..'
-import { toModelEdge } from '../../utils'
+import { removeProject } from '../api'
 
-type Response = number
-type Variables = AppEdge
+type Response = CustomResponse
+type Variables = number
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
-export const useAddEdge = (options?: MutationOptions) => {
+export const useRemoveProject = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: (edge) => {
-      return addEdge(toModelEdge(edge))
+    mutationFn: (id) => {
+      return removeProject(id)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {

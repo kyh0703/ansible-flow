@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { useQueryProjects } from '~/shared/services/projects'
+import { useQueryProjects } from '~/domains/project/services'
 import { Button } from '~/shared/ui/button'
 import ProjectCard from './project-card'
 

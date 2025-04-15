@@ -1,9 +1,8 @@
-import { fetchExtended } from '@/services/lib/fetch'
-import { CustomResponse } from '@/services/types'
+import { fetchExtended, type CustomResponse } from '~/shared/services'
 
-export const removeNode = async (nodeId: number) => {
+export const removeNode = async (id: number) => {
   const response = await fetchExtended<CustomResponse>(
-    `${import.meta.env.VITE_BASE_PATH}/nodes/${nodeId}`,
+    `${import.meta.env.VITE_BASE_PATH}/nodes/${id}`,
     {
       method: 'DELETE',
     },

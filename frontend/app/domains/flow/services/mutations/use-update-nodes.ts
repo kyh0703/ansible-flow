@@ -1,22 +1,24 @@
-import type { CustomResponse } from '@/services'
-import { toModelNode } from '@/utils/xyflow/convert'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
+import type { CustomResponse } from '~/shared/services'
 import { updateNodes } from '..'
 
 type Response = unknown
-type Variables = { nodes: Partial<AppNode>[] }
+type Variables = { flowId: number; nodes: Partial<AppNode>[] }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
 export const useUpdateNodes = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: ({ nodes }) => {
+    mutationFn: ({ flowId, nodes }) => {
       if (nodes.length === 0) {
         return Promise.resolve()
       }
-      return updateNodes(nodes.map((node) => toModelNode(node as AppNode)))
+      return updateNodes(
+        flowId,
+        nodes.map((node) => toModelNode(node as AppNode)),
+      )
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {
@@ -24,7 +26,7 @@ export const useUpdateNodes = (options?: MutationOptions) => {
       }
     },
     onError: (error, variables, context) => {
-      toast.error(error.errormsg)
+      toast.error(error.message)
 
       if (options?.onError) {
         options?.onError(error, variables, context)

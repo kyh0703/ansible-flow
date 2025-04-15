@@ -1,18 +1,15 @@
-import type { Edge } from '@/models/edge'
-import { fetchExtended } from '@/services/lib/fetch'
-import { CustomResponse } from '@/services/types'
+import type { ModelEdge } from '~/shared/models/edge'
+import { fetchExtended, type CustomResponse } from '~/shared/services'
 
-export const updateEdges = async (data: Edge[]) => {
+export const updateEdges = async (flowId: number, edges: ModelEdge[]) => {
   const response = await fetchExtended<CustomResponse>(
-    `${import.meta.env.VITE_BASE_PATH}/edges/list/update`,
+    `${import.meta.env.VITE_BASE_PATH}/flows/${flowId}/edges`,
     {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        data,
-      }),
+      body: JSON.stringify(edges),
     },
   )
 

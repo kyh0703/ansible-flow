@@ -1,15 +1,14 @@
-import type { ModelEdge } from '~/shared/models/edge'
 import { fetchExtended, type CustomResponse } from '~/shared/services'
 
-export const updateEdge = async (id: number, edge: Partial<ModelEdge>) => {
+export const removeEdges = async (flowId: number, removeIds: number[]) => {
   const response = await fetchExtended<CustomResponse>(
-    `${import.meta.env.VITE_BASE_PATH}/edges/${id}`,
+    `${import.meta.env.VITE_BASE_PATH}/flows/${flowId}/edges/delete`,
     {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(edge),
+      body: JSON.stringify(removeIds),
     },
   )
 

@@ -15,27 +15,31 @@ type History = {
   viewPort: Viewport | null
 }
 
-type FlowState = {
+interface FlowState {
   editMode: EditMode
   history: Record<number, History>
+  actions: {
+    setEditMode: (mode: EditMode) => void
+  }
 }
 
-type FlowActions = {
-  setEditMode: (mode: EditMode) => void
-}
-
-export const useFlowStore = createStore<FlowState & FlowActions>(
+export const useFlowStore = createStore<FlowState>(
   (set) => ({
     editMode: 'grab',
     history: {},
-    setEditMode: (mode: EditMode) =>
-      set(
-        (state) => {
-          state.editMode = mode
-        },
-        false,
-        'setEditMode',
-      ),
+    actions: {
+      setEditMode: (mode: EditMode) =>
+        set(
+          (state) => {
+            state.editMode = mode
+          },
+          false,
+          'setEditMode',
+        ),
+    },
   }),
   { name: 'FlowStore' },
 )
+
+export const useEditMode = () => useFlowStore((state) => state.editMode)
+export const useFlowActions = () => useFlowStore((state) => state.actions)

@@ -26,13 +26,13 @@ declare module '@xyflow/react' {
   }
 
   type CustomNodeData = {
-    subFlowId: number
+    flowId: number
     databaseId: number
     label: string
-    bookmark: string
     group: Partial<Group>
-    style: Partial<Style>
-    desc: string
+    description: string
+    updateAt: string
+    createAt: string
   }
 
   type CustomNodeType =
@@ -131,7 +131,7 @@ declare module '@xyflow/react' {
   }
 
   type CustomEdgeData = {
-    subFlowId: number
+    flowId: number
     databaseId: number
     condition: string
     points: ControlPointData[]

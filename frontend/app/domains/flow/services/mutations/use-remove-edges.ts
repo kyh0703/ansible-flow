@@ -1,20 +1,17 @@
-import type { CustomResponse } from '@/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { removeEdges } from '..'
+import type { CustomResponse } from '~/shared/services'
+import { removeEdges } from '../api/remove-edges'
 
 type Response = unknown
-type Variables = { id: number }[]
+type Variables = { flowId: number; removeIds: number[] }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
 export const useRemoveEdges = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: (edgeIds) => {
-      if (edgeIds.length === 0) {
-        return Promise.resolve()
-      }
-      return removeEdges(edgeIds)
+    mutationFn: ({ flowId, removeIds }) => {
+      return removeEdges(flowId, removeIds)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {
@@ -22,7 +19,7 @@ export const useRemoveEdges = (options?: MutationOptions) => {
       }
     },
     onError: (error, variables, context) => {
-      toast.error(error.errormsg)
+      toast.error(error.message)
 
       if (options?.onError) {
         options?.onError(error, variables, context)

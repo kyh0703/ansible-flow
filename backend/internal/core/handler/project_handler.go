@@ -45,13 +45,13 @@ func NewProjectHandler(
 
 func (h *projectHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodPost, "/project",
+		Mapping(fiber.MethodPost, "/projects",
 			h.authMiddleware.CurrentUser(), h.CreateOne),
-		Mapping(fiber.MethodGet, "/project/:id",
+		Mapping(fiber.MethodGet, "/projects/:id",
 			h.authMiddleware.CurrentUser(), h.FindOne),
-		Mapping(fiber.MethodPatch, "/project/:id",
+		Mapping(fiber.MethodPatch, "/projects/:id",
 			h.authMiddleware.CurrentUser(), h.UpdateOne),
-		Mapping(fiber.MethodDelete, "/project/:id",
+		Mapping(fiber.MethodDelete, "/projects/:id",
 			h.authMiddleware.CurrentUser(), h.DeleteOne),
 		Mapping(fiber.MethodGet, "/projects",
 			h.authMiddleware.CurrentUser(), h.FindAll),

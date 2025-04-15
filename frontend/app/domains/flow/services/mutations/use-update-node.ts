@@ -1,8 +1,8 @@
-import type { CustomResponse } from '@/services'
 import { toModelNode } from '@/utils/xyflow/convert'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
+import type { CustomResponse } from '~/shared/services'
 import { updateNode } from '..'
 
 type Response = unknown
@@ -21,7 +21,7 @@ export const useUpdateNode = (options?: MutationOptions) => {
       }
     },
     onError: (error, variables, context) => {
-      toast.error(error.errormsg)
+      toast.error(error.message)
 
       if (options?.onError) {
         options?.onError(error, variables, context)

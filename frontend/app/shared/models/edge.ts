@@ -1,4 +1,4 @@
-export interface Edge {
+export interface ModelEdge {
   id: number
   uuid: string
   flowId: number
@@ -7,7 +7,12 @@ export interface Edge {
   type: string
   label: string
   hidden: boolean
-  markerEnd: string
-  updateAt: string
-  createAt: string
+  markerEnd?: {
+    width: number
+    height: number
+    type: string
+    color: string
+  }
+  updateAt?: string
+  createAt?: string
 }
