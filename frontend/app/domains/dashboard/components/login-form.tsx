@@ -42,7 +42,10 @@ export function LoginForm() {
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="flex flex-col items-center justify-center space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <FormInput
         control={control}
         name="email"
@@ -61,13 +64,14 @@ export function LoginForm() {
       {errors.password && (
         <p className="error-msg">{errors.password.message}</p>
       )}
-      <div className="flex">
-        <Button className="text-sm text-gray-500 hover:text-gray-700">
-          <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
-        </Button>
-      </div>
       <Button className="w-full" type="submit">
         로그인
+      </Button>
+      <Button
+        className="text-sm text-gray-500 hover:text-gray-700"
+        variant="link"
+      >
+        <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
     </form>
   )
