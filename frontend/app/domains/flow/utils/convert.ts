@@ -4,10 +4,10 @@ import type {
   CustomEdgeType,
   CustomNodeType,
 } from '@xyflow/react'
-import type { Edge } from '~/shared/models/edge'
-import type { Node } from '~/shared/models/node'
+import type { ModelEdge } from '~/shared/models/edge'
+import type { ModelNode } from '~/shared/models/node'
 
-export function toModelNode(node: AppNode): Node {
+export function toModelNode(node: AppNode): ModelNode {
   return {
     id: node.data.databaseId!,
     uuid: node.id,
@@ -21,7 +21,7 @@ export function toModelNode(node: AppNode): Node {
   }
 }
 
-export function toAppNode(node: Node): AppNode {
+export function toAppNode(node: ModelNode): AppNode {
   return {
     id: node.uuid,
     type: node.type as CustomNodeType,
@@ -39,14 +39,26 @@ export function toAppNode(node: Node): AppNode {
   }
 }
 
-export function toModelEdge(edge: AppEdge): Edge {
-  return {
+export function toModelEdge(edge: AppEdge): ModelEdge {
+  const modelEdge: ModelEdge = {
     id: edge.data?.databaseId!,
     type: edge.type as CustomEdgeType,
     source: edge.source,
     target: edge.target,
     label: edge.data?.condition || '',
     hidden: edge.hidden || false,
-    markerEnd: edge.markerEnd ?? undefined,
+    uuid: edge.id,
+    flowId: edge.data?.flowId!,
   }
+
+  if (edge.markerEnd && typeof edge.markerEnd === 'object') {
+    modelEdge.markerEnd = {
+      width: edge.markerEnd.width!,
+      height: edge.markerEnd.height!,
+      type: edge.markerEnd.type,
+      color: edge.markerEnd.color!,
+    }
+  }
+
+  return modelEdge
 }
