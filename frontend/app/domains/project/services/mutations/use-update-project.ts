@@ -4,8 +4,8 @@ import {
   type UseMutationOptions,
 } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import type { Project } from '~/shared/models/project'
-import type { CustomResponse } from '~/shared/services'
+import type { Project } from '@/shared/models/project'
+import type { CustomResponse } from '@/shared/services'
 import { updateProject } from '../api'
 import { projectKey } from '../keys'
 

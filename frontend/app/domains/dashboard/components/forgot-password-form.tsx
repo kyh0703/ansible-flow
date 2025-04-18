@@ -1,10 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, Link, Mail } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { toast } from 'react-toastify'
-import * as z from 'zod'
-import { Button } from '~/shared/ui/button'
+import FormInput from '@/shared/components/form-input'
+import { Button } from '@/shared/ui/button'
 import {
   Card,
   CardContent,
@@ -12,10 +7,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '~/shared/ui/card'
-import FormInput from '~/shared/ui/form-input'
-import { Label } from '~/shared/ui/label'
-import { extractErrorMessage } from '~/shared/utils/errors'
+} from '@/shared/ui/card'
+import { Label } from '@/shared/ui/label'
+import { extractErrorMessage } from '@/shared/utils/errors'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowLeft, Link, Mail } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import * as z from 'zod'
 
 const ForgotPasswordSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),

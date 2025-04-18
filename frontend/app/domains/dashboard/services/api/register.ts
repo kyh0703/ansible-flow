@@ -1,6 +1,4 @@
-import type { ApiResponse } from '~/shared/services'
-import { fetchExtended } from '~/shared/services/fetch'
-import type { Token } from '~/shared/services/token'
+import { fetchExtended, type ApiResponse, type Token } from '@/shared/services'
 
 export const register = async (data: {
   email: string

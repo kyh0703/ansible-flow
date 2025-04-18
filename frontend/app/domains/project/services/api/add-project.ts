@@ -1,5 +1,5 @@
-import type { Project } from '~/shared/models/project'
-import { fetchExtended, type ApiResponse } from '~/shared/services'
+import type { Project } from '@/shared/models/project'
+import { fetchExtended, type ApiResponse } from '@/shared/services'
 
 export const addProject = async (project: Omit<Project, 'id'>) => {
   const response = await fetchExtended<

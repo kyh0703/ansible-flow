@@ -2,7 +2,7 @@ import { toModelNode } from '@/utils/xyflow/convert'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
-import type { CustomResponse } from '~/shared/services'
+import type { CustomResponse } from '@/shared/services'
 import { updateNode } from '..'
 
 type Response = unknown

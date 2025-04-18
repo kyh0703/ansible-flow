@@ -6,7 +6,7 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form'
-import { RadioGroup } from '~/shared/ui/radio-group'
+import { RadioGroup } from '@/shared/ui/radio-group'
 import { Form, FormControl, FormField, FormItem } from './form'
 
 export type FormRadioGroupProps<T extends FieldValues> = {

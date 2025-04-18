@@ -1,4 +1,4 @@
-import { fetchExtended, type CustomResponse } from '~/shared/services'
+import { fetchExtended, type CustomResponse } from '@/shared/services'
 
 export const removeEdges = async (flowId: number, removeIds: number[]) => {
   const response = await fetchExtended<CustomResponse>(

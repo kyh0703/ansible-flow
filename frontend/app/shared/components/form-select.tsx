@@ -6,13 +6,8 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form'
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from '~/shared/ui/select'
-import { Form, FormControl, FormField, FormItem } from './form'
+import { Form, FormControl, FormField, FormItem } from '../ui/form'
+import { Select, SelectContent, SelectTrigger, SelectValue } from '../ui/select'
 
 export type FormSelectProps<T extends FieldValues> = {
   control: Control<T>

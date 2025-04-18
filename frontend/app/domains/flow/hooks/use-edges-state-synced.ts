@@ -4,8 +4,8 @@ import {
   type OnEdgesChange,
 } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useYjs } from '~/shared/contexts/yjs-context'
 import useYjsData from './use-yjs-data'
+import { useYjs } from '@/shared/contexts/yjs-context'
 
 export function useEdgesStateSynced(
   flowId: number,

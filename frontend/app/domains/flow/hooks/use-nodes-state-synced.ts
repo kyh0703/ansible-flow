@@ -6,9 +6,9 @@ import {
   type OnNodesChange,
 } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useYjs } from '~/shared/contexts/yjs-context'
 import useYjsData from './use-yjs-data'
 import { getHelperLines } from '../utils'
+import { useYjs } from '@/shared/contexts/yjs-context'
 
 export function useNodesStateSynced(
   flowId: number,

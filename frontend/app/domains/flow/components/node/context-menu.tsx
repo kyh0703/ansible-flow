@@ -26,7 +26,7 @@
 //   DropdownMenuItem,
 //   DropdownMenuSeparator,
 //   DropdownMenuTrigger,
-// } from '~/shared/ui/dropdown-menu'
+// } from '@/shared/ui/dropdown-menu'
 
 // export type NodeContextMenuProps = {
 //   id: string

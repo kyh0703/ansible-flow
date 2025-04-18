@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Button } from '~/shared/ui/button'
+import { LoginForm } from './login-form'
+import { RegisterForm } from './register-form'
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '~/shared/ui/dialog'
-import { LoginForm } from './login-form'
-import { RegisterForm } from './register-form'
+} from '@/shared/ui/dialog'
+import { Button } from '@/shared/ui/button'
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true)

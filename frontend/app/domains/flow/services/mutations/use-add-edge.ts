@@ -1,9 +1,9 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { type AppEdge } from '@xyflow/react'
 import { toast } from 'react-toastify'
-import type { CustomResponse } from '~/shared/services'
 import { addEdge } from '..'
 import { toModelEdge } from '../../utils'
+import type { CustomResponse } from '@/shared/services'
 
 type Response = number
 type Variables = AppEdge

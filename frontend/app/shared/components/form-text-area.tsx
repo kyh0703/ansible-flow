@@ -4,8 +4,8 @@ import {
   type FieldPath,
   type FieldValues,
 } from 'react-hook-form'
-import { Textarea } from '~/shared/ui/textarea'
-import { Form, FormControl, FormField } from './form'
+import { Form, FormControl, FormField } from '../ui/form'
+import { Textarea } from '../ui/textarea'
 
 export type FormInputProps<T extends FieldValues> = {
   control: Control<T>

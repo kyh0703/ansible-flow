@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import type { CustomResponse } from '~/shared/services'
 import { removeEdge } from '..'
+import type { CustomResponse } from '@/shared/services'
 
 type Response = unknown
 type Variables = number

@@ -1,5 +1,5 @@
-import type { ModelEdge } from '~/shared/models/edge'
-import { fetchExtended, type CustomResponse } from '~/shared/services'
+import type { ModelEdge } from '@/shared/models/edge'
+import { fetchExtended, type CustomResponse } from '@/shared/services'
 
 export const updateEdge = async (id: number, edge: Partial<ModelEdge>) => {
   const response = await fetchExtended<CustomResponse>(

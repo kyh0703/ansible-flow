@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { setToken } from '~/shared/services/token'
-import { Button } from '~/shared/ui/button'
-import FormInput from '~/shared/ui/form-input'
-import { extractErrorMessage } from '~/shared/utils/errors'
-import logger from '~/shared/utils/logger'
 import { login } from '../services'
+import { Button } from '@/shared/ui/button'
+import FormInput from '@/shared/components/form-input'
+import { setToken } from '@/shared/services'
+import logger from '@/shared/utils/logger'
+import { extractErrorMessage } from '@/shared/utils/errors'
 
 const LoginSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),

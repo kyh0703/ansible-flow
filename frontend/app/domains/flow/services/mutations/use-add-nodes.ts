@@ -1,9 +1,9 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
-import type { CustomResponse } from '~/shared/services'
 import { addNodes } from '..'
 import { toModelNode } from '../../utils'
+import type { CustomResponse } from '@/shared/services'
 
 type Response = number[]
 type Variables = { flowId: number; nodes: AppNode[] }

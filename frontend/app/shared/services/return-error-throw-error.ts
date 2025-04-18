@@ -1,4 +1,4 @@
-import { CustomError, type CustomResponse } from '~/shared/services'
+import { CustomError, type CustomResponse } from '@/shared/services'
 import type { ReturnFetch } from 'return-fetch'
 import returnFetch from 'return-fetch'
 import { parseJsonSafely } from './return-body'

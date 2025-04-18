@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogTrigger } from '~/shared/ui/dialog'
-import { Button } from '~/shared/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
 import AuthForm from '../components/auth-form'
+import { Button } from '@/shared/ui/button'
 
 export default function HeroSection() {
   return (

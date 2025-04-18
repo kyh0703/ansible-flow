@@ -11,8 +11,6 @@ import {
   type OnInit,
 } from '@xyflow/react'
 import { useCallback, useRef, useState } from 'react'
-import { cn } from '~/shared/lib/utils'
-import { useTheme } from '~/shared/providers/theme-provider'
 import { useCursorStateSynced } from '../../hooks/use-cursor-state-synced'
 import { useEdgesStateSynced } from '../../hooks/use-edges-state-synced'
 import { getCursorClassByEditMode } from '../../utils/get-cursor-mode'
@@ -31,7 +29,9 @@ import { ConnectionLine } from '../tools/connection-line'
 
 import '@xyflow/react/dist/style.css'
 import { Cursors } from '../tools/cursor'
-import { useFlowStore } from '../../store/flow'
+import { useEditMode } from '../../store/flow'
+import { useTheme } from '@/shared/providers/theme-provider'
+import { cn } from '@/shared/lib/utils'
 
 type FlowProps = {
   flowId: number
@@ -49,7 +49,7 @@ export default function BasicFlow({
   const flowRef = useRef<HTMLDivElement>(null)
 
   const { theme } = useTheme()
-  const editMode = useFlowStore((state) => state.editMode)
+  const editMode = useEditMode()
 
   const [isInit, setIsInit] = useState(false)
   const [nodes, setNodes, onNodesChange, horizontalLine, verticalLine] =

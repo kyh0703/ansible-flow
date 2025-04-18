@@ -1,5 +1,5 @@
+import { createStore } from '@/shared/lib/store'
 import type { CustomNodeType, Viewport } from '@xyflow/react'
-import { createStore } from '~/shared/lib/store'
 
 export type EditMode = 'grab' | 'pointer' | 'link'
 
@@ -23,7 +23,7 @@ interface FlowState {
   }
 }
 
-export const useFlowStore = createStore<FlowState>(
+const useFlowStore = createStore<FlowState>(
   (set) => ({
     editMode: 'grab',
     history: {},

@@ -1,4 +1,4 @@
-import { errorMessages, type ErrorCode } from '~/shared/constants/http-error'
+import { errorMessages, type ErrorCode } from '@/shared/constants/http-error'
 
 export type CustomResponse = {
   code: number

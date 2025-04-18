@@ -4,8 +4,8 @@ import type {
   CustomEdgeType,
   CustomNodeType,
 } from '@xyflow/react'
-import type { ModelEdge } from '~/shared/models/edge'
-import type { ModelNode } from '~/shared/models/node'
+import type { ModelEdge } from '@/shared/models/edge'
+import type { ModelNode } from '@/shared/models/node'
 
 export function toModelNode(node: AppNode): ModelNode {
   return {

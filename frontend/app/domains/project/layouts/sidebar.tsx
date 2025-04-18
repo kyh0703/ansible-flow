@@ -4,14 +4,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/shared/ui/dropdown-menu'
+} from '@/shared/ui/dropdown-menu'
 import {
   Sidebar,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '~/shared/ui/sidebar'
+} from '@/shared/ui/sidebar'
 
 export default function AppSidebar() {
   return (

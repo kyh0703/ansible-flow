@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
@@ -72,7 +71,6 @@ func getLogLevel(level string) zap.AtomicLevel {
 }
 
 func Debug(args ...interface{}) {
-	fmt.Println("Debug", args, Zap)
 	Zap.Sugar().Debug(args...)
 }
 

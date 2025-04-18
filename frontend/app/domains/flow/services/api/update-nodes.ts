@@ -1,5 +1,5 @@
-import type { ModelNode } from '~/shared/models/node'
-import { fetchExtended, type CustomResponse } from '~/shared/services'
+import type { ModelNode } from '@/shared/models/node'
+import { fetchExtended, type CustomResponse } from '@/shared/services'
 
 export const updateNodes = async (flowId: number, nodes: ModelNode[]) => {
   const response = await fetchExtended<CustomResponse>(

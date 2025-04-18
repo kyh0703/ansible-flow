@@ -1,5 +1,5 @@
-import { cn } from '~/shared/lib/utils'
-import { ThemeButton } from '~/shared/ui/theme-button'
+import { cn } from '@/shared/lib/utils'
+import { ThemeButton } from '@/shared/components/theme-button'
 
 export default function Header() {
   return (

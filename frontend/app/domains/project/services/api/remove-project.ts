@@ -1,4 +1,4 @@
-import { fetchExtended, type CustomResponse } from '~/shared/services'
+import { fetchExtended, type CustomResponse } from '@/shared/services'
 
 export const removeProject = async (id: number) => {
   const response = await fetchExtended<CustomResponse>(

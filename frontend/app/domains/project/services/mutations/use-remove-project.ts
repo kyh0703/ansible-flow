@@ -1,6 +1,6 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import type { CustomResponse } from '~/shared/services'
+import type { CustomResponse } from '@/shared/services'
 import { removeProject } from '../api'
 
 type Response = CustomResponse

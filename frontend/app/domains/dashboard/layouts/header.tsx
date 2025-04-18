@@ -1,11 +1,11 @@
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '~/shared/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '~/shared/ui/dialog'
 import { Link } from 'react-router-dom'
 import { LoginForm } from '../components/login-form'
-import { Sheet, SheetContent, SheetTrigger } from '~/shared/ui/sheet'
 import AuthForm from '../components/auth-form'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
+import { Button } from '@/shared/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
