@@ -1,5 +1,5 @@
 import { EdgeLabelRenderer, useViewport } from '@xyflow/react'
-import type { Cursor } from '~/domains/flow/types/collaboration'
+import type { Cursor } from '../../types/collaboration'
 
 const cursorPath = `
   M3.29227 0.048984C3.47033 -0.032338 3.67946 -0.00228214 3.8274 0.125891L12.8587

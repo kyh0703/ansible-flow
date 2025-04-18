@@ -1,9 +1,9 @@
-import { toModelNode } from '@/utils/xyflow/convert'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
 import type { CustomResponse } from '@/shared/services'
 import { updateNode } from '..'
+import { toModelNode } from '../../utils'
 
 type Response = unknown
 type Variables = { nodeId: number; node: Partial<AppNode> }

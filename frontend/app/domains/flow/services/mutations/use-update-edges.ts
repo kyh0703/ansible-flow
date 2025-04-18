@@ -13,9 +13,6 @@ export const useUpdateEdges = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
     mutationFn: ({ flowId, edges }) => {
-      if (edges.length === 0) {
-        return Promise.resolve()
-      }
       return updateEdges(
         flowId,
         edges.map((edge) => toModelEdge(edge as AppEdge)),
