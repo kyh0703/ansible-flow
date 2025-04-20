@@ -35,6 +35,26 @@ func (p *projectRepository) GetList(ctx context.Context, userID int64) ([]model.
 	return p.queries.ListProjects(ctx, userID)
 }
 
+func (p *projectRepository) GetListWithPaging(ctx context.Context, userID int64, offset int, limit int) ([]model.Project, int64, error) {
+	arg := model.ListProjectsWithPagingParams{
+		UserID: userID,
+		Limit:  int64(limit),
+		Offset: int64(offset),
+	}
+
+	projects, err := p.queries.ListProjectsWithPaging(ctx, arg)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := p.queries.CountProjects(ctx, userID)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return projects, total, nil
+}
+
 func (p *projectRepository) UpdateOne(ctx context.Context, arg model.PatchProjectParams) error {
 	return p.queries.PatchProject(ctx, arg)
 }

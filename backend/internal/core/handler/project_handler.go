@@ -149,15 +149,28 @@ func (h *projectHandler) DeleteOne(c *fiber.Ctx) error {
 }
 
 func (h *projectHandler) FindAll(c *fiber.Ctx) error {
-	user := c.Locals("user").(model.User)
+	var req project.ListProjectRequest
+	if err := c.QueryParser(&req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
 
-	projectList, err := h.projectRepository.GetList(c.Context(), user.ID)
+	if err := h.validate.Struct(&req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	user := c.Locals("user").(model.User)
+	offset := (req.Page - 1) * req.PageSize
+
+	projectList, total, err := h.projectRepository.GetListWithPaging(c.Context(), user.ID, offset, req.PageSize)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res []project.ProjectResponse
-	copier.Copy(&res, &projectList)
+	var projects []project.ProjectResponse
+	copier.Copy(&projects, &projectList)
 
-	return response.Success(c, fiber.StatusOK, res)
+	return response.Success(c, fiber.StatusOK, fiber.Map{
+		"total": total,
+		"items": projects,
+	})
 }

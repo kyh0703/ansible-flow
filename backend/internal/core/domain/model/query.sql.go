@@ -10,6 +10,18 @@ import (
 	"database/sql"
 )
 
+const countProjects = `-- name: CountProjects :one
+SELECT COUNT(*) FROM projects
+WHERE user_id = ?
+`
+
+func (q *Queries) CountProjects(ctx context.Context, userID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countProjects, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createEdge = `-- name: CreateEdge :one
 INSERT INTO edges (
   id,
@@ -612,6 +624,49 @@ ORDER BY name
 
 func (q *Queries) ListProjects(ctx context.Context, userID int64) ([]Project, error) {
 	rows, err := q.db.QueryContext(ctx, listProjects, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Project
+	for rows.Next() {
+		var i Project
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Description,
+			&i.UpdateAt,
+			&i.CreateAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listProjectsWithPaging = `-- name: ListProjectsWithPaging :many
+SELECT id, user_id, name, description, update_at, create_at FROM projects
+WHERE user_id = ?
+ORDER BY name
+LIMIT ? OFFSET ?
+`
+
+type ListProjectsWithPagingParams struct {
+	UserID int64 `json:"userId"`
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
+}
+
+func (q *Queries) ListProjectsWithPaging(ctx context.Context, arg ListProjectsWithPagingParams) ([]Project, error) {
+	rows, err := q.db.QueryContext(ctx, listProjectsWithPaging, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

@@ -13,4 +13,5 @@ type ProjectRepository interface {
 	GetList(ctx context.Context, userID int64) ([]model.Project, error)
 	UpdateOne(ctx context.Context, arg model.PatchProjectParams) error
 	DeleteOne(ctx context.Context, id int64) error
+	GetListWithPaging(ctx context.Context, userID int64, offset int, limit int) ([]model.Project, int64, error)
 }

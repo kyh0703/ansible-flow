@@ -102,6 +102,16 @@ SELECT * FROM projects
 WHERE user_id = ?
 ORDER BY name;
 
+-- name: ListProjectsWithPaging :many
+SELECT * FROM projects
+WHERE user_id = ?
+ORDER BY name
+LIMIT ? OFFSET ?;
+
+-- name: CountProjects :one
+SELECT COUNT(*) FROM projects
+WHERE user_id = ?;
+
 -- name: PatchProject :exec
 UPDATE projects SET
 name = COALESCE(sqlc.narg(name), name),
