@@ -109,3 +109,9 @@ clean:
 	@rm -f $(BUILD_BIN)/$(TARGET)
 	@rm -f $(BUILD_REPORT)/*
 	@echo ""
+
+.PHONY: build-admin
+build-admin:
+	@echo "build-admin:"
+	go build -o bin/admin cmd/admin/main.go
+	@echo ""

@@ -46,6 +46,21 @@ type Node struct {
 	CreateAt    sql.NullString `json:"createAt"`
 }
 
+type OauthState struct {
+	ID          int64          `json:"id"`
+	State       string         `json:"state"`
+	RedirectUrl string         `json:"redirectUrl"`
+	ExpiresAt   string         `json:"expiresAt"`
+	CreateAt    sql.NullString `json:"createAt"`
+}
+
+type Permission struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+	CreateAt    sql.NullString `json:"createAt"`
+}
+
 type Project struct {
 	ID          int64          `json:"id"`
 	UserID      int64          `json:"userId"`
@@ -53,6 +68,19 @@ type Project struct {
 	Description sql.NullString `json:"description"`
 	UpdateAt    sql.NullString `json:"updateAt"`
 	CreateAt    sql.NullString `json:"createAt"`
+}
+
+type Role struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+	CreateAt    sql.NullString `json:"createAt"`
+}
+
+type RolePermission struct {
+	RoleID       int64          `json:"roleId"`
+	PermissionID int64          `json:"permissionId"`
+	CreateAt     sql.NullString `json:"createAt"`
 }
 
 type Token struct {
@@ -64,11 +92,20 @@ type Token struct {
 }
 
 type User struct {
-	ID       int64          `json:"id"`
-	Email    string         `json:"email" validate:"required,email"`
-	Password string         `json:"password" validate:"required,min=8,max=32"`
-	Name     string         `json:"name"`
-	Bio      sql.NullString `json:"bio"`
-	UpdateAt sql.NullString `json:"updateAt"`
+	ID         int64          `json:"id"`
+	Email      string         `json:"email" validate:"required,email"`
+	Password   sql.NullString `json:"password" validate:"required,min=8,max=32"`
+	Name       string         `json:"name"`
+	Bio        sql.NullString `json:"bio"`
+	Provider   sql.NullString `json:"provider"`
+	ProviderID sql.NullString `json:"providerId"`
+	IsAdmin    int64          `json:"isAdmin"`
+	UpdateAt   sql.NullString `json:"updateAt"`
+	CreateAt   sql.NullString `json:"createAt"`
+}
+
+type UserRole struct {
+	UserID   int64          `json:"userId"`
+	RoleID   int64          `json:"roleId"`
 	CreateAt sql.NullString `json:"createAt"`
 }

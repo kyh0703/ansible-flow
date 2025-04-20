@@ -1,11 +1,16 @@
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY,
   email TEXT NOT NULL,
-  password TEXT NOT NULL,
+  password TEXT,
   name TEXT NOT NULL,
   bio TEXT,
+  provider TEXT,
+  provider_id TEXT,
+  is_admin INTEGER NOT NULL DEFAULT 0,
   update_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  create_at TEXT DEFAULT CURRENT_TIMESTAMP
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(email),
+  UNIQUE(provider, provider_id)
 );
 
 CREATE TABLE IF NOT EXISTS tokens (
@@ -66,4 +71,47 @@ CREATE TABLE IF NOT EXISTS edges (
   update_at TEXT DEFAULT CURRENT_TIMESTAMP,
   create_at TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (flow_id) REFERENCES flows(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS oauth_states (
+  id INTEGER PRIMARY KEY,
+  state TEXT NOT NULL,
+  redirect_url TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(state)
+);
+
+CREATE TABLE IF NOT EXISTS roles (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(name)
+);
+
+CREATE TABLE IF NOT EXISTS permissions (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(name)
+);
+
+CREATE TABLE IF NOT EXISTS role_permissions (
+  role_id INTEGER NOT NULL,
+  permission_id INTEGER NOT NULL,
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (role_id, permission_id),
+  FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+  FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_roles (
+  user_id INTEGER NOT NULL,
+  role_id INTEGER NOT NULL,
+  create_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, role_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );

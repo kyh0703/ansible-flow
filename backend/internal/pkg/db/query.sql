@@ -6,6 +6,10 @@ WHERE id = ? LIMIT 1;
 SELECT * FROM users
 WHERE email = ? LIMIT 1;
 
+-- name: GetUserByProvider :one
+SELECT * FROM users
+WHERE provider = ? AND provider_id = ? LIMIT 1;
+
 -- name: ListUsers :many
 SELECT * FROM users
 ORDER BY name;
@@ -16,10 +20,13 @@ INSERT INTO users (
   password,
   name,
   bio,
+  provider,
+  provider_id,
+  is_admin,
   update_at,
   create_at
 ) VALUES (
-  ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+  ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -38,6 +45,9 @@ UPDATE users SET
 name = COALESCE(sqlc.narg(name), name),
 password = COALESCE(sqlc.narg(password), password),
 bio = COALESCE(sqlc.narg(bio), bio),
+provider = COALESCE(sqlc.narg(provider), provider),
+provider_id = COALESCE(sqlc.narg(provider_id), provider_id),
+is_admin = COALESCE(sqlc.narg(is_admin), is_admin),
 update_at = CURRENT_TIMESTAMP
 WHERE id = ?
 RETURNING *;
@@ -239,3 +249,104 @@ RETURNING *;
 -- name: DeleteEdge :exec
 DELETE FROM edges
 WHERE id = ?;
+
+-- name: CreateOAuthState :one
+INSERT INTO oauth_states (
+  state,
+  redirect_url,
+  expires_at,
+  create_at
+) VALUES (
+  ?, ?, ?, CURRENT_TIMESTAMP
+)
+RETURNING *;
+
+-- name: GetOAuthState :one
+SELECT * FROM oauth_states
+WHERE state = ? LIMIT 1;
+
+-- name: DeleteOAuthState :exec
+DELETE FROM oauth_states
+WHERE state = ?;
+
+-- name: CreateRole :one
+INSERT INTO roles (
+  name,
+  description
+) VALUES (
+  ?, ?
+)
+RETURNING *;
+
+-- name: GetRole :one
+SELECT * FROM roles
+WHERE id = ? LIMIT 1;
+
+-- name: ListRoles :many
+SELECT * FROM roles
+ORDER BY name;
+
+-- name: DeleteRole :exec
+DELETE FROM roles
+WHERE id = ?;
+
+-- name: CreatePermission :one
+INSERT INTO permissions (
+  name,
+  description
+) VALUES (
+  ?, ?
+)
+RETURNING *;
+
+-- name: GetPermission :one
+SELECT * FROM permissions
+WHERE id = ? LIMIT 1;
+
+-- name: ListPermissions :many
+SELECT * FROM permissions
+ORDER BY name;
+
+-- name: DeletePermission :exec
+DELETE FROM permissions
+WHERE id = ?;
+
+-- name: AssignRoleToUser :exec
+INSERT INTO user_roles (
+  user_id,
+  role_id
+) VALUES (
+  ?, ?
+);
+
+-- name: RemoveRoleFromUser :exec
+DELETE FROM user_roles
+WHERE user_id = ? AND role_id = ?;
+
+-- name: GetUserRoles :many
+SELECT r.* FROM roles r
+JOIN user_roles ur ON ur.role_id = r.id
+WHERE ur.user_id = ?;
+
+-- name: GetUserPermissions :many
+SELECT DISTINCT p.* FROM permissions p
+JOIN role_permissions rp ON rp.permission_id = p.id
+JOIN user_roles ur ON ur.role_id = rp.role_id
+WHERE ur.user_id = ?;
+
+-- name: AssignPermissionToRole :exec
+INSERT INTO role_permissions (
+  role_id,
+  permission_id
+) VALUES (
+  ?, ?
+);
+
+-- name: RemovePermissionFromRole :exec
+DELETE FROM role_permissions
+WHERE role_id = ? AND permission_id = ?;
+
+-- name: GetRolePermissions :many
+SELECT p.* FROM permissions p
+JOIN role_permissions rp ON rp.permission_id = p.id
+WHERE rp.role_id = ?;

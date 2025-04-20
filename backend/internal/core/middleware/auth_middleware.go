@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 	"github.com/kyh0703/flow/internal/pkg/jwt"
 )
@@ -24,6 +25,18 @@ func NewAuthMiddleware(
 ) AuthMiddleware {
 	return &authMiddleware{
 		userRepository: userRepository,
+	}
+}
+
+func (a *authMiddleware) RequireAdmin() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		user := c.Locals("user").(model.User)
+
+		if user.IsAdmin == 0 {
+			return fiber.NewError(fiber.StatusForbidden, "admin permission required")
+		}
+
+		return c.Next()
 	}
 }
 
@@ -54,7 +67,7 @@ func (a *authMiddleware) CurrentUser() fiber.Handler {
 			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
 		}
 
-		user, err := a.userRepository.FindOneByEmail(c.Context(), email)
+		user, err := a.userRepository.FindByEmail(c.Context(), email)
 		if err != nil {
 			return fiber.NewError(fiber.StatusUnauthorized, err.Error())
 		}
