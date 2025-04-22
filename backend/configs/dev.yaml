@@ -1,4 +1,29 @@
-oauth:
+server:
+  profile: "dev"
+  port: "8080"
+
+app:
+  version: "1.0.0"
+  txTimeout: 30
+  logLevel: "debug"
+
+infra:
+  db:
+    user: "root"
+    password: "password"
+    sourceAddrs: ["localhost:3306"]
+    replicaAddrs: ["localhost:3307"]
+    dbName: "flow"
+    filePath: "./data/flow.db"
+  redis:
+    masterName: "mymaster"
+    sentinelAddrs: ["localhost:26379"]
+  kafka:
+    brokers: ["localhost:9092"]
+  sentry:
+    dsn: "your-sentry-dsn"
+
+auth:
   google:
     client_id: "your-client-id"
     client_secret: "your-client-secret"
@@ -13,3 +38,7 @@ oauth:
     scopes:
       - "account_email"
       - "profile_nickname"
+
+log:
+  level: "debug"
+  historyType: "file"
