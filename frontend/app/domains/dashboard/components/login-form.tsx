@@ -10,6 +10,9 @@ import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { login } from '../services'
+import { Tooltip, TooltipTrigger } from '@/shared/ui/tooltip'
+import { TooltipContent } from '@radix-ui/react-tooltip'
+import OAuthButton from './oauth-button'
 
 const LoginSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
@@ -42,10 +45,6 @@ export function LoginForm() {
     }
   }
 
-  const handleGoogleLogin = () => {}
-
-  const handleKakaoLogin = () => {}
-
   return (
     <form
       className="flex flex-col items-center justify-center space-y-4"
@@ -72,30 +71,15 @@ export function LoginForm() {
       <Button className="w-full" type="submit">
         로그인
       </Button>
+      <section className="flex gap-2">
+        <OAuthButton />
+      </section>
       <Button
         className="text-sm text-gray-500 hover:text-gray-700"
         variant="link"
       >
         <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
-      <section className="flex gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          type="button"
-          onClick={handleGoogleLogin}
-        >
-          <GoogleIcon />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          type="button"
-          onClick={handleKakaoLogin}
-        >
-          <KakaoIcon />
-        </Button>
-      </section>
     </form>
   )
 }

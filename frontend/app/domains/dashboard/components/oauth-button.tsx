@@ -1,0 +1,61 @@
+import { GoogleIcon, KakaoIcon, NaverIcon } from '@/shared/components/icon'
+import { Button } from '@/shared/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
+
+export default function OAuthButton() {
+  const handleGoogleLogin = () => {}
+
+  const handleKakaoLogin = () => {}
+
+  return (
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className="size-10 rounded-full"
+            variant="ghost"
+            type="button"
+            onClick={handleGoogleLogin}
+          >
+            <GoogleIcon />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-sm">구글로 로그인하기</p>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className="size-10 rounded-full"
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={handleKakaoLogin}
+          >
+            <NaverIcon />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-sm">네이버로 로그인하기</p>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            className="size-10 rounded-full"
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={handleKakaoLogin}
+          >
+            <KakaoIcon />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-sm">카카오로 로그인하기</p>
+        </TooltipContent>
+      </Tooltip>
+    </>
+  )
+}
