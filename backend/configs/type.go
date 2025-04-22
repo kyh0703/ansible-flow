@@ -1,10 +1,6 @@
 package configs
 
-type Log struct {
-	Level       string `mapstructure:"level"`
-	HistoryType string `mapstructure:"historyType"`
-}
-
+// Infra
 type DB struct {
 	User         string   `mapstructure:"user"`
 	Password     string   `mapstructure:"password"`
@@ -21,6 +17,26 @@ type Redis struct {
 
 type Kafka struct {
 	Brokers []string `mapstructure:"brokers"`
+}
+
+// Auth
+type Google struct {
+	ClientID     string   `mapstructure:"client_id"`
+	ClientSecret string   `mapstructure:"client_secret"`
+	RedirectURL  string   `mapstructure:"redirect_url"`
+	Scopes       []string `mapstructure:"scopes"`
+}
+
+type Kakao struct {
+	ClientID     string   `mapstructure:"client_id"`
+	ClientSecret string   `mapstructure:"client_secret"`
+	RedirectURL  string   `mapstructure:"redirect_url"`
+	Scopes       []string `mapstructure:"scopes"`
+}
+
+type Log struct {
+	Level       string `mapstructure:"level"`
+	HistoryType string `mapstructure:"historyType"`
 }
 
 type Sentry struct {
@@ -45,8 +61,14 @@ type Infra struct {
 	Sentry Sentry `mapstructure:"sentry"`
 }
 
+type Auth struct {
+	Google Google `mapstructure:"google"`
+	Kakao  Kakao  `mapstructure:"kakao"`
+}
+
 type Config struct {
 	Server Server
 	App    App
 	Infra  Infra
+	Auth   Auth
 }

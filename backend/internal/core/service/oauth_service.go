@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kyh0703/flow/internal/core/config"
+	"github.com/kyh0703/flow/configs"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 	"golang.org/x/oauth2"
@@ -28,22 +28,22 @@ type OAuthService interface {
 }
 
 type oauthService struct {
-	config          *config.OAuthConfig
+	config          *configs.Config
 	userRepository  repository.UserRepository
 	stateRepository repository.OAuthStateRepository
 	googleConf      *oauth2.Config
 }
 
 func NewOAuthService(
-	config *config.OAuthConfig,
+	config *configs.Config,
 	userRepository repository.UserRepository,
 	stateRepository repository.OAuthStateRepository,
 ) OAuthService {
 	googleConf := &oauth2.Config{
-		ClientID:     config.Google.ClientID,
-		ClientSecret: config.Google.ClientSecret,
-		RedirectURL:  config.Google.RedirectURL,
-		Scopes:       config.Google.Scopes,
+		ClientID:     config.Auth.Google.ClientID,
+		ClientSecret: config.Auth.Google.ClientSecret,
+		RedirectURL:  config.Auth.Google.RedirectURL,
+		Scopes:       config.Auth.Google.Scopes,
 		Endpoint:     google.Endpoint,
 	}
 

@@ -1,14 +1,15 @@
+import FormInput from '@/shared/components/form-input'
+import { GoogleIcon, KakaoIcon } from '@/shared/components/icon'
+import { setToken } from '@/shared/services'
+import { Button } from '@/shared/ui/button'
+import { extractErrorMessage } from '@/shared/utils/errors'
+import logger from '@/shared/utils/logger'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { login } from '../services'
-import { Button } from '@/shared/ui/button'
-import FormInput from '@/shared/components/form-input'
-import { setToken } from '@/shared/services'
-import logger from '@/shared/utils/logger'
-import { extractErrorMessage } from '@/shared/utils/errors'
 
 const LoginSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
@@ -40,6 +41,10 @@ export function LoginForm() {
       logger.error(error)
     }
   }
+
+  const handleGoogleLogin = () => {}
+
+  const handleKakaoLogin = () => {}
 
   return (
     <form
@@ -73,6 +78,24 @@ export function LoginForm() {
       >
         <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
+      <section className="flex gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          type="button"
+          onClick={handleGoogleLogin}
+        >
+          <GoogleIcon />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          type="button"
+          onClick={handleKakaoLogin}
+        >
+          <KakaoIcon />
+        </Button>
+      </section>
     </form>
   )
 }
