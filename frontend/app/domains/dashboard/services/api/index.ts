@@ -1,2 +1,5 @@
+export * from './google-login'
+export * from './github-login'
+export * from './kakao-login'
 export * from './register'
 export * from './login'

@@ -1,5 +1,4 @@
 import FormInput from '@/shared/components/form-input'
-import { GoogleIcon, KakaoIcon } from '@/shared/components/icon'
 import { setToken } from '@/shared/services'
 import { Button } from '@/shared/ui/button'
 import { extractErrorMessage } from '@/shared/utils/errors'
@@ -10,8 +9,6 @@ import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { login } from '../services'
-import { Tooltip, TooltipTrigger } from '@/shared/ui/tooltip'
-import { TooltipContent } from '@radix-ui/react-tooltip'
 import OAuthButton from './oauth-button'
 
 const LoginSchema = z.object({

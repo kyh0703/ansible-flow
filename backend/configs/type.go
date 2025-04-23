@@ -20,7 +20,8 @@ type Auth struct {
 }
 
 type Config struct {
-	App   App   `mapstructure:"app"`
-	Infra Infra `mapstructure:"infra"`
-	Auth  Auth  `mapstructure:"auth"`
+	App    App    `mapstructure:"app"`
+	Infra  Infra  `mapstructure:"infra"`
+	Auth   Auth   `mapstructure:"auth"`
+	Server Server `mapstructure:"server"`
 }

@@ -1,11 +1,23 @@
-import { GoogleIcon, KakaoIcon, NaverIcon } from '@/shared/components/icon'
+import { GithubIcon, GoogleIcon, KakaoIcon } from '@/shared/components/icon'
 import { Button } from '@/shared/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
 
 export default function OAuthButton() {
-  const handleGoogleLogin = () => {}
+  const redirectURL = encodeURIComponent(
+    `${window.location.origin}/auth/callback`,
+  )
 
-  const handleKakaoLogin = () => {}
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login?redirect_url=${redirectURL}`
+  }
+
+  const handleKakaoLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao/login?redirect_url=${redirectURL}`
+  }
+
+  const handleGithubLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github/login?redirect_url=${redirectURL}`
+  }
 
   return (
     <>
@@ -31,13 +43,13 @@ export default function OAuthButton() {
             variant="ghost"
             size="icon"
             type="button"
-            onClick={handleKakaoLogin}
+            onClick={handleGithubLogin}
           >
-            <NaverIcon />
+            <GithubIcon />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p className="text-sm">네이버로 로그인하기</p>
+          <p className="text-sm">깃허브로 로그인하기</p>
         </TooltipContent>
       </Tooltip>
       <Tooltip>

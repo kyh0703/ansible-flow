@@ -19,7 +19,7 @@ import (
 type oauthService struct {
 	config          *configs.Config
 	userRepository  repository.UserRepository
-	stateRepository repository.OAuthStateRepository
+	oauthRepository repository.OAuthRepository
 	providers       map[Provider]*providerConfig
 }
 
@@ -38,7 +38,7 @@ type userInfo struct {
 func NewOAuthService(
 	config *configs.Config,
 	userRepository repository.UserRepository,
-	stateRepository repository.OAuthStateRepository,
+	oauthRepository repository.OAuthRepository,
 ) Service {
 	providers := map[Provider]*providerConfig{
 		Google: {
@@ -79,13 +79,49 @@ func NewOAuthService(
 	return &oauthService{
 		config:          config,
 		userRepository:  userRepository,
-		stateRepository: stateRepository,
+		oauthRepository: oauthRepository,
 		providers:       providers,
 	}
 }
 
+func mapGoogleUserInfo(data []byte) (*userInfo, error) {
+	var info GoogleUserInfo
+	if err := json.Unmarshal(data, &info); err != nil {
+		return nil, err
+	}
+	return &userInfo{
+		email:      info.Email,
+		name:       info.Name,
+		providerID: info.ID,
+	}, nil
+}
+
+func mapKakaoUserInfo(data []byte) (*userInfo, error) {
+	var info KakaoUserInfo
+	if err := json.Unmarshal(data, &info); err != nil {
+		return nil, err
+	}
+	return &userInfo{
+		email:      info.KakaoAccount.Email,
+		name:       info.Properties.Nickname,
+		providerID: fmt.Sprintf("%d", info.ID),
+	}, nil
+}
+
+func mapGithubUserInfo(data []byte) (*userInfo, error) {
+	var info GithubUserInfo
+	if err := json.Unmarshal(data, &info); err != nil {
+		return nil, err
+	}
+	return &userInfo{
+		email:      info.Email,
+		name:       info.Login,
+		providerID: fmt.Sprintf("%d", info.ID),
+	}, nil
+}
+
 func (s *oauthService) GetAuthURL(provider Provider, state string, redirectURL string) string {
-	s.stateRepository.CreateState(context.Background(), model.CreateOAuthStateParams{
+	s.oauthRepository.CreateState(context.Background(), model.CreateOAuthStateParams{
 		State:       state,
 		RedirectUrl: redirectURL,
 		ExpiresAt:   time.Now().Add(15 * time.Minute).Format(time.RFC3339),
@@ -95,7 +131,7 @@ func (s *oauthService) GetAuthURL(provider Provider, state string, redirectURL s
 }
 
 func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*model.User, error) {
-	savedState, err := s.stateRepository.GetState(ctx, state)
+	savedState, err := s.oauthRepository.GetState(ctx, state)
 	if err != nil {
 		return nil, fmt.Errorf("invalid state: %w", err)
 	}
@@ -146,40 +182,4 @@ func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, co
 	}
 
 	return &user, nil
-}
-
-func mapGoogleUserInfo(data []byte) (*userInfo, error) {
-	var info GoogleUserInfo
-	if err := json.Unmarshal(data, &info); err != nil {
-		return nil, err
-	}
-	return &userInfo{
-		email:      info.Email,
-		name:       info.Name,
-		providerID: info.ID,
-	}, nil
-}
-
-func mapKakaoUserInfo(data []byte) (*userInfo, error) {
-	var info KakaoUserInfo
-	if err := json.Unmarshal(data, &info); err != nil {
-		return nil, err
-	}
-	return &userInfo{
-		email:      info.KakaoAccount.Email,
-		name:       info.Properties.Nickname,
-		providerID: fmt.Sprintf("%d", info.ID),
-	}, nil
-}
-
-func mapGithubUserInfo(data []byte) (*userInfo, error) {
-	var info GithubUserInfo
-	if err := json.Unmarshal(data, &info); err != nil {
-		return nil, err
-	}
-	return &userInfo{
-		email:      info.Email,
-		name:       info.Login,
-		providerID: fmt.Sprintf("%d", info.ID),
-	}, nil
 }
