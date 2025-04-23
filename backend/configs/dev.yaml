@@ -1,11 +1,11 @@
-server:
-  profile: "dev"
-  port: "8080"
-
 app:
   version: "1.0.0"
-  txTimeout: 30
-  logLevel: "debug"
+  log:
+    level: "debug"
+    historyType: "file"
+  server:
+    profile: "dev"
+    port: "8080"
 
 infra:
   db:
@@ -38,7 +38,10 @@ auth:
     scopes:
       - "account_email"
       - "profile_nickname"
-
-log:
-  level: "debug"
-  historyType: "file"
+  github:
+    client_id: "your-github-client-id"
+    client_secret: "your-github-client-secret"
+    redirect_url: "http://localhost:8080/api/v1/auth/github/callback"
+    scopes:
+      - "user:email"
+      - "user:profile"

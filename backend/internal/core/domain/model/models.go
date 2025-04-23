@@ -54,13 +54,6 @@ type OauthState struct {
 	CreateAt    sql.NullString `json:"createAt"`
 }
 
-type Permission struct {
-	ID          int64          `json:"id"`
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-	CreateAt    sql.NullString `json:"createAt"`
-}
-
 type Project struct {
 	ID          int64          `json:"id"`
 	UserID      int64          `json:"userId"`
@@ -68,19 +61,6 @@ type Project struct {
 	Description sql.NullString `json:"description"`
 	UpdateAt    sql.NullString `json:"updateAt"`
 	CreateAt    sql.NullString `json:"createAt"`
-}
-
-type Role struct {
-	ID          int64          `json:"id"`
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-	CreateAt    sql.NullString `json:"createAt"`
-}
-
-type RolePermission struct {
-	RoleID       int64          `json:"roleId"`
-	PermissionID int64          `json:"permissionId"`
-	CreateAt     sql.NullString `json:"createAt"`
 }
 
 type Token struct {
@@ -102,10 +82,4 @@ type User struct {
 	IsAdmin    int64          `json:"isAdmin"`
 	UpdateAt   sql.NullString `json:"updateAt"`
 	CreateAt   sql.NullString `json:"createAt"`
-}
-
-type UserRole struct {
-	UserID   int64          `json:"userId"`
-	RoleID   int64          `json:"roleId"`
-	CreateAt sql.NullString `json:"createAt"`
 }

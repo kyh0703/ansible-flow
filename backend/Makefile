@@ -91,7 +91,7 @@ tag:
 	@echo ""
 
 .PHONY: sqlc
-tag:
+sqlc:
 	@echo "sqlc:"
 	@echo "sqlc generate"
 	@sqlc generate

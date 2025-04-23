@@ -1,4 +1,4 @@
-package service
+package oauth
 
 import (
 	"context"
@@ -6,9 +6,15 @@ import (
 	"github.com/kyh0703/flow/internal/core/domain/model"
 )
 
-type OAuthService interface {
-	GetGoogleAuthURL(state string, redirectURL string) string
-	HandleGoogleCallback(ctx context.Context, code string, state string) (*model.User, error)
-	GetKakaoAuthURL(state string, redirectURL string) string
-	HandleKakaoCallback(ctx context.Context, code string, state string) (*model.User, error)
+type Provider string
+
+const (
+	Google Provider = "google"
+	Kakao  Provider = "kakao"
+	Github Provider = "github"
+)
+
+type Service interface {
+	GetAuthURL(provider Provider, state string, redirectURL string) string
+	HandleCallback(ctx context.Context, provider Provider, code string, state string) (*model.User, error)
 }

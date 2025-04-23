@@ -1,4 +1,4 @@
-package service
+package oauth
 
 type GoogleUserInfo struct {
 	ID            string `json:"id"`
@@ -16,4 +16,11 @@ type KakaoUserInfo struct {
 	KakaoAccount struct {
 		Email string `json:"email"`
 	} `json:"kakao_account"`
+}
+
+type GithubUserInfo struct {
+	ID        int64  `json:"id"`
+	Login     string `json:"login"`
+	AvatarURL string `json:"avatar_url"`
+	Email     string `json:"email"`
 }

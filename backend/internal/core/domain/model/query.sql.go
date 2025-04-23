@@ -10,44 +10,6 @@ import (
 	"database/sql"
 )
 
-const assignPermissionToRole = `-- name: AssignPermissionToRole :exec
-INSERT INTO role_permissions (
-  role_id,
-  permission_id
-) VALUES (
-  ?, ?
-)
-`
-
-type AssignPermissionToRoleParams struct {
-	RoleID       int64 `json:"roleId"`
-	PermissionID int64 `json:"permissionId"`
-}
-
-func (q *Queries) AssignPermissionToRole(ctx context.Context, arg AssignPermissionToRoleParams) error {
-	_, err := q.db.ExecContext(ctx, assignPermissionToRole, arg.RoleID, arg.PermissionID)
-	return err
-}
-
-const assignRoleToUser = `-- name: AssignRoleToUser :exec
-INSERT INTO user_roles (
-  user_id,
-  role_id
-) VALUES (
-  ?, ?
-)
-`
-
-type AssignRoleToUserParams struct {
-	UserID int64 `json:"userId"`
-	RoleID int64 `json:"roleId"`
-}
-
-func (q *Queries) AssignRoleToUser(ctx context.Context, arg AssignRoleToUserParams) error {
-	_, err := q.db.ExecContext(ctx, assignRoleToUser, arg.UserID, arg.RoleID)
-	return err
-}
-
 const countProjects = `-- name: CountProjects :one
 SELECT COUNT(*) FROM projects
 WHERE user_id = ?
@@ -238,33 +200,6 @@ func (q *Queries) CreateOAuthState(ctx context.Context, arg CreateOAuthStatePara
 	return i, err
 }
 
-const createPermission = `-- name: CreatePermission :one
-INSERT INTO permissions (
-  name,
-  description
-) VALUES (
-  ?, ?
-)
-RETURNING id, name, description, create_at
-`
-
-type CreatePermissionParams struct {
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-}
-
-func (q *Queries) CreatePermission(ctx context.Context, arg CreatePermissionParams) (Permission, error) {
-	row := q.db.QueryRowContext(ctx, createPermission, arg.Name, arg.Description)
-	var i Permission
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Description,
-		&i.CreateAt,
-	)
-	return i, err
-}
-
 const createProject = `-- name: CreateProject :one
 INSERT INTO projects (
   user_id,
@@ -293,33 +228,6 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (P
 		&i.Name,
 		&i.Description,
 		&i.UpdateAt,
-		&i.CreateAt,
-	)
-	return i, err
-}
-
-const createRole = `-- name: CreateRole :one
-INSERT INTO roles (
-  name,
-  description
-) VALUES (
-  ?, ?
-)
-RETURNING id, name, description, create_at
-`
-
-type CreateRoleParams struct {
-	Name        string         `json:"name"`
-	Description sql.NullString `json:"description"`
-}
-
-func (q *Queries) CreateRole(ctx context.Context, arg CreateRoleParams) (Role, error) {
-	row := q.db.QueryRowContext(ctx, createRole, arg.Name, arg.Description)
-	var i Role
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Description,
 		&i.CreateAt,
 	)
 	return i, err
@@ -449,16 +357,6 @@ func (q *Queries) DeleteOAuthState(ctx context.Context, state string) error {
 	return err
 }
 
-const deletePermission = `-- name: DeletePermission :exec
-DELETE FROM permissions
-WHERE id = ?
-`
-
-func (q *Queries) DeletePermission(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deletePermission, id)
-	return err
-}
-
 const deleteProject = `-- name: DeleteProject :exec
 DELETE FROM projects
 WHERE id = ?
@@ -466,16 +364,6 @@ WHERE id = ?
 
 func (q *Queries) DeleteProject(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteProject, id)
-	return err
-}
-
-const deleteRole = `-- name: DeleteRole :exec
-DELETE FROM roles
-WHERE id = ?
-`
-
-func (q *Queries) DeleteRole(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteRole, id)
 	return err
 }
 
@@ -585,23 +473,6 @@ func (q *Queries) GetOAuthState(ctx context.Context, state string) (OauthState, 
 	return i, err
 }
 
-const getPermission = `-- name: GetPermission :one
-SELECT id, name, description, create_at FROM permissions
-WHERE id = ? LIMIT 1
-`
-
-func (q *Queries) GetPermission(ctx context.Context, id int64) (Permission, error) {
-	row := q.db.QueryRowContext(ctx, getPermission, id)
-	var i Permission
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Description,
-		&i.CreateAt,
-	)
-	return i, err
-}
-
 const getProject = `-- name: GetProject :one
 SELECT id, user_id, name, description, update_at, create_at FROM projects
 WHERE id = ? LIMIT 1
@@ -619,57 +490,6 @@ func (q *Queries) GetProject(ctx context.Context, id int64) (Project, error) {
 		&i.CreateAt,
 	)
 	return i, err
-}
-
-const getRole = `-- name: GetRole :one
-SELECT id, name, description, create_at FROM roles
-WHERE id = ? LIMIT 1
-`
-
-func (q *Queries) GetRole(ctx context.Context, id int64) (Role, error) {
-	row := q.db.QueryRowContext(ctx, getRole, id)
-	var i Role
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Description,
-		&i.CreateAt,
-	)
-	return i, err
-}
-
-const getRolePermissions = `-- name: GetRolePermissions :many
-SELECT p.id, p.name, p.description, p.create_at FROM permissions p
-JOIN role_permissions rp ON rp.permission_id = p.id
-WHERE rp.role_id = ?
-`
-
-func (q *Queries) GetRolePermissions(ctx context.Context, roleID int64) ([]Permission, error) {
-	rows, err := q.db.QueryContext(ctx, getRolePermissions, roleID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Permission
-	for rows.Next() {
-		var i Permission
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const getToken = `-- name: GetToken :one
@@ -780,75 +600,6 @@ func (q *Queries) GetUserByProvider(ctx context.Context, arg GetUserByProviderPa
 		&i.CreateAt,
 	)
 	return i, err
-}
-
-const getUserPermissions = `-- name: GetUserPermissions :many
-SELECT DISTINCT p.id, p.name, p.description, p.create_at FROM permissions p
-JOIN role_permissions rp ON rp.permission_id = p.id
-JOIN user_roles ur ON ur.role_id = rp.role_id
-WHERE ur.user_id = ?
-`
-
-func (q *Queries) GetUserPermissions(ctx context.Context, userID int64) ([]Permission, error) {
-	rows, err := q.db.QueryContext(ctx, getUserPermissions, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Permission
-	for rows.Next() {
-		var i Permission
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getUserRoles = `-- name: GetUserRoles :many
-SELECT r.id, r.name, r.description, r.create_at FROM roles r
-JOIN user_roles ur ON ur.role_id = r.id
-WHERE ur.user_id = ?
-`
-
-func (q *Queries) GetUserRoles(ctx context.Context, userID int64) ([]Role, error) {
-	rows, err := q.db.QueryContext(ctx, getUserRoles, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Role
-	for rows.Next() {
-		var i Role
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const listEdges = `-- name: ListEdges :many
@@ -970,39 +721,6 @@ func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
 	return items, nil
 }
 
-const listPermissions = `-- name: ListPermissions :many
-SELECT id, name, description, create_at FROM permissions
-ORDER BY name
-`
-
-func (q *Queries) ListPermissions(ctx context.Context) ([]Permission, error) {
-	rows, err := q.db.QueryContext(ctx, listPermissions)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Permission
-	for rows.Next() {
-		var i Permission
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const listProjects = `-- name: ListProjects :many
 SELECT id, user_id, name, description, update_at, create_at FROM projects
 WHERE user_id = ?
@@ -1067,39 +785,6 @@ func (q *Queries) ListProjectsWithPaging(ctx context.Context, arg ListProjectsWi
 			&i.Name,
 			&i.Description,
 			&i.UpdateAt,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listRoles = `-- name: ListRoles :many
-SELECT id, name, description, create_at FROM roles
-ORDER BY name
-`
-
-func (q *Queries) ListRoles(ctx context.Context) ([]Role, error) {
-	rows, err := q.db.QueryContext(ctx, listRoles)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Role
-	for rows.Next() {
-		var i Role
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.Description,
 			&i.CreateAt,
 		); err != nil {
 			return nil, err
@@ -1336,36 +1021,6 @@ func (q *Queries) PatchUser(ctx context.Context, arg PatchUserParams) error {
 		arg.IsAdmin,
 		arg.ID,
 	)
-	return err
-}
-
-const removePermissionFromRole = `-- name: RemovePermissionFromRole :exec
-DELETE FROM role_permissions
-WHERE role_id = ? AND permission_id = ?
-`
-
-type RemovePermissionFromRoleParams struct {
-	RoleID       int64 `json:"roleId"`
-	PermissionID int64 `json:"permissionId"`
-}
-
-func (q *Queries) RemovePermissionFromRole(ctx context.Context, arg RemovePermissionFromRoleParams) error {
-	_, err := q.db.ExecContext(ctx, removePermissionFromRole, arg.RoleID, arg.PermissionID)
-	return err
-}
-
-const removeRoleFromUser = `-- name: RemoveRoleFromUser :exec
-DELETE FROM user_roles
-WHERE user_id = ? AND role_id = ?
-`
-
-type RemoveRoleFromUserParams struct {
-	UserID int64 `json:"userId"`
-	RoleID int64 `json:"roleId"`
-}
-
-func (q *Queries) RemoveRoleFromUser(ctx context.Context, arg RemoveRoleFromUserParams) error {
-	_, err := q.db.ExecContext(ctx, removeRoleFromUser, arg.UserID, arg.RoleID)
 	return err
 }
 
