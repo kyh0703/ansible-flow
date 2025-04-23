@@ -39,8 +39,8 @@ auth:
       - "account_email"
       - "profile_nickname"
   github:
-    client_id: "your-github-client-id"
-    client_secret: "your-github-client-secret"
+    client_id: "Ov23liioku54VGtjk65j"
+    client_secret: "bf7bf87b9a406c7fb2df2c39e332dd447f256e1e"
     redirect_url: "http://localhost:8080/api/v1/auth/github/callback"
     scopes:
       - "user:email"

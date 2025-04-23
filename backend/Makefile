@@ -44,6 +44,8 @@ watch:
 .PHONY: gen
 gen:
 	@echo "gen:"
+	@echo "sqlc generate"
+	@sqlc generate
 	@CGO_ENABLED=0 $(GO) generate ./...
 	@echo ""
 
@@ -88,13 +90,6 @@ tag:
 	@echo docker image tag $(TARGET):$(GIT_COMMIT) real-image-registry.ncr.gov-ntruss.com/ipron/$(TARGET):$(GIT_COMMIT)
 	@docker image tag $(TARGET):$(GIT_COMMIT) 100.100.103.167/ipron/$(TARGET):$(GIT_COMMIT)
 	@docker image tag $(TARGET):$(GIT_COMMIT) real-image-registry.ncr.gov-ntruss.com/ipron/$(TARGET):$(GIT_COMMIT)
-	@echo ""
-
-.PHONY: sqlc
-sqlc:
-	@echo "sqlc:"
-	@echo "sqlc generate"
-	@sqlc generate
 	@echo ""
 
 .PHONY: vendor

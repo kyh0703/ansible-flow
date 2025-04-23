@@ -7,6 +7,7 @@ import (
 	"github.com/kyh0703/flow/internal/pkg/response"
 )
 
+//counterfeiter:generate . OAuthHandler
 type OAuthHandler interface {
 	Handler
 	GoogleLogin(c *fiber.Ctx) error

@@ -15,7 +15,7 @@ import (
 	"github.com/kyh0703/flow/internal/pkg/response"
 )
 
-//counterfeiter:generate . flowHandler
+//counterfeiter:generate . FlowHandler
 type FlowHandler interface {
 	Table() []Mapper
 	CreateOne(c *fiber.Ctx) error
