@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"errors"
+	"math"
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
@@ -101,10 +102,12 @@ func (h *projectHandler) FindOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var res project.ProjectResponse
-	copier.Copy(&res, &finedProject)
-
-	return response.Success(c, fiber.StatusOK, res)
+	return response.Success(c, fiber.StatusOK, fiber.Map{
+		"name":        finedProject.Name,
+		"description": finedProject.Description,
+		"updateAt":    finedProject.UpdateAt,
+		"createAt":    finedProject.CreateAt,
+	})
 }
 
 func (h *projectHandler) UpdateOne(c *fiber.Ctx) error {
@@ -174,8 +177,18 @@ func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 	var projects []project.ProjectResponse
 	copier.Copy(&projects, &projectList)
 
+	page := req.Page
+	totalPages := int64(math.Ceil(float64(total) / float64(req.PageSize)))
+
 	return response.Success(c, fiber.StatusOK, fiber.Map{
-		"total": total,
 		"items": projects,
+		"meta": fiber.Map{
+			"total":      total,
+			"skip":       offset,
+			"take":       req.PageSize,
+			"hasMore":    int64(offset+req.PageSize) < total,
+			"page":       page,
+			"totalPages": totalPages,
+		},
 	})
 }
