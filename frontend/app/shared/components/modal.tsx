@@ -40,7 +40,7 @@ const Modal = ({ id, title = '', className, children }: ModalProps) => {
               className={cn(
                 'w-2/6',
                 'flex flex-col items-center justify-center gap-5',
-                'bg-dialog text-dialog-foreground p-6',
+                'text-dialog-foreground bg-accent p-6',
                 'rounded-sm',
                 className,
               )}
@@ -69,7 +69,7 @@ const Modal = ({ id, title = '', className, children }: ModalProps) => {
 }
 
 const ModalContent = ({ children }: PropsWithChildren) => (
-  <div className="z-10 h-full max-h-[440px] w-full overflow-y-scroll rounded-sm bg-[#F9F9F9] p-5 whitespace-pre-line dark:bg-[#272C31]">
+  <div className="bg-accent text-accent-foreground z-10 h-full max-h-[440px] w-full overflow-y-scroll rounded-sm p-5 whitespace-pre-line">
     {children}
   </div>
 )

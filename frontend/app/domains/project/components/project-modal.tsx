@@ -3,19 +3,23 @@
 import { useForm } from 'react-hook-form'
 import { useModalId } from '@/shared/contexts/modal-context'
 import { useModalActions, useModalData } from '@/shared/store/modal'
-import { ModalContent } from '@/shared/components/modal'
+import { ModalAction, ModalContent } from '@/shared/components/modal'
+import type { Project } from '@/shared/models/project'
+import FormInput from '@/shared/components/form-input'
+import { Button } from '@/shared/ui/button'
 
 type ModalData = {
   mode: 'create' | 'update'
+  data?: Project
 }
 
 export default function ProjectModal({
   onSubmit,
 }: {
-  onSubmit?: (data: ModalData) => void
+  onSubmit?: (mode: 'create' | 'update', data: Project) => void
 }) {
   const id = useModalId()
-  const modalData = useModalData()
+  const modalData = useModalData() as ModalData
   const { closeModal } = useModalActions()
 
   const {
@@ -23,22 +27,54 @@ export default function ProjectModal({
     control,
     formState: { errors },
     reset,
-  } = useForm<ModalData>()
+  } = useForm<Project>({
+    defaultValues: modalData?.data || {
+      name: '',
+      description: '',
+    },
+  })
 
   const handleCancelClick = () => {
     closeModal(id)
     reset()
   }
 
-  const onSubmitModal = (data: ModalData) => {
+  const onSubmitModal = (project: Project) => {
     closeModal(id)
     reset()
-    onSubmit?.(data)
+    onSubmit?.(modalData.mode, project)
   }
 
   return (
-    <form>
-      <ModalContent></ModalContent>
+    <form onSubmit={handleSubmit(onSubmitModal)}>
+      <ModalContent>
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <h3>Name</h3>
+            <FormInput
+              control={control}
+              name="name"
+              placeholder="Enter project name"
+            />
+            {errors.name && <p className="error-msg">{errors.name.message}</p>}
+            <h3>Description</h3>
+            <FormInput
+              control={control}
+              name="description"
+              placeholder="Enter project description"
+            />
+            {errors.description && (
+              <p className="error-msg">{errors.description.message}</p>
+            )}
+          </div>
+        </div>
+      </ModalContent>
+      <ModalAction>
+        <Button variant="destructive" onClick={handleCancelClick}>
+          Cancel
+        </Button>
+        <Button type="submit">Save</Button>
+      </ModalAction>
     </form>
   )
 }

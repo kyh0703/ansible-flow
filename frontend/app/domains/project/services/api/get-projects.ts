@@ -1,7 +1,7 @@
 import type { Project } from '@/shared/models/project'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const getProjects = async (pageParam = 0, take = 10) => {
+export const getProjects = async (pageParam = 1, pageSize = 10) => {
   const response = await fetchExtended<
     ApiResponse<{
       items: Project[]
@@ -15,7 +15,7 @@ export const getProjects = async (pageParam = 0, take = 10) => {
       }
     }>
   >(
-    `${import.meta.env.VITE_BASE_PATH}/projects?page=${pageParam}&take=${take}`,
+    `${import.meta.env.VITE_BASE_PATH}/projects?page=${pageParam}&pageSize=${pageSize}`,
     {
       method: 'GET',
     },
