@@ -166,9 +166,9 @@ func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 	user := c.Locals("user").(model.User)
-	offset := (*req.Page - 1) * *req.PageSize
+	offset := (req.Page - 1) * req.PageSize
 
-	projectList, total, err := h.projectRepository.GetListWithPaging(c.Context(), user.ID, offset, *req.PageSize)
+	projectList, total, err := h.projectRepository.GetListWithPaging(c.Context(), user.ID, offset, req.PageSize)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -177,7 +177,7 @@ func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 	copier.Copy(&projects, &projectList)
 
 	page := req.Page
-	totalPages := int64(math.Ceil(float64(total) / float64(*req.PageSize)))
+	totalPages := int64(math.Ceil(float64(total) / float64(req.PageSize)))
 
 	return response.Success(c, fiber.StatusOK, fiber.Map{
 		"items": projects,
@@ -185,7 +185,7 @@ func (h *projectHandler) FindAll(c *fiber.Ctx) error {
 			"total":      total,
 			"skip":       offset,
 			"take":       req.PageSize,
-			"hasMore":    int64(offset+*req.PageSize) < total,
+			"hasMore":    int64(offset+req.PageSize) < total,
 			"page":       page,
 			"totalPages": totalPages,
 		},
