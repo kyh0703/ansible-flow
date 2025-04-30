@@ -1,6 +1,4 @@
 import {
-  Background,
-  BackgroundVariant,
   Controls,
   MiniMap,
   Panel,
@@ -13,25 +11,25 @@ import {
 import { useCallback, useRef, useState } from 'react'
 import { useCursorStateSynced } from '../../hooks/use-cursor-state-synced'
 import { useEdgesStateSynced } from '../../hooks/use-edges-state-synced'
+import { useNodesStateSynced } from '../../hooks/use-nodes-state-synced'
 import { getCursorClassByEditMode } from '../../utils/get-cursor-mode'
 import DevTools from '../dev/dev-tool'
+import { IconToolbar } from '../toolbar/icon-toolbar'
+import { ConnectionLine } from '../tools/connection-line'
+import { HelperLines } from '../tools/helper-line'
+import { isValidConnection } from '../tools/validator'
 import {
   defaultEdgeOptions,
   fitViewOptions,
   proOptions,
   viewPort,
 } from './options'
-import { HelperLines } from '../tools/helper-line'
-import { isValidConnection } from '../tools/validator'
-import { useNodesStateSynced } from '../../hooks/use-nodes-state-synced'
-import { IconToolbar } from '../toolbar/icon-toolbar'
-import { ConnectionLine } from '../tools/connection-line'
 
-import '@xyflow/react/dist/style.css'
-import { Cursors } from '../tools/cursor'
-import { useEditMode } from '../../store/flow'
-import { useTheme } from '@/shared/providers/theme-provider'
 import { cn } from '@/shared/lib/utils'
+import { useTheme } from '@/shared/providers/theme-provider'
+import '@xyflow/react/dist/style.css'
+import { useEditMode } from '../../store/flow'
+import { Cursors } from '../tools/cursor'
 
 type FlowProps = {
   flowId: number
@@ -45,7 +43,7 @@ export default function BasicFlow({
   initialNodes,
   initialEdges,
   focusNode,
-}: FlowProps) {
+}: Readonly<FlowProps>) {
   const flowRef = useRef<HTMLDivElement>(null)
 
   const { theme } = useTheme()

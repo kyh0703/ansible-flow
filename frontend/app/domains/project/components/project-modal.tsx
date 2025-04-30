@@ -15,9 +15,9 @@ type ModalData = {
 
 export default function ProjectModal({
   onSubmit,
-}: {
+}: Readonly<{
   onSubmit?: (mode: 'create' | 'update', data: Project) => void
-}) {
+}>) {
   const id = useModalId()
   const modalData = useModalData() as ModalData
   const { closeModal } = useModalActions()

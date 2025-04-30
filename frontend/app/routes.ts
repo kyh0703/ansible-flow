@@ -11,13 +11,16 @@ export default [
     index('./domains/dashboard/pages/home.tsx'),
     route('/auth-callback', './domains/dashboard/pages/auth-callback.tsx'),
     layout('./domains/project/layouts/index.tsx', [
-      ...prefix('project', [
+      ...prefix('projects', [
         index('./domains/project/pages/index.tsx'),
         route(':projectId', './domains/project/pages/detail.tsx'),
       ]),
     ]),
     layout('./domains/flow/layouts/index.tsx', [
-      ...prefix('flow', [route(':flowId', './domains/flow/pages/detail.tsx')]),
+      ...prefix('projects/:projectId/flows', [
+        index('./domains/flow/pages/index.tsx'),
+        route(':flowId', './domains/flow/pages/detail.tsx'),
+      ]),
     ]),
   ]),
 ] satisfies RouteConfig

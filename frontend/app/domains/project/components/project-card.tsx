@@ -15,7 +15,8 @@ type ProjectCardProps = {
   project: Project
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
+  console.log(project)
   return (
     <Card className="flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
       <div className="from-primary/20 to-primary/5 flex aspect-video w-full items-center justify-center bg-gradient-to-br p-8">
@@ -39,7 +40,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       </CardContent>
       <CardFooter className="p-6 pt-0">
         <Button asChild className="w-full">
-          <Link to={`/flows/${project.id}`}>
+          <Link to={`/projects/${project.id}/flows`}>
             View Flow <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

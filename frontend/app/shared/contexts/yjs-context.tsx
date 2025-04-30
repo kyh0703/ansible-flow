@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type PropsWithChildren,
@@ -19,12 +20,12 @@ type YjsState = {
 const YjsContext = createContext<YjsState | undefined>(undefined)
 
 type YjsProviderProps = {
-  flowId: number
+  projectId: number
   baseUrl?: string
 } & PropsWithChildren
 
 export default function YjsProvider({
-  flowId,
+  projectId,
   baseUrl,
   children,
 }: YjsProviderProps) {
@@ -33,13 +34,18 @@ export default function YjsProvider({
   const [isConnected, setIsConnected] = useState(false)
   const [isSynced, setIsSynced] = useState(false)
 
+  const value = useMemo(
+    () => ({ yDoc: yDocRef.current, isConnected, isSynced }),
+    [isConnected, isSynced],
+  )
+
   useEffect(() => {
     if (!baseUrl) {
       throw new Error('[YJS] URL is not defined')
     }
 
     const yDoc = yDocRef.current
-    const provider = new WebsocketProvider(baseUrl, `room/${flowId}`, yDoc)
+    const provider = new WebsocketProvider(baseUrl, `room/${projectId}`, yDoc)
     yDoc.gc = true
     logger.info('[YJS] Initialized', baseUrl)
 
@@ -65,15 +71,9 @@ export default function YjsProvider({
       provider?.destroy()
       yDoc.destroy()
     }
-  }, [baseUrl, flowId])
+  }, [baseUrl, projectId])
 
-  return (
-    <YjsContext.Provider
-      value={{ yDoc: yDocRef.current, isConnected, isSynced }}
-    >
-      {children}
-    </YjsContext.Provider>
-  )
+  return <YjsContext.Provider value={value}>{children}</YjsContext.Provider>
 }
 
 export const useYjs = () => {

@@ -4,7 +4,9 @@ import {
   ResizablePanelGroup,
 } from '../../../shared/ui/resizable'
 
-export default function Panel({ children }: { children: React.ReactNode }) {
+export default function Panel({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel defaultSize={20} maxSize={50}>

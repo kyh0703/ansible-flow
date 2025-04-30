@@ -15,7 +15,7 @@ type ChangeInfoProps = {
   change: NodeChange
 }
 
-function ChangeInfo({ change }: ChangeInfoProps) {
+function ChangeInfo({ change }: Readonly<ChangeInfoProps>) {
   const id = 'id' in change ? change.id : '-'
   const { type } = change
 
@@ -39,7 +39,9 @@ function ChangeInfo({ change }: ChangeInfoProps) {
   )
 }
 
-export default function ChangeLogger({ limit = 20 }: ChangeLoggerProps) {
+export default function ChangeLogger({
+  limit = 20,
+}: Readonly<ChangeLoggerProps>) {
   const [changes, setChanges] = useState<NodeChange[]>([])
   const onNodesChangeIntercepted = useRef(false)
   const onNodesChange = useStore((s) => s.onNodesChange)

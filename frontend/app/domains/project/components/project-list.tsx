@@ -1,10 +1,9 @@
-import { useInView } from 'react-intersection-observer'
 import { useInfiniteQueryProjects } from '@/domains/project/services'
 import { Spinner } from '@/shared/ui/spinner'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import ProjectCard from './project-card'
 import { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
+import ProjectCard from './project-card'
 
 export default function ProjectList() {
   const { ref, inView } = useInView({
