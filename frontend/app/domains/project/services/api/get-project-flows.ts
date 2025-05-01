@@ -1,10 +1,14 @@
-import type { Flow } from '@/shared/models/flow'
+import type { Project } from '@/shared/models/project'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const getProjects = async (pageParam = 1, pageSize = 10) => {
+export const getProjectFlows = async (
+  projectId: number,
+  pageParam = 1,
+  pageSize = 10,
+) => {
   const response = await fetchExtended<
     ApiResponse<{
-      items: Flow[]
+      items: Project[]
       meta: {
         total: number
         skip: number
@@ -15,7 +19,7 @@ export const getProjects = async (pageParam = 1, pageSize = 10) => {
       }
     }>
   >(
-    `${import.meta.env.VITE_BASE_PATH}/projects?page=${pageParam}&pageSize=${pageSize}`,
+    `${import.meta.env.VITE_BASE_PATH}/projects/${projectId}/flows?page=${pageParam}&pageSize=${pageSize}`,
     {
       method: 'GET',
     },

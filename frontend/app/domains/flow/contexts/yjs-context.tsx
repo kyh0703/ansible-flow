@@ -1,3 +1,4 @@
+import logger from '@/shared/utils/logger'
 import {
   createContext,
   useContext,
@@ -9,7 +10,6 @@ import {
 } from 'react'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
-import logger from '../utils/logger'
 
 type YjsState = {
   yDoc: Y.Doc
@@ -21,11 +21,13 @@ const YjsContext = createContext<YjsState | undefined>(undefined)
 
 type YjsProviderProps = {
   projectId: number
+  flowId: number
   baseUrl?: string
 } & PropsWithChildren
 
 export default function YjsProvider({
   projectId,
+  flowId,
   baseUrl,
   children,
 }: YjsProviderProps) {
@@ -33,10 +35,9 @@ export default function YjsProvider({
   const startTimeRef = useRef<number>(performance.now())
   const [isConnected, setIsConnected] = useState(false)
   const [isSynced, setIsSynced] = useState(false)
-
   const value = useMemo(
-    () => ({ yDoc: yDocRef.current, isConnected, isSynced }),
-    [isConnected, isSynced],
+    () => ({ yDoc: yDocRef.current, isConnected, isSynced, projectId, flowId }),
+    [isConnected, isSynced, projectId, flowId],
   )
 
   useEffect(() => {
@@ -45,7 +46,11 @@ export default function YjsProvider({
     }
 
     const yDoc = yDocRef.current
-    const provider = new WebsocketProvider(baseUrl, `room/${projectId}`, yDoc)
+    const provider = new WebsocketProvider(
+      baseUrl,
+      `${projectId}/${flowId}`,
+      yDoc,
+    )
     yDoc.gc = true
     logger.info('[YJS] Initialized', baseUrl)
 

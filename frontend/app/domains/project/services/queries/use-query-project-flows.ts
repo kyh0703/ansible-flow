@@ -1,10 +1,10 @@
 import type { Project } from '@/shared/models/project'
-import { getProjects } from '../api'
+import { getProjectFlows } from '../api'
 import { projectKey } from '../keys'
 
-export const useInfiniteQueryProjects = () => ({
-  queryKey: [projectKey.lists],
-  queryFn: ({ pageParam = 0 }) => getProjects(pageParam, 10),
+export const useInfiniteQueryFlows = (projectId: number) => ({
+  queryKey: [projectKey.flows.lists(projectId)],
+  queryFn: ({ pageParam = 0 }) => getProjectFlows(projectId, pageParam, 10),
   initialPageParam: 0,
   getNextPageParam: (lastPage: {
     items: Project[]
