@@ -35,7 +35,7 @@ export function LoginForm() {
     try {
       const response = await login(data)
       setToken(response)
-      navigate('/project')
+      navigate('/projects')
     } catch (error) {
       toast.error(extractErrorMessage(error))
       logger.error(error)

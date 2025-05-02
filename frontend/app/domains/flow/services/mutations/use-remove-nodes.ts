@@ -1,17 +1,17 @@
+import type { CustomResponse } from '@/shared/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { removeNodes } from '..'
-import type { CustomResponse } from '@/shared/services'
 
 type Response = CustomResponse
-type Variables = { flowId: number; removeIds: number[] }
+type Variables = { projectId: number; flowId: number; nodeIds: number[] }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
 export const useRemoveNodes = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: ({ flowId, removeIds }) => {
-      return removeNodes(flowId, removeIds)
+    mutationFn: ({ projectId, flowId, nodeIds }) => {
+      return removeNodes(projectId, flowId, nodeIds)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {

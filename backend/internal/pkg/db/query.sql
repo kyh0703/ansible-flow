@@ -107,20 +107,15 @@ RETURNING *;
 SELECT * FROM projects
 WHERE id = ? LIMIT 1;
 
--- name: ListProjects :many
-SELECT * FROM projects
-WHERE user_id = ?
-ORDER BY name;
+-- name: CountProjects :one
+SELECT COUNT(*) FROM projects
+WHERE user_id = ?;
 
--- name: ListProjectsWithPaging :many
+-- name: PaginationProjects :many
 SELECT * FROM projects
 WHERE user_id = ?
 ORDER BY name
 LIMIT ? OFFSET ?;
-
--- name: CountProjects :one
-SELECT COUNT(*) FROM projects
-WHERE user_id = ?;
 
 -- name: PatchProject :exec
 UPDATE projects SET
@@ -147,10 +142,15 @@ RETURNING *;
 SELECT * FROM flows
 WHERE id = ? LIMIT 1;
 
--- name: ListFlows :many
+-- name: CountFlows :one
+SELECT COUNT(*) FROM flows
+WHERE project_id = ?;
+
+-- name: PaginationFlows :many
 SELECT * FROM flows
 WHERE project_id = ?
-ORDER BY name;
+ORDER BY name
+LIMIT ? OFFSET ?;
 
 -- name: PatchFlow :exec
 UPDATE flows SET

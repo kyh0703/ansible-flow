@@ -1,10 +1,14 @@
 import { fetchExtended, type CustomResponse } from '@/shared/services'
 
-export const removeNodes = async (flowId: number, removeIds: number[]) => {
+export const removeNodes = async (
+  projectId: number,
+  flowId: number,
+  removeIds: number[],
+) => {
   const response = await fetchExtended<CustomResponse>(
-    `${import.meta.env.VITE_BASE_PATH}/flows/${flowId}/nodes/delete`,
+    `${import.meta.env.VITE_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
     {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },

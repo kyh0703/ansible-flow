@@ -1,14 +1,14 @@
+import FormInput from '@/shared/components/form-input'
+import { setToken } from '@/shared/services'
+import { Button } from '@/shared/ui/button'
+import { extractErrorMessage } from '@/shared/utils/errors'
+import logger from '@/shared/utils/logger'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { register } from '../services'
-import { Button } from '@/shared/ui/button'
-import FormInput from '@/shared/components/form-input'
-import { setToken } from '@/shared/services'
-import logger from '@/shared/utils/logger'
-import { extractErrorMessage } from '@/shared/utils/errors'
 
 const SignupSchema = z
   .object({
@@ -41,7 +41,7 @@ export function RegisterForm() {
     try {
       const response = await register(data)
       setToken(response)
-      navigate('/project')
+      navigate('/projects')
     } catch (error) {
       toast.error(extractErrorMessage(error))
       logger.error(error)

@@ -1,9 +1,9 @@
 import { useReactFlow } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useYjs } from '../contexts/yjs-context'
 import type { Cursor } from '../types/collaboration'
 import { stringToColor } from '../utils'
 import useYjsData from './use-yjs-data'
-import { useYjs } from '@/shared/contexts/yjs-context'
 
 const MAX_IDLE_TIME = 10000
 

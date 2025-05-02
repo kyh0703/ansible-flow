@@ -36,31 +36,31 @@ type FakeAuthRepository struct {
 	deleteOneReturnsOnCall map[int]struct {
 		result1 error
 	}
-	FindOneStub        func(context.Context, int64) (model.Token, error)
-	findOneMutex       sync.RWMutex
-	findOneArgsForCall []struct {
+	FindByIDStub        func(context.Context, int64) (model.Token, error)
+	findByIDMutex       sync.RWMutex
+	findByIDArgsForCall []struct {
 		arg1 context.Context
 		arg2 int64
 	}
-	findOneReturns struct {
+	findByIDReturns struct {
 		result1 model.Token
 		result2 error
 	}
-	findOneReturnsOnCall map[int]struct {
+	findByIDReturnsOnCall map[int]struct {
 		result1 model.Token
 		result2 error
 	}
-	FindOneByUserIDStub        func(context.Context, int64) (model.Token, error)
-	findOneByUserIDMutex       sync.RWMutex
-	findOneByUserIDArgsForCall []struct {
+	FindByUserIDStub        func(context.Context, int64) (model.Token, error)
+	findByUserIDMutex       sync.RWMutex
+	findByUserIDArgsForCall []struct {
 		arg1 context.Context
 		arg2 int64
 	}
-	findOneByUserIDReturns struct {
+	findByUserIDReturns struct {
 		result1 model.Token
 		result2 error
 	}
-	findOneByUserIDReturnsOnCall map[int]struct {
+	findByUserIDReturnsOnCall map[int]struct {
 		result1 model.Token
 		result2 error
 	}
@@ -220,17 +220,17 @@ func (fake *FakeAuthRepository) DeleteOneReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeAuthRepository) FindOne(arg1 context.Context, arg2 int64) (model.Token, error) {
-	fake.findOneMutex.Lock()
-	ret, specificReturn := fake.findOneReturnsOnCall[len(fake.findOneArgsForCall)]
-	fake.findOneArgsForCall = append(fake.findOneArgsForCall, struct {
+func (fake *FakeAuthRepository) FindByID(arg1 context.Context, arg2 int64) (model.Token, error) {
+	fake.findByIDMutex.Lock()
+	ret, specificReturn := fake.findByIDReturnsOnCall[len(fake.findByIDArgsForCall)]
+	fake.findByIDArgsForCall = append(fake.findByIDArgsForCall, struct {
 		arg1 context.Context
 		arg2 int64
 	}{arg1, arg2})
-	stub := fake.FindOneStub
-	fakeReturns := fake.findOneReturns
-	fake.recordInvocation("FindOne", []interface{}{arg1, arg2})
-	fake.findOneMutex.Unlock()
+	stub := fake.FindByIDStub
+	fakeReturns := fake.findByIDReturns
+	fake.recordInvocation("FindByID", []interface{}{arg1, arg2})
+	fake.findByIDMutex.Unlock()
 	if stub != nil {
 		return stub(arg1, arg2)
 	}
@@ -240,62 +240,62 @@ func (fake *FakeAuthRepository) FindOne(arg1 context.Context, arg2 int64) (model
 	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeAuthRepository) FindOneCallCount() int {
-	fake.findOneMutex.RLock()
-	defer fake.findOneMutex.RUnlock()
-	return len(fake.findOneArgsForCall)
+func (fake *FakeAuthRepository) FindByIDCallCount() int {
+	fake.findByIDMutex.RLock()
+	defer fake.findByIDMutex.RUnlock()
+	return len(fake.findByIDArgsForCall)
 }
 
-func (fake *FakeAuthRepository) FindOneCalls(stub func(context.Context, int64) (model.Token, error)) {
-	fake.findOneMutex.Lock()
-	defer fake.findOneMutex.Unlock()
-	fake.FindOneStub = stub
+func (fake *FakeAuthRepository) FindByIDCalls(stub func(context.Context, int64) (model.Token, error)) {
+	fake.findByIDMutex.Lock()
+	defer fake.findByIDMutex.Unlock()
+	fake.FindByIDStub = stub
 }
 
-func (fake *FakeAuthRepository) FindOneArgsForCall(i int) (context.Context, int64) {
-	fake.findOneMutex.RLock()
-	defer fake.findOneMutex.RUnlock()
-	argsForCall := fake.findOneArgsForCall[i]
+func (fake *FakeAuthRepository) FindByIDArgsForCall(i int) (context.Context, int64) {
+	fake.findByIDMutex.RLock()
+	defer fake.findByIDMutex.RUnlock()
+	argsForCall := fake.findByIDArgsForCall[i]
 	return argsForCall.arg1, argsForCall.arg2
 }
 
-func (fake *FakeAuthRepository) FindOneReturns(result1 model.Token, result2 error) {
-	fake.findOneMutex.Lock()
-	defer fake.findOneMutex.Unlock()
-	fake.FindOneStub = nil
-	fake.findOneReturns = struct {
+func (fake *FakeAuthRepository) FindByIDReturns(result1 model.Token, result2 error) {
+	fake.findByIDMutex.Lock()
+	defer fake.findByIDMutex.Unlock()
+	fake.FindByIDStub = nil
+	fake.findByIDReturns = struct {
 		result1 model.Token
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeAuthRepository) FindOneReturnsOnCall(i int, result1 model.Token, result2 error) {
-	fake.findOneMutex.Lock()
-	defer fake.findOneMutex.Unlock()
-	fake.FindOneStub = nil
-	if fake.findOneReturnsOnCall == nil {
-		fake.findOneReturnsOnCall = make(map[int]struct {
+func (fake *FakeAuthRepository) FindByIDReturnsOnCall(i int, result1 model.Token, result2 error) {
+	fake.findByIDMutex.Lock()
+	defer fake.findByIDMutex.Unlock()
+	fake.FindByIDStub = nil
+	if fake.findByIDReturnsOnCall == nil {
+		fake.findByIDReturnsOnCall = make(map[int]struct {
 			result1 model.Token
 			result2 error
 		})
 	}
-	fake.findOneReturnsOnCall[i] = struct {
+	fake.findByIDReturnsOnCall[i] = struct {
 		result1 model.Token
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeAuthRepository) FindOneByUserID(arg1 context.Context, arg2 int64) (model.Token, error) {
-	fake.findOneByUserIDMutex.Lock()
-	ret, specificReturn := fake.findOneByUserIDReturnsOnCall[len(fake.findOneByUserIDArgsForCall)]
-	fake.findOneByUserIDArgsForCall = append(fake.findOneByUserIDArgsForCall, struct {
+func (fake *FakeAuthRepository) FindByUserID(arg1 context.Context, arg2 int64) (model.Token, error) {
+	fake.findByUserIDMutex.Lock()
+	ret, specificReturn := fake.findByUserIDReturnsOnCall[len(fake.findByUserIDArgsForCall)]
+	fake.findByUserIDArgsForCall = append(fake.findByUserIDArgsForCall, struct {
 		arg1 context.Context
 		arg2 int64
 	}{arg1, arg2})
-	stub := fake.FindOneByUserIDStub
-	fakeReturns := fake.findOneByUserIDReturns
-	fake.recordInvocation("FindOneByUserID", []interface{}{arg1, arg2})
-	fake.findOneByUserIDMutex.Unlock()
+	stub := fake.FindByUserIDStub
+	fakeReturns := fake.findByUserIDReturns
+	fake.recordInvocation("FindByUserID", []interface{}{arg1, arg2})
+	fake.findByUserIDMutex.Unlock()
 	if stub != nil {
 		return stub(arg1, arg2)
 	}
@@ -305,46 +305,46 @@ func (fake *FakeAuthRepository) FindOneByUserID(arg1 context.Context, arg2 int64
 	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeAuthRepository) FindOneByUserIDCallCount() int {
-	fake.findOneByUserIDMutex.RLock()
-	defer fake.findOneByUserIDMutex.RUnlock()
-	return len(fake.findOneByUserIDArgsForCall)
+func (fake *FakeAuthRepository) FindByUserIDCallCount() int {
+	fake.findByUserIDMutex.RLock()
+	defer fake.findByUserIDMutex.RUnlock()
+	return len(fake.findByUserIDArgsForCall)
 }
 
-func (fake *FakeAuthRepository) FindOneByUserIDCalls(stub func(context.Context, int64) (model.Token, error)) {
-	fake.findOneByUserIDMutex.Lock()
-	defer fake.findOneByUserIDMutex.Unlock()
-	fake.FindOneByUserIDStub = stub
+func (fake *FakeAuthRepository) FindByUserIDCalls(stub func(context.Context, int64) (model.Token, error)) {
+	fake.findByUserIDMutex.Lock()
+	defer fake.findByUserIDMutex.Unlock()
+	fake.FindByUserIDStub = stub
 }
 
-func (fake *FakeAuthRepository) FindOneByUserIDArgsForCall(i int) (context.Context, int64) {
-	fake.findOneByUserIDMutex.RLock()
-	defer fake.findOneByUserIDMutex.RUnlock()
-	argsForCall := fake.findOneByUserIDArgsForCall[i]
+func (fake *FakeAuthRepository) FindByUserIDArgsForCall(i int) (context.Context, int64) {
+	fake.findByUserIDMutex.RLock()
+	defer fake.findByUserIDMutex.RUnlock()
+	argsForCall := fake.findByUserIDArgsForCall[i]
 	return argsForCall.arg1, argsForCall.arg2
 }
 
-func (fake *FakeAuthRepository) FindOneByUserIDReturns(result1 model.Token, result2 error) {
-	fake.findOneByUserIDMutex.Lock()
-	defer fake.findOneByUserIDMutex.Unlock()
-	fake.FindOneByUserIDStub = nil
-	fake.findOneByUserIDReturns = struct {
+func (fake *FakeAuthRepository) FindByUserIDReturns(result1 model.Token, result2 error) {
+	fake.findByUserIDMutex.Lock()
+	defer fake.findByUserIDMutex.Unlock()
+	fake.FindByUserIDStub = nil
+	fake.findByUserIDReturns = struct {
 		result1 model.Token
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeAuthRepository) FindOneByUserIDReturnsOnCall(i int, result1 model.Token, result2 error) {
-	fake.findOneByUserIDMutex.Lock()
-	defer fake.findOneByUserIDMutex.Unlock()
-	fake.FindOneByUserIDStub = nil
-	if fake.findOneByUserIDReturnsOnCall == nil {
-		fake.findOneByUserIDReturnsOnCall = make(map[int]struct {
+func (fake *FakeAuthRepository) FindByUserIDReturnsOnCall(i int, result1 model.Token, result2 error) {
+	fake.findByUserIDMutex.Lock()
+	defer fake.findByUserIDMutex.Unlock()
+	fake.FindByUserIDStub = nil
+	if fake.findByUserIDReturnsOnCall == nil {
+		fake.findByUserIDReturnsOnCall = make(map[int]struct {
 			result1 model.Token
 			result2 error
 		})
 	}
-	fake.findOneByUserIDReturnsOnCall[i] = struct {
+	fake.findByUserIDReturnsOnCall[i] = struct {
 		result1 model.Token
 		result2 error
 	}{result1, result2}
@@ -483,10 +483,10 @@ func (fake *FakeAuthRepository) Invocations() map[string][][]interface{} {
 	defer fake.createOneMutex.RUnlock()
 	fake.deleteOneMutex.RLock()
 	defer fake.deleteOneMutex.RUnlock()
-	fake.findOneMutex.RLock()
-	defer fake.findOneMutex.RUnlock()
-	fake.findOneByUserIDMutex.RLock()
-	defer fake.findOneByUserIDMutex.RUnlock()
+	fake.findByIDMutex.RLock()
+	defer fake.findByIDMutex.RUnlock()
+	fake.findByUserIDMutex.RLock()
+	defer fake.findByUserIDMutex.RUnlock()
 	fake.getListMutex.RLock()
 	defer fake.getListMutex.RUnlock()
 	fake.updateOneMutex.RLock()

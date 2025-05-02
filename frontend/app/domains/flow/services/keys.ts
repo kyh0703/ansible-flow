@@ -1,6 +1,7 @@
-export const subFlowKeys = {
+export const flowKey = {
+  structure: 'structure' as const,
   nodes: 'nodes' as const,
   edges: 'edges' as const,
   nodeProperty: (nodeId: number) =>
-    [subFlowKeys.nodes, nodeId, 'property'] as const,
+    [flowKey.nodes, nodeId, 'property'] as const,
 }

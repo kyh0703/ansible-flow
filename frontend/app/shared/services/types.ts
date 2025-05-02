@@ -15,9 +15,9 @@ export class CustomError extends Error {
   public status: number
 
   constructor(code: number, status: number, message: string) {
-    super(message || errorMessages.get(code) || 'Unknown error')
+    super(message ?? errorMessages.get(code) ?? 'Unknown error')
     this.code = code
-    this.message = errorMessages.get(code) || message || 'Unknown error'
+    this.message = errorMessages.get(code) ?? message ?? 'Unknown error'
     this.status = status
     this.name = 'CustomError'
   }

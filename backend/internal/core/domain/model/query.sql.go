@@ -10,6 +10,18 @@ import (
 	"database/sql"
 )
 
+const countFlows = `-- name: CountFlows :one
+SELECT COUNT(*) FROM flows
+WHERE project_id = ?
+`
+
+func (q *Queries) CountFlows(ctx context.Context, projectID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countFlows, projectID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countProjects = `-- name: CountProjects :one
 SELECT COUNT(*) FROM projects
 WHERE user_id = ?
@@ -643,42 +655,6 @@ func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
 	return items, nil
 }
 
-const listFlows = `-- name: ListFlows :many
-SELECT id, project_id, name, description, update_at, create_at FROM flows
-WHERE project_id = ?
-ORDER BY name
-`
-
-func (q *Queries) ListFlows(ctx context.Context, projectID int64) ([]Flow, error) {
-	rows, err := q.db.QueryContext(ctx, listFlows, projectID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Flow
-	for rows.Next() {
-		var i Flow
-		if err := rows.Scan(
-			&i.ID,
-			&i.ProjectID,
-			&i.Name,
-			&i.Description,
-			&i.UpdateAt,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const listNodes = `-- name: ListNodes :many
 SELECT id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE flow_id = ?
@@ -704,85 +680,6 @@ func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
 			&i.Width,
 			&i.Height,
 			&i.Hidden,
-			&i.Description,
-			&i.UpdateAt,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listProjects = `-- name: ListProjects :many
-SELECT id, user_id, name, description, update_at, create_at FROM projects
-WHERE user_id = ?
-ORDER BY name
-`
-
-func (q *Queries) ListProjects(ctx context.Context, userID int64) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, listProjects, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Project
-	for rows.Next() {
-		var i Project
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.Name,
-			&i.Description,
-			&i.UpdateAt,
-			&i.CreateAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const listProjectsWithPaging = `-- name: ListProjectsWithPaging :many
-SELECT id, user_id, name, description, update_at, create_at FROM projects
-WHERE user_id = ?
-ORDER BY name
-LIMIT ? OFFSET ?
-`
-
-type ListProjectsWithPagingParams struct {
-	UserID int64 `json:"userId"`
-	Limit  int64 `json:"limit"`
-	Offset int64 `json:"offset"`
-}
-
-func (q *Queries) ListProjectsWithPaging(ctx context.Context, arg ListProjectsWithPagingParams) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, listProjectsWithPaging, arg.UserID, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Project
-	for rows.Next() {
-		var i Project
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.Name,
 			&i.Description,
 			&i.UpdateAt,
 			&i.CreateAt,
@@ -857,6 +754,92 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Provider,
 			&i.ProviderID,
 			&i.IsAdmin,
+			&i.UpdateAt,
+			&i.CreateAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const paginationFlows = `-- name: PaginationFlows :many
+SELECT id, project_id, name, description, update_at, create_at FROM flows
+WHERE project_id = ?
+ORDER BY name
+LIMIT ? OFFSET ?
+`
+
+type PaginationFlowsParams struct {
+	ProjectID int64 `json:"projectId"`
+	Limit     int64 `json:"limit"`
+	Offset    int64 `json:"offset"`
+}
+
+func (q *Queries) PaginationFlows(ctx context.Context, arg PaginationFlowsParams) ([]Flow, error) {
+	rows, err := q.db.QueryContext(ctx, paginationFlows, arg.ProjectID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Flow
+	for rows.Next() {
+		var i Flow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ProjectID,
+			&i.Name,
+			&i.Description,
+			&i.UpdateAt,
+			&i.CreateAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const paginationProjects = `-- name: PaginationProjects :many
+SELECT id, user_id, name, description, update_at, create_at FROM projects
+WHERE user_id = ?
+ORDER BY name
+LIMIT ? OFFSET ?
+`
+
+type PaginationProjectsParams struct {
+	UserID int64 `json:"userId"`
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
+}
+
+func (q *Queries) PaginationProjects(ctx context.Context, arg PaginationProjectsParams) ([]Project, error) {
+	rows, err := q.db.QueryContext(ctx, paginationProjects, arg.UserID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Project
+	for rows.Next() {
+		var i Project
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Description,
 			&i.UpdateAt,
 			&i.CreateAt,
 		); err != nil {

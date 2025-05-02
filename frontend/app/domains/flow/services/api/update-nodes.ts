@@ -1,9 +1,13 @@
 import type { ModelNode } from '@/shared/models/node'
 import { fetchExtended, type CustomResponse } from '@/shared/services'
 
-export const updateNodes = async (flowId: number, nodes: ModelNode[]) => {
+export const updateNodes = async (
+  projectId: number,
+  flowId: number,
+  nodes: ModelNode[],
+) => {
   const response = await fetchExtended<CustomResponse>(
-    `${import.meta.env.VITE_BASE_PATH}/flows/${flowId}/nodes`,
+    `${import.meta.env.VITE_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
     {
       method: 'PUT',
       headers: {

@@ -10,7 +10,6 @@ import (
 	"github.com/kyh0703/flow/configs"
 	"github.com/kyh0703/flow/internal/core/handler"
 	"github.com/kyh0703/flow/internal/core/middleware"
-	"github.com/kyh0703/flow/internal/core/recorder"
 	"github.com/kyh0703/flow/internal/core/repository"
 	"github.com/kyh0703/flow/internal/core/service"
 	"github.com/kyh0703/flow/internal/pkg"
@@ -34,7 +33,6 @@ func main() {
 	app := fx.New(
 		configs.Module,
 		pkg.Module,
-		recorder.Module,
 		repository.Module,
 		service.Module,
 		middleware.Module,

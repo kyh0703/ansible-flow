@@ -43,19 +43,31 @@ func NewAuthHandler(
 
 func (a *authHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(fiber.MethodPost, "/auth/register",
-			a.Register),
-		Mapping(fiber.MethodPost, "/auth/login",
-			a.Login),
-		Mapping(fiber.MethodPost, "/auth/logout",
-			a.Logout),
-		Mapping(fiber.MethodPost, "/auth/refresh",
-			a.Refresh),
+		Mapping(
+			fiber.MethodPost,
+			"/auth/register",
+			a.Register,
+		),
+		Mapping(
+			fiber.MethodPost,
+			"/auth/login",
+			a.Login,
+		),
+		Mapping(
+			fiber.MethodPost,
+			"/auth/logout",
+			a.Logout,
+		),
+		Mapping(
+			fiber.MethodPost,
+			"/auth/refresh",
+			a.Refresh,
+		),
 	}
 }
 
 func (a *authHandler) Register(c *fiber.Ctx) error {
-	var register dto.Register
+	var register dto.RegisterDto
 	if err := c.BodyParser(&register); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -81,7 +93,7 @@ func (a *authHandler) Register(c *fiber.Ctx) error {
 }
 
 func (a *authHandler) Login(c *fiber.Ctx) error {
-	var login dto.Login
+	var login dto.LoginDto
 	if err := c.BodyParser(&login); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

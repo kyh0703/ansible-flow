@@ -8,11 +8,11 @@ var Module = fx.Module(
 	"handler",
 	fx.Provide(
 		AsHandler(NewAuthHandler),
-		AsHandler(NewEdgeHandler),
-		AsHandler(NewFlowHandler),
-		AsHandler(NewNodeHandler),
+		AsHandler(NewEdgesHandler),
+		AsHandler(NewFlowsHandler),
+		AsHandler(NewNodesHandler),
 		AsHandler(NewOAuthHandler),
-		AsHandler(NewProjectHandler),
-		AsHandler(NewUserHandler),
+		AsHandler(NewProjectsHandler),
+		AsHandler(NewUsersHandler),
 	),
 )

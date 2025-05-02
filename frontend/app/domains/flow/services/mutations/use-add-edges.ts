@@ -1,22 +1,20 @@
+import type { CustomResponse } from '@/shared/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppEdge } from '@xyflow/react'
 import { toast } from 'react-toastify'
 import { addEdges } from '..'
 import { toModelEdge } from '../../utils'
-import type { CustomResponse } from '@/shared/services'
 
 type Response = number[]
-type Variables = { flowId: number; edges: AppEdge[] }
+type Variables = { projectId: number; flowId: number; edges: AppEdge[] }
 type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
 
 export const useAddEdges = (options?: MutationOptions) => {
   return useMutation<Response, CustomResponse, Variables>({
     ...options,
-    mutationFn: ({ flowId, edges }) => {
-      if (edges.length === 0) {
-        return Promise.resolve([])
-      }
+    mutationFn: ({ projectId, flowId, edges }) => {
       return addEdges(
+        projectId,
         flowId,
         edges.map((edge) => toModelEdge(edge)),
       )

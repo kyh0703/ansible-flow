@@ -5,39 +5,33 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/url"
 	"time"
 
 	"github.com/kyh0703/flow/configs"
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
+	"github.com/kyh0703/flow/internal/core/service/auth"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 	"golang.org/x/oauth2/google"
 	"golang.org/x/oauth2/kakao"
+
+	authdto "github.com/kyh0703/flow/internal/core/dto/auth"
 )
 
 type oauthService struct {
 	config          *configs.Config
-	userRepository  repository.UserRepository
+	authService     auth.Service
+	usersRepository repository.UsersRepository
 	oauthRepository repository.OAuthRepository
 	providers       map[Provider]*providerConfig
 }
 
-type providerConfig struct {
-	oauth2Config *oauth2.Config
-	userInfoURL  string
-	mapUserInfo  func([]byte) (*userInfo, error)
-}
-
-type userInfo struct {
-	email      string
-	name       string
-	providerID string
-}
-
 func NewOAuthService(
 	config *configs.Config,
-	userRepository repository.UserRepository,
+	usersRepository repository.UsersRepository,
 	oauthRepository repository.OAuthRepository,
 ) Service {
 	providers := map[Provider]*providerConfig{
@@ -78,14 +72,14 @@ func NewOAuthService(
 
 	return &oauthService{
 		config:          config,
-		userRepository:  userRepository,
+		usersRepository: usersRepository,
 		oauthRepository: oauthRepository,
 		providers:       providers,
 	}
 }
 
 func mapGoogleUserInfo(data []byte) (*userInfo, error) {
-	var info GoogleUserInfo
+	var info googleUserInfo
 	if err := json.Unmarshal(data, &info); err != nil {
 		return nil, err
 	}
@@ -97,7 +91,7 @@ func mapGoogleUserInfo(data []byte) (*userInfo, error) {
 }
 
 func mapKakaoUserInfo(data []byte) (*userInfo, error) {
-	var info KakaoUserInfo
+	var info kakaoUserInfo
 	if err := json.Unmarshal(data, &info); err != nil {
 		return nil, err
 	}
@@ -109,7 +103,7 @@ func mapKakaoUserInfo(data []byte) (*userInfo, error) {
 }
 
 func mapGithubUserInfo(data []byte) (*userInfo, error) {
-	var info GithubUserInfo
+	var info githubUserInfo
 	if err := json.Unmarshal(data, &info); err != nil {
 		return nil, err
 	}
@@ -120,17 +114,34 @@ func mapGithubUserInfo(data []byte) (*userInfo, error) {
 	}, nil
 }
 
-func (s *oauthService) GetAuthURL(provider Provider, state string, redirectURL string) string {
-	s.oauthRepository.CreateState(context.Background(), model.CreateOAuthStateParams{
+func (s *oauthService) GenerateAuthURL(provider Provider, state string, redirectURL string) (string, error) {
+	if _, err := s.oauthRepository.CreateState(context.Background(), model.CreateOAuthStateParams{
 		State:       state,
 		RedirectUrl: redirectURL,
 		ExpiresAt:   time.Now().Add(15 * time.Minute).Format(time.RFC3339),
-	})
+	}); err != nil {
+		return "", err
+	}
 
-	return s.providers[provider].oauth2Config.AuthCodeURL(state)
+	return s.providers[provider].oauth2Config.AuthCodeURL(state), nil
 }
 
-func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*model.User, error) {
+func (s *oauthService) GetOAuthState(state string) (*model.OauthState, error) {
+	savedState, err := s.oauthRepository.GetState(context.Background(), state)
+	if err != nil {
+		return nil, err
+	}
+
+	redirectURL, err := url.QueryUnescape(savedState.RedirectUrl)
+	if err != nil {
+		return nil, err
+	}
+	savedState.RedirectUrl = redirectURL
+
+	return &savedState, nil
+}
+
+func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*authdto.Token, error) {
 	savedState, err := s.oauthRepository.GetState(ctx, state)
 	if err != nil {
 		return nil, fmt.Errorf("invalid state: %w", err)
@@ -157,8 +168,8 @@ func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, co
 	}
 	defer resp.Body.Close()
 
-	var body []byte
-	if _, err := resp.Body.Read(body); err != nil {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, fmt.Errorf("failed reading response body: %w", err)
 	}
 
@@ -167,9 +178,9 @@ func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, co
 		return nil, fmt.Errorf("failed mapping user info: %w", err)
 	}
 
-	user, err := s.userRepository.FindByEmail(ctx, userInfo.email)
+	user, err := s.usersRepository.FindByEmail(ctx, userInfo.email)
 	if err != nil {
-		user, err = s.userRepository.CreateOne(ctx, model.CreateUserParams{
+		user, err = s.usersRepository.CreateOne(ctx, model.CreateUserParams{
 			Email:      userInfo.email,
 			Name:       userInfo.name,
 			Provider:   sql.NullString{String: string(provider), Valid: true},
@@ -181,5 +192,10 @@ func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, co
 		}
 	}
 
-	return &user, nil
+	authToken, err := s.authService.GenerateTokens(ctx, user)
+	if err != nil {
+		return nil, fmt.Errorf("failed to validate and refresh token: %w", err)
+	}
+
+	return authToken, nil
 }

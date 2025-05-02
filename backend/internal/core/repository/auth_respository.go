@@ -2,19 +2,23 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
 )
 
 type authRepository struct {
+	db      *sql.DB
 	queries *model.Queries
 }
 
 func NewAuthRepository(
+	db *sql.DB,
 	queries *model.Queries,
 ) repository.AuthRepository {
 	return &authRepository{
+		db:      db,
 		queries: queries,
 	}
 }
@@ -23,11 +27,11 @@ func (a *authRepository) CreateOne(ctx context.Context, arg model.CreateTokenPar
 	return a.queries.CreateToken(ctx, arg)
 }
 
-func (a *authRepository) FindOne(ctx context.Context, id int64) (model.Token, error) {
+func (a *authRepository) FindByID(ctx context.Context, id int64) (model.Token, error) {
 	return a.queries.GetToken(ctx, id)
 }
 
-func (a *authRepository) FindOneByUserID(ctx context.Context, userID int64) (model.Token, error) {
+func (a *authRepository) FindByUserID(ctx context.Context, userID int64) (model.Token, error) {
 	return a.queries.GetTokenByUserID(ctx, userID)
 }
 
