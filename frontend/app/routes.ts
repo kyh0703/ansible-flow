@@ -9,7 +9,7 @@ import {
 export default [
   layout('./shared/providers/index.tsx', [
     index('./domains/dashboard/pages/home.tsx'),
-    route('/auth-callback', './domains/dashboard/pages/auth-callback.tsx'),
+    route('/auth/callback', './domains/dashboard/pages/auth-callback.tsx'),
     layout('./domains/project/layouts/index.tsx', [
       ...prefix('projects', [
         index('./domains/project/pages/index.tsx'),

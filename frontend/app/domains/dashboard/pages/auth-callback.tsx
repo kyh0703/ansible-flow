@@ -1,7 +1,6 @@
 import { setToken } from '@/shared/services'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { URLSearchParams } from 'url'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
@@ -10,7 +9,7 @@ export default function AuthCallback() {
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const token = params.get('token')
-    const expiresIn = params.get('expiresIn')
+    const expiresIn = params.get('expires_in')
 
     if (token) {
       const expiryTimestamp = Math.floor(
