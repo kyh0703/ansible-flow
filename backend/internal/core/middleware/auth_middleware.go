@@ -13,6 +13,7 @@ import (
 
 //counterfeiter:generate . AuthMiddleware
 type AuthMiddleware interface {
+	RequireAdmin() fiber.Handler
 	CurrentUser() fiber.Handler
 }
 

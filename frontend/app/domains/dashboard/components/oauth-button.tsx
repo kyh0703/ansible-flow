@@ -15,7 +15,7 @@ export default function OAuthButton() {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao/login?redirect_url=${redirectURL}`
   }
 
-  const handleGithubLogin = () =>{
+  const handleGithubLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/github/login?redirect_url=${redirectURL}`
   }
 

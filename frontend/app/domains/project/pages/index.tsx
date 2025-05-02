@@ -1,6 +1,5 @@
-import { Suspense } from 'react'
 import { Spinner } from '@/shared/ui/spinner'
-import ProjectList from '../components/project-list'
+import { Suspense } from 'react'
 import ProjectDashboard from '../components/project-dashboard'
 
 export default function Page() {

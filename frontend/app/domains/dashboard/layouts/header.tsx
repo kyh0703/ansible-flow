@@ -1,11 +1,12 @@
+import { Button } from '@/shared/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { LoginForm } from '../components/login-form'
 import AuthForm from '../components/auth-form'
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { Button } from '@/shared/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/shared/ui/sheet'
+import { LoginForm } from '../components/login-form'
+import { ThemeButton } from '@/shared/components/theme-button'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -52,6 +53,7 @@ export default function Header() {
           </Link>
         </nav>
         <div className="flex items-center gap-4">
+          <ThemeButton />
           <Dialog>
             <DialogTrigger asChild>
               <Button>Login</Button>
