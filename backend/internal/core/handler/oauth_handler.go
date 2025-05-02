@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/kyh0703/flow/internal/core/domain/repository"
@@ -35,134 +37,76 @@ func NewOAuthHandler(
 
 func (o *oauthHandler) Table() []Mapper {
 	return []Mapper{
-		Mapping(
-			fiber.MethodGet,
-			"/auth/google/login",
-			o.GoogleLogin,
-		),
-		Mapping(
-			fiber.MethodGet,
-			"/auth/google/callback",
-			o.GoogleCallback,
-		),
-		Mapping(
-			fiber.MethodGet,
-			"/auth/github/login",
-			o.GithubLogin,
-		),
-		Mapping(
-			fiber.MethodGet,
-			"/auth/github/callback",
-			o.GithubCallback,
-		),
-		Mapping(
-			fiber.MethodGet,
-			"/auth/kakao/login",
-			o.KakaoLogin,
-		),
-		Mapping(
-			fiber.MethodGet,
-			"/auth/kakao/callback",
-			o.KakaoCallback,
-		),
+		Mapping(fiber.MethodGet, "/auth/google/login", o.GoogleLogin),
+		Mapping(fiber.MethodGet, "/auth/google/callback", o.GoogleCallback),
+		Mapping(fiber.MethodGet, "/auth/github/login", o.GithubLogin),
+		Mapping(fiber.MethodGet, "/auth/github/callback", o.GithubCallback),
+		Mapping(fiber.MethodGet, "/auth/kakao/login", o.KakaoLogin),
+		Mapping(fiber.MethodGet, "/auth/kakao/callback", o.KakaoCallback),
 	}
+}
+
+func (o *oauthHandler) handleLogin(c *fiber.Ctx, provider oauth.Provider) error {
+	state := uuid.New().String()
+	redirectURL := c.Query("redirect_url", "/")
+
+	authURL, err := o.oauthService.GenerateAuthURL(provider, state, redirectURL)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	return c.Redirect(authURL)
+}
+
+func (o *oauthHandler) handleCallback(c *fiber.Ctx, provider oauth.Provider) error {
+	code := c.Query("code")
+	state := c.Query("state")
+
+	if code == "" || state == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "missing code or state")
+	}
+
+	token, err := o.oauthService.HandleCallback(c.Context(), provider, code, state)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	redirectURL, err := o.oauthService.GetRedirectURL(state, *token)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token.Refresh.RefreshToken,
+		Expires:  time.Unix(token.Refresh.RefreshExpiresIn, 0),
+		HTTPOnly: true,
+		Secure:   false,
+	})
+
+	return c.Redirect(redirectURL)
 }
 
 func (o *oauthHandler) GoogleLogin(c *fiber.Ctx) error {
-	state := uuid.New().String()
-	redirectURL := c.Query("redirect_url", "/")
-
-	authURL, err := o.oauthService.GenerateAuthURL(oauth.Google, state, redirectURL)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(authURL)
+	return o.handleLogin(c, oauth.Google)
 }
 
 func (o *oauthHandler) GoogleCallback(c *fiber.Ctx) error {
-	code := c.Query("code")
-	state := c.Query("state")
-
-	if code == "" || state == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "missing code or state")
-	}
-
-	_, err := o.oauthService.HandleCallback(c.Context(), oauth.Google, code, state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	savedState, err := o.oauthRepository.GetState(c.Context(), state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(savedState.RedirectUrl)
+	return o.handleCallback(c, oauth.Google)
 }
 
 func (o *oauthHandler) GithubLogin(c *fiber.Ctx) error {
-	state := uuid.New().String()
-	redirectURL := c.Query("redirect_url", "/")
-
-	authURL, err := o.oauthService.GenerateAuthURL(oauth.Github, state, redirectURL)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(authURL)
+	return o.handleLogin(c, oauth.Github)
 }
 
 func (o *oauthHandler) GithubCallback(c *fiber.Ctx) error {
-	code := c.Query("code")
-	state := c.Query("state")
-
-	if code == "" || state == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "missing code or state")
-	}
-
-	_, err := o.oauthService.HandleCallback(c.Context(), oauth.Github, code, state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	savedState, err := o.oauthRepository.GetState(c.Context(), state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(savedState.RedirectUrl)
+	return o.handleCallback(c, oauth.Github)
 }
 
 func (o *oauthHandler) KakaoLogin(c *fiber.Ctx) error {
-	state := uuid.New().String()
-	redirectURL := c.Query("redirect_url", "/")
-
-	authURL, err := o.oauthService.GenerateAuthURL(oauth.Kakao, state, redirectURL)
-	if err != nil {
-		return fiber.NewError(500, err.Error())
-	}
-
-	return c.Redirect(authURL)
+	return o.handleLogin(c, oauth.Kakao)
 }
 
 func (o *oauthHandler) KakaoCallback(c *fiber.Ctx) error {
-	code := c.Query("code")
-	state := c.Query("state")
-
-	if code == "" || state == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "missing code or state")
-	}
-
-	_, err := o.oauthService.HandleCallback(c.Context(), oauth.Kakao, code, state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	savedState, err := o.oauthRepository.GetState(c.Context(), state)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	return c.Redirect(savedState.RedirectUrl)
+	return o.handleCallback(c, oauth.Kakao)
 }

@@ -18,7 +18,7 @@ import (
 	"golang.org/x/oauth2/google"
 	"golang.org/x/oauth2/kakao"
 
-	authdto "github.com/kyh0703/flow/internal/core/dto/auth"
+	dto "github.com/kyh0703/flow/internal/core/dto/auth"
 )
 
 type oauthService struct {
@@ -31,6 +31,7 @@ type oauthService struct {
 
 func NewOAuthService(
 	config *configs.Config,
+	authService auth.Service,
 	usersRepository repository.UsersRepository,
 	oauthRepository repository.OAuthRepository,
 ) Service {
@@ -72,6 +73,7 @@ func NewOAuthService(
 
 	return &oauthService{
 		config:          config,
+		authService:     authService,
 		usersRepository: usersRepository,
 		oauthRepository: oauthRepository,
 		providers:       providers,
@@ -117,31 +119,34 @@ func mapGithubUserInfo(data []byte) (*userInfo, error) {
 func (s *oauthService) GenerateAuthURL(provider Provider, state string, redirectURL string) (string, error) {
 	if _, err := s.oauthRepository.CreateState(context.Background(), model.CreateOAuthStateParams{
 		State:       state,
-		RedirectUrl: redirectURL,
+		RedirectUrl: url.QueryEscape(redirectURL),
 		ExpiresAt:   time.Now().Add(15 * time.Minute).Format(time.RFC3339),
 	}); err != nil {
 		return "", err
 	}
-
 	return s.providers[provider].oauth2Config.AuthCodeURL(state), nil
 }
 
-func (s *oauthService) GetOAuthState(state string) (*model.OauthState, error) {
+func (s *oauthService) GetRedirectURL(state string, token dto.Token) (string, error) {
 	savedState, err := s.oauthRepository.GetState(context.Background(), state)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	redirectURL, err := url.QueryUnescape(savedState.RedirectUrl)
+	decodedURL, err := url.QueryUnescape(savedState.RedirectUrl)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	savedState.RedirectUrl = redirectURL
 
-	return &savedState, nil
+	return fmt.Sprintf(
+		"%s?token=%s&expires_in=%d",
+		decodedURL,
+		token.Access.AccessToken,
+		token.Access.AccessExpiresIn,
+	), nil
 }
 
-func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*authdto.Token, error) {
+func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*dto.Token, error) {
 	savedState, err := s.oauthRepository.GetState(ctx, state)
 	if err != nil {
 		return nil, fmt.Errorf("invalid state: %w", err)

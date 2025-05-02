@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"time"
 
@@ -31,15 +30,15 @@ func NewAuthService(
 }
 
 func (a *authService) GenerateTokens(ctx context.Context, user model.User) (*auth.Token, error) {
-	token, err := a.authRepository.FindByUserID(ctx, user.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil, err
-	}
+	var (
+		accessExpire  time.Time = time.Now().Add(jwt.AccessTokenExpireDuration)
+		refreshExpire time.Time = time.Now().Add(jwt.RefreshTokenExpireDuration)
+	)
 
+	token, err := a.authRepository.FindByUserID(ctx, user.ID)
 	if err == nil {
 		expire := time.Unix(token.ExpiresIn, 0)
 		if expire.After(time.Now()) {
-			accessExpire := time.Now().Add(jwt.AccessTokenExpireDuration)
 			accessToken, err := jwt.GenerateToken(user.Email, accessExpire)
 			if err != nil {
 				return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
@@ -56,18 +55,17 @@ func (a *authService) GenerateTokens(ctx context.Context, user model.User) (*aut
 				},
 			}, nil
 		}
+
 		if err := a.authRepository.DeleteOne(ctx, token.ID); err != nil {
 			return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 	}
 
-	accessExpire := time.Now().Add(jwt.AccessTokenExpireDuration)
 	accessToken, err := jwt.GenerateToken(user.Email, accessExpire)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	refreshExpire := time.Now().Add(jwt.RefreshTokenExpireDuration)
 	refreshToken, err := jwt.GenerateToken(user.Email, refreshExpire)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, err.Error())
