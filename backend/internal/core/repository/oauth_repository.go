@@ -27,7 +27,7 @@ func (r *oauthRepository) CreateState(ctx context.Context, arg model.CreateOAuth
 	return r.queries.CreateOAuthState(ctx, arg)
 }
 
-func (r *oauthRepository) GetState(ctx context.Context, state string) (model.OauthState, error) {
+func (r *oauthRepository) FindByState(ctx context.Context, state string) (model.OauthState, error) {
 	return r.queries.GetOAuthState(ctx, state)
 }
 

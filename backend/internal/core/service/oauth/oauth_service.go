@@ -128,7 +128,7 @@ func (s *oauthService) GenerateAuthURL(provider Provider, state string, redirect
 }
 
 func (s *oauthService) GetRedirectURL(state string, token dto.Token) (string, error) {
-	savedState, err := s.oauthRepository.GetState(context.Background(), state)
+	savedState, err := s.oauthRepository.FindByState(context.Background(), state)
 	if err != nil {
 		return "", err
 	}
@@ -147,7 +147,7 @@ func (s *oauthService) GetRedirectURL(state string, token dto.Token) (string, er
 }
 
 func (s *oauthService) HandleCallback(ctx context.Context, provider Provider, code string, state string) (*dto.Token, error) {
-	savedState, err := s.oauthRepository.GetState(ctx, state)
+	savedState, err := s.oauthRepository.FindByState(ctx, state)
 	if err != nil {
 		return nil, fmt.Errorf("invalid state: %w", err)
 	}

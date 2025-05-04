@@ -168,7 +168,7 @@ WHERE id = ?;
 SELECT * FROM nodes
 WHERE id = ? LIMIT 1;
 
--- name: ListNodes :many
+-- name: ListNodesByFlowID :many
 SELECT * FROM nodes
 WHERE flow_id = ?
 ORDER BY create_at;
@@ -212,7 +212,7 @@ WHERE id = ?;
 SELECT * FROM edges
 WHERE id = ? LIMIT 1;
 
--- name: ListEdges :many
+-- name: ListEdgesByFlowID :many
 SELECT * FROM edges
 WHERE flow_id = ?
 ORDER BY create_at;

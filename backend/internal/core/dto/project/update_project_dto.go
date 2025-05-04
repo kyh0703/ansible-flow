@@ -1,6 +1,6 @@
 package project
 
-type UpdateDto struct {
+type UpdateProjectDto struct {
 	Name        *string `json:"name"`
 	Description *string `json:"description"`
 }

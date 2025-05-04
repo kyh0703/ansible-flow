@@ -30,17 +30,23 @@ type flowsHandler struct {
 	validate        *validator.Validate
 	authMiddleware  middleware.AuthMiddleware
 	flowsRepository repository.FlowsRepository
+	nodesRepository repository.NodesRepository
+	edgesRepository repository.EdgesRepository
 }
 
 func NewFlowsHandler(
 	validate *validator.Validate,
 	authMiddleware middleware.AuthMiddleware,
 	flowsRepository repository.FlowsRepository,
+	nodesRepository repository.NodesRepository,
+	edgesRepository repository.EdgesRepository,
 ) FlowsHandler {
 	return &flowsHandler{
 		validate:        validate,
 		authMiddleware:  authMiddleware,
 		flowsRepository: flowsRepository,
+		nodesRepository: nodesRepository,
+		edgesRepository: edgesRepository,
 	}
 }
 
@@ -86,7 +92,7 @@ func (f *flowsHandler) Table() []Mapper {
 }
 
 func (f *flowsHandler) CreateOne(c *fiber.Ctx) error {
-	var req flow.CreateDto
+	var req flow.CreateFlowDto
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -132,7 +138,7 @@ func (f *flowsHandler) UpdateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	var req flow.UpdateDto
+	var req flow.UpdateFlowDto
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -177,5 +183,26 @@ func (f *flowsHandler) Pagination(c *fiber.Ctx) error {
 }
 
 func (f *flowsHandler) FindStructure(c *fiber.Ctx) error {
-	return nil
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	nodes, err := f.nodesRepository.FindByFlowID(c.Context(), int64(id))
+	if err != nil {
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	}
+
+	edges, err := f.edgesRepository.FindByFlowID(c.Context(), int64(id))
+	if err != nil {
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	}
+
+	return response.Success(c, fiber.StatusOK, struct {
+		Nodes []model.Node `json:"nodes"`
+		Edges []model.Edge `json:"edges"`
+	}{
+		Nodes: nodes,
+		Edges: edges,
+	})
 }

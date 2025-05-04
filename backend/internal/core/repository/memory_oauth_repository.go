@@ -38,7 +38,7 @@ func (r *memoryOAuthRepository) CreateState(ctx context.Context, arg model.Creat
 	return state, nil
 }
 
-func (r *memoryOAuthRepository) GetState(ctx context.Context, state string) (model.OauthState, error) {
+func (r *memoryOAuthRepository) FindByState(ctx context.Context, state string) (model.OauthState, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 

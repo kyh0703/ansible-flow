@@ -50,13 +50,13 @@ func (e *edgesHandler) Table() []Mapper {
 		),
 		Mapping(
 			fiber.MethodPatch,
-			"projects/:projectId/flows/:flowId/edges/:id",
+			"projects/:projectId/flows/:flowId/edges",
 			e.authMiddleware.CurrentUser(),
 			e.UpdateList,
 		),
 		Mapping(
 			fiber.MethodDelete,
-			"projects/:projectId/flows/:flowId/edges/:id",
+			"projects/:projectId/flows/:flowId/edges",
 			e.authMiddleware.CurrentUser(),
 			e.DeleteList,
 		),

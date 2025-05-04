@@ -129,7 +129,7 @@ func (p *projectsHandler) UpdateOne(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	var req project.UpdateDto
+	var req project.UpdateProjectDto
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -170,7 +170,7 @@ func (p *projectsHandler) DeleteOne(c *fiber.Ctx) error {
 }
 
 func (p *projectsHandler) Pagination(c *fiber.Ctx) error {
-	var req project.PaginationDto
+	var req project.PaginationProjectDto
 	if err := c.QueryParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

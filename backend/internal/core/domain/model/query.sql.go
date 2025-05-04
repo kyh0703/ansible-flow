@@ -614,14 +614,14 @@ func (q *Queries) GetUserByProvider(ctx context.Context, arg GetUserByProviderPa
 	return i, err
 }
 
-const listEdges = `-- name: ListEdges :many
+const listEdgesByFlowID = `-- name: ListEdgesByFlowID :many
 SELECT id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at FROM edges
 WHERE flow_id = ?
 ORDER BY create_at
 `
 
-func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
-	rows, err := q.db.QueryContext(ctx, listEdges, flowID)
+func (q *Queries) ListEdgesByFlowID(ctx context.Context, flowID int64) ([]Edge, error) {
+	rows, err := q.db.QueryContext(ctx, listEdgesByFlowID, flowID)
 	if err != nil {
 		return nil, err
 	}
@@ -655,14 +655,14 @@ func (q *Queries) ListEdges(ctx context.Context, flowID int64) ([]Edge, error) {
 	return items, nil
 }
 
-const listNodes = `-- name: ListNodes :many
+const listNodesByFlowID = `-- name: ListNodesByFlowID :many
 SELECT id, uuid, flow_id, type, position, styles, width, height, hidden, description, update_at, create_at FROM nodes
 WHERE flow_id = ?
 ORDER BY create_at
 `
 
-func (q *Queries) ListNodes(ctx context.Context, flowID int64) ([]Node, error) {
-	rows, err := q.db.QueryContext(ctx, listNodes, flowID)
+func (q *Queries) ListNodesByFlowID(ctx context.Context, flowID int64) ([]Node, error) {
+	rows, err := q.db.QueryContext(ctx, listNodesByFlowID, flowID)
 	if err != nil {
 		return nil, err
 	}
