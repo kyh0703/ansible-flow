@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
+	"github.com/kyh0703/flow/internal/core/domain/model"
 	"github.com/kyh0703/flow/internal/core/middleware"
 	"github.com/kyh0703/flow/internal/core/service/auth"
 	"github.com/kyh0703/flow/internal/pkg/response"
@@ -21,6 +22,7 @@ type AuthHandler interface {
 	Login(c *fiber.Ctx) error
 	Logout(c *fiber.Ctx) error
 	Refresh(c *fiber.Ctx) error
+	Me(c *fiber.Ctx) error
 }
 
 type authHandler struct {
@@ -62,6 +64,12 @@ func (a *authHandler) Table() []Mapper {
 			fiber.MethodPost,
 			"/auth/refresh",
 			a.Refresh,
+		),
+		Mapping(
+			fiber.MethodGet,
+			"/auth/me",
+			a.authMiddleware.CurrentUser(),
+			a.Me,
 		),
 	}
 }
@@ -142,4 +150,9 @@ func (a *authHandler) Refresh(c *fiber.Ctx) error {
 	})
 
 	return response.Success(c, fiber.StatusOK, token.Access)
+}
+
+func (a *authHandler) Me(c *fiber.Ctx) error {
+	user := c.Locals("user").(model.User)
+	return response.Success(c, fiber.StatusOK, user)
 }

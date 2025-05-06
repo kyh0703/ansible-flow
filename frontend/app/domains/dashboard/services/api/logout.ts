@@ -1,21 +1,13 @@
-import type { User } from '@/shared/models/user'
 import { fetchExtended, type ApiResponse, type Token } from '@/shared/services'
 
-export const login = async ({
-  email,
-  password,
-}: {
-  email: string
-  password: string
-}) => {
+export const logout = async () => {
   const response = await fetchExtended<ApiResponse<Token>>(
-    `${import.meta.env.VITE_BASE_PATH}/auth/login`,
+    `${import.meta.env.VITE_BASE_PATH}/auth/logout`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
     },
   )
 

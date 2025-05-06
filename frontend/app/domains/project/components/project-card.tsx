@@ -16,7 +16,6 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
-  console.log(project)
   return (
     <Card className="flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
       <div className="from-primary/20 to-primary/5 flex aspect-video w-full items-center justify-center bg-gradient-to-br p-8">

@@ -4,6 +4,7 @@ export interface User {
   password: string
   name: string
   bio: string
+  isAdmin: boolean
   updateAt: string
   createAt: string
 }

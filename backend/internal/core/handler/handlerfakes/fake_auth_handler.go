@@ -31,6 +31,17 @@ type FakeAuthHandler struct {
 	logoutReturnsOnCall map[int]struct {
 		result1 error
 	}
+	MeStub        func(*fiber.Ctx) error
+	meMutex       sync.RWMutex
+	meArgsForCall []struct {
+		arg1 *fiber.Ctx
+	}
+	meReturns struct {
+		result1 error
+	}
+	meReturnsOnCall map[int]struct {
+		result1 error
+	}
 	RefreshStub        func(*fiber.Ctx) error
 	refreshMutex       sync.RWMutex
 	refreshArgsForCall []struct {
@@ -185,6 +196,67 @@ func (fake *FakeAuthHandler) LogoutReturnsOnCall(i int, result1 error) {
 		})
 	}
 	fake.logoutReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeAuthHandler) Me(arg1 *fiber.Ctx) error {
+	fake.meMutex.Lock()
+	ret, specificReturn := fake.meReturnsOnCall[len(fake.meArgsForCall)]
+	fake.meArgsForCall = append(fake.meArgsForCall, struct {
+		arg1 *fiber.Ctx
+	}{arg1})
+	stub := fake.MeStub
+	fakeReturns := fake.meReturns
+	fake.recordInvocation("Me", []interface{}{arg1})
+	fake.meMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeAuthHandler) MeCallCount() int {
+	fake.meMutex.RLock()
+	defer fake.meMutex.RUnlock()
+	return len(fake.meArgsForCall)
+}
+
+func (fake *FakeAuthHandler) MeCalls(stub func(*fiber.Ctx) error) {
+	fake.meMutex.Lock()
+	defer fake.meMutex.Unlock()
+	fake.MeStub = stub
+}
+
+func (fake *FakeAuthHandler) MeArgsForCall(i int) *fiber.Ctx {
+	fake.meMutex.RLock()
+	defer fake.meMutex.RUnlock()
+	argsForCall := fake.meArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeAuthHandler) MeReturns(result1 error) {
+	fake.meMutex.Lock()
+	defer fake.meMutex.Unlock()
+	fake.MeStub = nil
+	fake.meReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeAuthHandler) MeReturnsOnCall(i int, result1 error) {
+	fake.meMutex.Lock()
+	defer fake.meMutex.Unlock()
+	fake.MeStub = nil
+	if fake.meReturnsOnCall == nil {
+		fake.meReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.meReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
 }
@@ -371,6 +443,8 @@ func (fake *FakeAuthHandler) Invocations() map[string][][]interface{} {
 	defer fake.loginMutex.RUnlock()
 	fake.logoutMutex.RLock()
 	defer fake.logoutMutex.RUnlock()
+	fake.meMutex.RLock()
+	defer fake.meMutex.RUnlock()
 	fake.refreshMutex.RLock()
 	defer fake.refreshMutex.RUnlock()
 	fake.registerMutex.RLock()

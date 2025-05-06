@@ -1,4 +1,9 @@
-import { createContext, useContext, type PropsWithChildren } from 'react'
+import {
+  createContext,
+  useContext,
+  useMemo,
+  type PropsWithChildren,
+} from 'react'
 
 type ModalState = {
   id: string
@@ -11,9 +16,9 @@ type ModalProviderProps = {
 } & PropsWithChildren
 
 export const ModalProvider = ({ id, children }: ModalProviderProps) => {
-  return (
-    <ModalContext.Provider value={{ id }}>{children}</ModalContext.Provider>
-  )
+  const value = useMemo(() => ({ id }), [id])
+
+  return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
 }
 
 export const useModalId = () => {

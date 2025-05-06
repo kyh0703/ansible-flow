@@ -1,5 +1,6 @@
 import FormInput from '@/shared/components/form-input'
 import { setToken } from '@/shared/services'
+import { useUserActions } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
 import { extractErrorMessage } from '@/shared/utils/errors'
 import logger from '@/shared/utils/logger'
@@ -8,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { login } from '../services'
+import { login, me } from '../services'
 import OAuthButton from './oauth-button'
 
 const LoginSchema = z.object({
@@ -23,6 +24,7 @@ type Login = z.infer<typeof LoginSchema>
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const { setUser } = useUserActions()
   const {
     handleSubmit,
     control,
@@ -34,7 +36,9 @@ export function LoginForm() {
   const onSubmit = async (data: Login) => {
     try {
       const response = await login(data)
+      const user = await me()
       setToken(response)
+      setUser(user)
       navigate('/projects')
     } catch (error) {
       toast.error(extractErrorMessage(error))

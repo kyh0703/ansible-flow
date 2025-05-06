@@ -12,8 +12,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/ui/sidebar'
+import { useUser } from '@/shared/store/user'
 
 export default function AppSidebar() {
+  const user = useUser()
+  if (!user) {
+    return null
+  }
+
   return (
     <Sidebar>
       <SidebarHeader>

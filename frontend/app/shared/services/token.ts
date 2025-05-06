@@ -9,6 +9,6 @@ export const getToken = (): Token | null => {
   return token
 }
 
-export const setToken = (newToken: Token) => {
+export const setToken = (newToken: Token | null) => {
   token = newToken
 }

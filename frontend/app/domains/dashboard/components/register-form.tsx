@@ -1,5 +1,6 @@
 import FormInput from '@/shared/components/form-input'
 import { setToken } from '@/shared/services'
+import { useUserActions } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
 import { extractErrorMessage } from '@/shared/utils/errors'
 import logger from '@/shared/utils/logger'
@@ -8,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { register } from '../services'
+import { me, register } from '../services'
 
 const SignupSchema = z
   .object({
@@ -25,10 +26,11 @@ const SignupSchema = z
     path: ['confirmPassword'],
   })
 
-type Register = z.infer<typeof SignupSchema>
+export type Register = z.infer<typeof SignupSchema>
 
 export function RegisterForm() {
   const navigate = useNavigate()
+  const { setUser } = useUserActions()
   const {
     handleSubmit,
     control,
@@ -40,7 +42,9 @@ export function RegisterForm() {
   const onSubmit = async (data: Register) => {
     try {
       const response = await register(data)
+      const user = await me()
       setToken(response)
+      setUser(user)
       navigate('/projects')
     } catch (error) {
       toast.error(extractErrorMessage(error))
