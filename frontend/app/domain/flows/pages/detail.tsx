@@ -1,7 +1,7 @@
 import { ReactFlowProvider } from '@xyflow/react'
 import BasicFlow from '../components/basic-flow'
 import YjsProvider from '../contexts/yjs-context'
-import type { Route } from './+types/index'
+import type { Route } from './+types/detail'
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const { projectId, flowId } = params

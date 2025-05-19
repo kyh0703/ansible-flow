@@ -1,4 +1,4 @@
-import { useInfiniteQueryProjects } from '@/domains/project/services'
+import { useInfiniteQueryProjects } from '@/domain/projects/services'
 import { Spinner } from '@/shared/ui/spinner'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'

@@ -8,13 +8,14 @@ import {
 
 export default [
   layout('./shared/providers/index.tsx', [
-    index('./domains/dashboard/pages/home.tsx'),
-    route('/auth/callback', './domains/dashboard/pages/auth-callback.tsx'),
-    layout('./domains/project/layouts/index.tsx', [
+    index('./domain/dashboard/pages/home.tsx'),
+    route('/auth/callback', './domain/dashboard/pages/auth-callback.tsx'),
+    layout('./domain/projects/layouts/index.tsx', [
       ...prefix('projects', [
-        index('./domains/project/pages/index.tsx'),
-        route(':projectId', './domains/project/pages/detail.tsx'),
-        route(':projectId/flows/:flowId', './domains/flow/pages/index.tsx'),
+        index('./domain/projects/pages/index.tsx'),
+        route(':projectId', './domain/projects/pages/detail.tsx'),
+        route(':projectId/flows', './domain/projects/pages/flows.tsx'),
+        route(':projectId/flows/:flowId', './domain/flows/pages/detail.tsx'),
       ]),
     ]),
   ]),
