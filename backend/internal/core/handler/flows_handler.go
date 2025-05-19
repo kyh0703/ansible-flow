@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"errors"
+	"math"
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
@@ -27,26 +28,29 @@ type FlowsHandler interface {
 }
 
 type flowsHandler struct {
-	validate        *validator.Validate
-	authMiddleware  middleware.AuthMiddleware
-	flowsRepository repository.FlowsRepository
-	nodesRepository repository.NodesRepository
-	edgesRepository repository.EdgesRepository
+	validate          *validator.Validate
+	authMiddleware    middleware.AuthMiddleware
+	projectMiddleware middleware.ProjectMiddleware
+	flowsRepository   repository.FlowsRepository
+	nodesRepository   repository.NodesRepository
+	edgesRepository   repository.EdgesRepository
 }
 
 func NewFlowsHandler(
 	validate *validator.Validate,
 	authMiddleware middleware.AuthMiddleware,
+	projectMiddleware middleware.ProjectMiddleware,
 	flowsRepository repository.FlowsRepository,
 	nodesRepository repository.NodesRepository,
 	edgesRepository repository.EdgesRepository,
 ) FlowsHandler {
 	return &flowsHandler{
-		validate:        validate,
-		authMiddleware:  authMiddleware,
-		flowsRepository: flowsRepository,
-		nodesRepository: nodesRepository,
-		edgesRepository: edgesRepository,
+		validate:          validate,
+		authMiddleware:    authMiddleware,
+		projectMiddleware: projectMiddleware,
+		flowsRepository:   flowsRepository,
+		nodesRepository:   nodesRepository,
+		edgesRepository:   edgesRepository,
 	}
 }
 
@@ -56,36 +60,42 @@ func (f *flowsHandler) Table() []Mapper {
 			fiber.MethodPost,
 			"projects/:projectId/flows",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.CreateOne,
 		),
 		Mapping(
 			fiber.MethodGet,
 			"projects/:projectId/flows/:id",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.FindOne,
 		),
 		Mapping(
 			fiber.MethodPatch,
 			"projects/:projectId/flows/:id",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.UpdateOne,
 		),
 		Mapping(
 			fiber.MethodDelete,
 			"projects/:projectId/flows/:id",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.DeleteOne,
 		),
 		Mapping(
 			fiber.MethodGet,
 			"projects/:projectId/flows",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.Pagination,
 		),
 		Mapping(
 			fiber.MethodGet,
 			"projects/:projectId/flows/:id/structure",
 			f.authMiddleware.CurrentUser(),
+			f.projectMiddleware.IsOwnProjects(),
 			f.FindStructure,
 		),
 	}
@@ -179,7 +189,44 @@ func (f *flowsHandler) DeleteOne(c *fiber.Ctx) error {
 }
 
 func (f *flowsHandler) Pagination(c *fiber.Ctx) error {
-	return nil
+	var req flow.PaginationFlowDto
+	if err := c.QueryParser(&req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := f.validate.Struct(&req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	user := c.Locals("user").(model.User)
+	offset := (req.Page - 1) * req.PageSize
+
+	flowList, total, err := f.flowsRepository.Pagination(
+		c.Context(),
+		user.ID,
+		offset,
+		req.PageSize,
+	)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	var flows []flow.FlowDto
+	copier.Copy(&flows, &flowList)
+
+	page := req.Page
+	totalPages := int64(math.Ceil(float64(total) / float64(req.PageSize)))
+
+	return response.Success(c, fiber.StatusOK, fiber.Map{
+		"items": flows,
+		"meta": fiber.Map{
+			"total":      total,
+			"skip":       offset,
+			"take":       req.PageSize,
+			"hasMore":    int64(offset+req.PageSize) < total,
+			"page":       page,
+			"totalPages": totalPages,
+		},
+	})
 }
 
 func (f *flowsHandler) FindStructure(c *fiber.Ctx) error {
