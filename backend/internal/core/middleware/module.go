@@ -6,5 +6,6 @@ var Module = fx.Module(
 	"middleware",
 	fx.Provide(
 		NewAuthMiddleware,
+		NewProjectMiddleware,
 	),
 )

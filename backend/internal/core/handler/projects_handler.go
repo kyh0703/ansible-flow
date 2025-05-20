@@ -29,17 +29,20 @@ type ProjectsHandler interface {
 type projectsHandler struct {
 	validate           *validator.Validate
 	authMiddleware     middleware.AuthMiddleware
+	projectMiddleware  middleware.ProjectMiddleware
 	projectsRepository repository.ProjectsRepository
 }
 
 func NewProjectsHandler(
 	validate *validator.Validate,
 	authMiddleware middleware.AuthMiddleware,
+	projectMiddleware middleware.ProjectMiddleware,
 	projectsRepository repository.ProjectsRepository,
 ) ProjectsHandler {
 	return &projectsHandler{
 		validate:           validate,
 		authMiddleware:     authMiddleware,
+		projectMiddleware:  projectMiddleware,
 		projectsRepository: projectsRepository,
 	}
 }
@@ -56,18 +59,21 @@ func (p *projectsHandler) Table() []Mapper {
 			fiber.MethodGet,
 			"/projects/:id",
 			p.authMiddleware.CurrentUser(),
+			p.projectMiddleware.IsOwnProjects(),
 			p.FindOne,
 		),
 		Mapping(
 			fiber.MethodPatch,
 			"/projects/:id",
 			p.authMiddleware.CurrentUser(),
+			p.projectMiddleware.IsOwnProjects(),
 			p.UpdateOne,
 		),
 		Mapping(
 			fiber.MethodDelete,
 			"/projects/:id",
 			p.authMiddleware.CurrentUser(),
+			p.projectMiddleware.IsOwnProjects(),
 			p.DeleteOne,
 		),
 		Mapping(

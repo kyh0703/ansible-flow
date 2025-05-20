@@ -614,6 +614,24 @@ func (q *Queries) GetUserByProvider(ctx context.Context, arg GetUserByProviderPa
 	return i, err
 }
 
+const isProjectOwnedByUser = `-- name: IsProjectOwnedByUser :one
+SELECT 1 FROM projects
+WHERE id = ? AND user_id = ?
+LIMIT 1
+`
+
+type IsProjectOwnedByUserParams struct {
+	ID     int64 `json:"id"`
+	UserID int64 `json:"userId"`
+}
+
+func (q *Queries) IsProjectOwnedByUser(ctx context.Context, arg IsProjectOwnedByUserParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, isProjectOwnedByUser, arg.ID, arg.UserID)
+	var column_1 int64
+	err := row.Scan(&column_1)
+	return column_1, err
+}
+
 const listEdgesByFlowID = `-- name: ListEdgesByFlowID :many
 SELECT id, uuid, flow_id, source, target, type, label, hidden, marker_end, update_at, create_at FROM edges
 WHERE flow_id = ?

@@ -117,6 +117,11 @@ WHERE user_id = ?
 ORDER BY name
 LIMIT ? OFFSET ?;
 
+-- name: IsProjectOwnedByUser :one
+SELECT 1 FROM projects
+WHERE id = ? AND user_id = ?
+LIMIT 1;
+
 -- name: PatchProject :exec
 UPDATE projects SET
 name = COALESCE(sqlc.narg(name), name),
