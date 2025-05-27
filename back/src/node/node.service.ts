@@ -8,30 +8,28 @@ import { UpdateNodeDto } from './dto/update-node.dto'
 export class NodeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // 노드 다건 조회
-  async findMany(ids?: string[]): Promise<Node[]> {
-    if (ids && ids.length > 0) {
-      return this.prisma.node.findMany({
-        where: { id: { in: ids } },
-        orderBy: { createdAt: 'desc' },
-      })
-    }
-    return this.prisma.node.findMany({ orderBy: { createdAt: 'desc' } })
-  }
-
   // 노드 다건 생성
-  async createMany(createNodeDtos: CreateNodeDto[]): Promise<Node[]> {
-    const created = await this.prisma.node.createMany({ data: createNodeDtos })
-    // createMany는 생성된 개수만 반환하므로, 실제 생성된 노드 목록을 반환하려면 findMany로 재조회
-    // (실제 서비스에서는 트랜잭션 처리 권장)
-    return this.findMany() // 전체 반환 or 필요시 ids로 조회
+  async createMany(
+    projectId: string,
+    flowId: string,
+    createNodeDtos: CreateNodeDto[],
+  ): Promise<Node[]> {
+    const data = createNodeDtos.map((dto) => ({ ...dto, flowId }))
+    await this.prisma.node.createMany({ data })
+    return this.findMany(projectId, flowId)
   }
 
   // 노드 다건 수정
-  async updateMany(updateNodeDtos: UpdateNodeDto[]): Promise<Node[]> {
+  async updateMany(
+    projectId: string,
+    flowId: string,
+    updateNodeDtos: UpdateNodeDto[],
+  ): Promise<Node[]> {
     const results: Node[] = []
     for (const dto of updateNodeDtos) {
       if (!dto.id) throw new NotFoundException('id is required for update')
+      // flowId, projectId 일치 검증
+      const node = await this.findOne(projectId, flowId, dto.id)
       const updated = await this.prisma.node.update({
         where: { id: dto.id },
         data: dto,
@@ -42,8 +40,33 @@ export class NodeService {
   }
 
   // 노드 다건 삭제
-  async deleteMany(ids: string[]): Promise<string[]> {
-    await this.prisma.node.deleteMany({ where: { id: { in: ids } } })
+  async deleteMany(
+    projectId: string,
+    flowId: string,
+    ids: string[],
+  ): Promise<string[]> {
+    // 소유권 검증
+    for (const id of ids) {
+      await this.findOne(projectId, flowId, id)
+    }
+    await this.prisma.node.deleteMany({ where: { id: { in: ids }, flowId } })
     return ids
+  }
+
+  // 노드 단건 조회
+  async findOne(projectId: string, flowId: string, id: string): Promise<Node> {
+    const node = await this.prisma.node.findFirst({
+      where: { id, flowId, flow: { projectId } },
+    })
+    if (!node) throw new NotFoundException('Node not found')
+    return node
+  }
+
+  // (옵션) 플로우 하위 전체 노드 조회
+  async findMany(projectId: string, flowId: string): Promise<Node[]> {
+    return this.prisma.node.findMany({
+      where: { flowId, flow: { projectId } },
+      orderBy: { createdAt: 'desc' },
+    })
   }
 }

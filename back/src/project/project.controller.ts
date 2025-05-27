@@ -15,8 +15,8 @@ import { UpdateProjectDto } from './dto/update-project.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { Request } from 'express'
 
-@ApiTags('project')
-@Controller('project')
+@ApiTags('projects')
+@Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 

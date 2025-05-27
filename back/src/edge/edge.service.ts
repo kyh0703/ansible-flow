@@ -8,28 +8,29 @@ import { UpdateEdgeDto } from './dto/update-edge.dto'
 export class EdgeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // 에지 다건 조회
-  async findMany(ids?: string[]): Promise<Edge[]> {
-    if (ids && ids.length > 0) {
-      return this.prisma.edge.findMany({
-        where: { id: { in: ids } },
-        orderBy: { createdAt: 'desc' },
-      })
-    }
-    return this.prisma.edge.findMany({ orderBy: { createdAt: 'desc' } })
-  }
-
   // 에지 다건 생성
-  async createMany(createEdgeDtos: CreateEdgeDto[]): Promise<Edge[]> {
-    const created = await this.prisma.edge.createMany({ data: createEdgeDtos })
-    return this.findMany() // 전체 반환 or 필요시 ids로 조회
+  async createMany(
+    projectId: string,
+    flowId: string,
+    createEdgeDtos: CreateEdgeDto[],
+  ): Promise<Edge[]> {
+    // 모든 에지에 projectId, flowId 주입
+    const data = createEdgeDtos.map((dto) => ({ ...dto, flowId }))
+    await this.prisma.edge.createMany({ data })
+    return this.findMany(projectId, flowId)
   }
 
   // 에지 다건 수정
-  async updateMany(updateEdgeDtos: UpdateEdgeDto[]): Promise<Edge[]> {
+  async updateMany(
+    projectId: string,
+    flowId: string,
+    updateEdgeDtos: UpdateEdgeDto[],
+  ): Promise<Edge[]> {
     const results: Edge[] = []
     for (const dto of updateEdgeDtos) {
       if (!dto.id) throw new NotFoundException('id is required for update')
+      // flowId, projectId 일치 검증
+      const edge = await this.findOne(projectId, flowId, dto.id)
       const updated = await this.prisma.edge.update({
         where: { id: dto.id },
         data: dto,
@@ -40,8 +41,33 @@ export class EdgeService {
   }
 
   // 에지 다건 삭제
-  async deleteMany(ids: string[]): Promise<string[]> {
-    await this.prisma.edge.deleteMany({ where: { id: { in: ids } } })
+  async deleteMany(
+    projectId: string,
+    flowId: string,
+    ids: string[],
+  ): Promise<string[]> {
+    // 소유권 검증
+    for (const id of ids) {
+      await this.findOne(projectId, flowId, id)
+    }
+    await this.prisma.edge.deleteMany({ where: { id: { in: ids }, flowId } })
     return ids
+  }
+
+  // 에지 단건 조회
+  async findOne(projectId: string, flowId: string, id: string): Promise<Edge> {
+    const edge = await this.prisma.edge.findFirst({
+      where: { id, flowId, flow: { projectId } },
+    })
+    if (!edge) throw new NotFoundException('Edge not found')
+    return edge
+  }
+
+  // (옵션) 플로우 하위 전체 에지 조회
+  async findMany(projectId: string, flowId: string): Promise<Edge[]> {
+    return this.prisma.edge.findMany({
+      where: { flowId, flow: { projectId } },
+      orderBy: { createdAt: 'desc' },
+    })
   }
 }

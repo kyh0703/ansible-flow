@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Delete,
-  Query,
+  Param,
 } from '@nestjs/common'
 import { EdgeService } from './edge.service'
 import { CreateEdgeDto } from './dto/create-edge.dto'
@@ -15,52 +15,71 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
-  ApiQuery,
+  ApiParam,
 } from '@nestjs/swagger'
 
 @ApiTags('edges')
-@Controller('edges')
+@Controller('projects/:projectId/flows/:flowId/edges')
 export class EdgeController {
   constructor(private readonly edgeService: EdgeService) {}
 
-  @ApiOperation({ summary: '에지 다건 조회' })
-  @ApiResponse({ status: 200, description: '에지 목록 반환' })
-  @ApiQuery({
-    name: 'ids',
-    required: false,
-    type: [String],
-    description: '에지 id 배열',
-  })
-  @Get()
-  async findMany(@Query('ids') ids?: string[]) {
-    return this.edgeService.findMany(ids)
-  }
-
   @ApiOperation({ summary: '에지 다건 생성' })
   @ApiResponse({ status: 201, description: '생성된 에지 목록 반환' })
+  @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [CreateEdgeDto] })
   @Post()
-  async createMany(@Body() createEdgeDtos: CreateEdgeDto[]) {
-    return this.edgeService.createMany(createEdgeDtos)
+  async createMany(
+    @Param('projectId') projectId: string,
+    @Param('flowId') flowId: string,
+    @Body() createEdgeDtos: CreateEdgeDto[],
+  ) {
+    return this.edgeService.createMany(projectId, flowId, createEdgeDtos)
   }
 
   @ApiOperation({ summary: '에지 다건 수정' })
   @ApiResponse({ status: 200, description: '수정된 에지 목록 반환' })
+  @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [UpdateEdgeDto] })
   @Patch()
-  async updateMany(@Body() updateEdgeDtos: UpdateEdgeDto[]) {
-    return this.edgeService.updateMany(updateEdgeDtos)
+  async updateMany(
+    @Param('projectId') projectId: string,
+    @Param('flowId') flowId: string,
+    @Body() updateEdgeDtos: UpdateEdgeDto[],
+  ) {
+    return this.edgeService.updateMany(projectId, flowId, updateEdgeDtos)
   }
 
   @ApiOperation({ summary: '에지 다건 삭제' })
   @ApiResponse({ status: 200, description: '삭제된 에지 id 목록 반환' })
+  @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({
     schema: {
       properties: { ids: { type: 'array', items: { type: 'string' } } },
     },
   })
   @Delete()
-  async deleteMany(@Body('ids') ids: string[]) {
-    return this.edgeService.deleteMany(ids)
+  async deleteMany(
+    @Param('projectId') projectId: string,
+    @Param('flowId') flowId: string,
+    @Body('ids') ids: string[],
+  ) {
+    return this.edgeService.deleteMany(projectId, flowId, ids)
+  }
+
+  @ApiOperation({ summary: '에지 단건 조회' })
+  @ApiResponse({ status: 200, description: '에지 반환' })
+  @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @ApiParam({ name: 'flowId', description: '플로우 ID' })
+  @ApiParam({ name: 'id', description: '에지 ID' })
+  @Get(':id')
+  async findOne(
+    @Param('projectId') projectId: string,
+    @Param('flowId') flowId: string,
+    @Param('id') id: string,
+  ) {
+    return this.edgeService.findOne(projectId, flowId, id)
   }
 }

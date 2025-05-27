@@ -1,53 +1,60 @@
-import { IsString, IsOptional, IsObject } from 'class-validator'
-import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger'
+import {
+  IsString,
+  IsOptional,
+  IsObject,
+  IsBoolean,
+  IsInt,
+} from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 
 export class UpdateNodeDto {
-  @ApiProperty({ description: '노드 id' })
+  @ApiPropertyOptional({ description: '노드 ID' })
+  @IsOptional()
   @IsString()
-  id: string
+  id?: string
+
+  @ApiPropertyOptional({ description: '노드 UUID' })
+  @IsOptional()
+  @IsString()
+  uuid?: string
 
   @ApiPropertyOptional({ description: '소속 플로우 ID' })
   @IsOptional()
   @IsString()
   flowId?: string
 
-  @ApiPropertyOptional({ description: '노드 식별자' })
+  @ApiPropertyOptional({ description: '노드 타입' })
   @IsOptional()
   @IsString()
-  nodeId?: string
-
-  @ApiPropertyOptional({ description: '노드 종류' })
-  @IsOptional()
-  @IsString()
-  kind?: string
-
-  @ApiPropertyOptional({ description: '노드 설명' })
-  @IsOptional()
-  @IsString()
-  desc?: string
-
-  @ApiPropertyOptional({ description: '노드 라벨' })
-  @IsOptional()
-  @IsString()
-  label?: string
-
-  @ApiPropertyOptional({ description: '노드 그룹 정보' })
-  @IsOptional()
-  @IsObject()
-  group?: object
-
-  @ApiPropertyOptional({ description: '노드 그룹 ID' })
-  @IsOptional()
-  @IsString()
-  groupId?: string
+  type?: string
 
   @ApiPropertyOptional({ description: '노드 위치 정보' })
   @IsOptional()
   @IsObject()
-  pos?: object
+  position?: object
 
   @ApiPropertyOptional({ description: '노드 스타일 정보' })
   @IsOptional()
   @IsObject()
-  style?: object
+  styles?: object
+
+  @ApiPropertyOptional({ description: '노드 너비' })
+  @IsOptional()
+  @IsInt()
+  width?: number
+
+  @ApiPropertyOptional({ description: '노드 높이' })
+  @IsOptional()
+  @IsInt()
+  height?: number
+
+  @ApiPropertyOptional({ description: '숨김 여부' })
+  @IsOptional()
+  @IsBoolean()
+  hidden?: boolean
+
+  @ApiPropertyOptional({ description: '노드 설명' })
+  @IsOptional()
+  @IsString()
+  description?: string
 }

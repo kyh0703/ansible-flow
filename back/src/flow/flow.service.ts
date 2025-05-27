@@ -10,13 +10,13 @@ export class FlowService {
 
   // 플로우 목록(페이징)
   async findAll(params: {
+    projectId: string
     skip?: number
     take?: number
-    projectId?: string
   }): Promise<Flow[]> {
-    const { skip, take, projectId } = params
+    const { projectId, skip, take } = params
     return this.prisma.flow.findMany({
-      where: projectId ? { projectId } : undefined,
+      where: { projectId },
       skip,
       take,
       orderBy: { createdAt: 'desc' },
@@ -24,24 +24,43 @@ export class FlowService {
   }
 
   // 플로우 단건 조회
-  async findOne(id: string): Promise<Flow> {
-    const flow = await this.prisma.flow.findUnique({ where: { id } })
+  async findOne(projectId: string, id: string): Promise<Flow> {
+    const flow = await this.prisma.flow.findFirst({ where: { id, projectId } })
     if (!flow) throw new NotFoundException('Flow not found')
     return flow
   }
 
   // 플로우 생성
-  async create(createFlowDto: CreateFlowDto): Promise<Flow> {
-    return this.prisma.flow.create({ data: createFlowDto })
+  async create(projectId: string, createFlowDto: CreateFlowDto): Promise<Flow> {
+    return this.prisma.flow.create({ data: { ...createFlowDto, projectId } })
   }
 
   // 플로우 수정
-  async update(id: string, updateFlowDto: UpdateFlowDto): Promise<Flow> {
+  async update(
+    projectId: string,
+    id: string,
+    updateFlowDto: UpdateFlowDto,
+  ): Promise<Flow> {
+    // projectId 일치하는지 검증
+    const flow = await this.findOne(projectId, id)
     return this.prisma.flow.update({ where: { id }, data: updateFlowDto })
   }
 
   // 플로우 삭제
-  async delete(id: string): Promise<Flow> {
+  async delete(projectId: string, id: string): Promise<Flow> {
+    // projectId 일치하는지 검증
+    const flow = await this.findOne(projectId, id)
     return this.prisma.flow.delete({ where: { id } })
+  }
+
+  // 플로우 구조 조회 (예시)
+  async findStructure(projectId: string, id: string) {
+    // 실제 구조 반환 로직은 도메인에 맞게 구현 필요
+    const flow = await this.findOne(projectId, id)
+    // 예시: 노드/에지 포함 구조 반환
+    return this.prisma.flow.findFirst({
+      where: { id, projectId },
+      include: { nodes: true, edges: true },
+    })
   }
 }

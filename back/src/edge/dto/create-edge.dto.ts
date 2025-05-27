@@ -2,43 +2,37 @@ import { IsString, IsOptional, IsObject, IsBoolean } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class CreateEdgeDto {
+  @ApiProperty({ description: '에지 UUID' })
+  @IsString()
+  uuid: string
+
   @ApiProperty({ description: '소속 플로우 ID' })
   @IsString()
   flowId: string
 
-  @ApiProperty({ description: '에지 식별자' })
-  @IsString()
-  edgeId: string
-
-  @ApiProperty({ description: '에지 종류' })
-  @IsString()
-  kind: string
-
   @ApiProperty({ description: '출발 노드 ID' })
   @IsString()
-  srcNodeId: string
+  source: string
 
   @ApiProperty({ description: '도착 노드 ID' })
   @IsString()
-  dstNodeId: string
+  target: string
 
-  @ApiPropertyOptional({ description: '에지 조건' })
+  @ApiProperty({ description: '에지 타입' })
+  @IsString()
+  type: string
+
+  @ApiPropertyOptional({ description: '에지 라벨' })
   @IsOptional()
   @IsString()
-  cond?: string
-
-  @ApiPropertyOptional({ description: '에지 마커 정보' })
-  @IsOptional()
-  @IsObject()
-  markerEnd?: object
-
-  @ApiPropertyOptional({ description: '에지 포인트 정보' })
-  @IsOptional()
-  @IsObject()
-  points?: object
+  label?: string
 
   @ApiPropertyOptional({ description: '숨김 여부' })
   @IsOptional()
   @IsBoolean()
   hidden?: boolean
+
+  @ApiProperty({ description: '마커 정보' })
+  @IsObject()
+  markerEnd: object
 }
