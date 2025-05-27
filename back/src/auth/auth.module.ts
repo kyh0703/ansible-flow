@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { KakaoStrategy } from './strategies/kakao.strategy';
-import { GithubStrategy } from './strategies/github.strategy';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtAuthGuard } from './guards/jwt.guard';
-import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
-import { PrismaModule } from '../prisma/prisma.module';
+import { Module } from '@nestjs/common'
+import { PassportModule } from '@nestjs/passport'
+import { JwtModule, JwtService } from '@nestjs/jwt'
+import { ConfigService } from '@nestjs/config'
+import { AuthService } from './auth.service'
+import { PrismaService } from '../prisma/prisma.service'
+import { AuthController } from './auth.controller'
+import { GoogleStrategy } from './strategies/google.strategy'
+import { KakaoStrategy } from './strategies/kakao.strategy'
+import { GithubStrategy } from './strategies/github.strategy'
+import { JwtStrategy } from './strategies/jwt.strategy'
+import { JwtAuthGuard } from './guards/jwt.guard'
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy'
+import { PrismaModule } from '../prisma/prisma.module'
 
 @Module({
   imports: [
@@ -34,6 +34,8 @@ import { PrismaModule } from '../prisma/prisma.module';
     JwtStrategy,
     JwtRefreshStrategy,
     JwtAuthGuard,
+    JwtService,
+    PrismaService,
   ],
   exports: [AuthService],
 })

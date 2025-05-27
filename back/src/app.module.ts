@@ -1,9 +1,13 @@
-import { Module } from '@nestjs/common'
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { AuthModule } from './auth/auth.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module'
+import { FlowModule } from './flow/flow.module'
+import { NodeModule } from './node/node.module'
+import { ProjectModule } from './project/project.module'
+import { UserModule } from './user/user.module'
+import { JwtAuthMiddleware } from './auth/middleware/jwt-auth.middleware'
 
 @Module({
   imports: [
@@ -12,9 +16,16 @@ import { ProjectsModule } from './projects/projects.module';
       envFilePath: `.env${process.env.NODE_ENV === 'test' ? '.test' : ''}`,
     }),
     AuthModule,
-    ProjectsModule,
+    ProjectModule,
+    FlowModule,
+    NodeModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtAuthMiddleware).forRoutes('project')
+  }
+}

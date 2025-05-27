@@ -122,18 +122,75 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   name: 'name',
-  profileImage: 'profileImage',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  bio: 'bio',
+  provider: 'provider',
+  providerId: 'providerId',
+  isAdmin: 'isAdmin',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.TokenScalarFieldEnum = {
   id: 'id',
-  title: 'title',
-  published: 'published',
-  authorId: 'authorId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  userId: 'userId',
+  refreshToken: 'refreshToken',
+  expiresIn: 'expiresIn',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FlowScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  description: 'description',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NodeScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  flowId: 'flowId',
+  type: 'type',
+  position: 'position',
+  styles: 'styles',
+  width: 'width',
+  height: 'height',
+  hidden: 'hidden',
+  description: 'description',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.EdgeScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  flowId: 'flowId',
+  source: 'source',
+  target: 'target',
+  type: 'type',
+  label: 'label',
+  hidden: 'hidden',
+  markerEnd: 'markerEnd',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OauthStateScalarFieldEnum = {
+  id: 'id',
+  state: 'state',
+  redirectUrl: 'redirectUrl',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -141,15 +198,35 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Post: 'Post'
+  Token: 'Token',
+  Project: 'Project',
+  Flow: 'Flow',
+  Node: 'Node',
+  Edge: 'Edge',
+  OauthState: 'OauthState'
 };
 
 /**

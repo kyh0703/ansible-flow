@@ -15,22 +15,87 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  password     String?
-  name         String?
-  profileImage String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  posts        Post[]
+  id         String    @id @default(uuid())
+  email      String    @unique
+  password   String?
+  name       String
+  bio        String?
+  provider   String?
+  providerId String?
+  isAdmin    Boolean   @default(false)
+  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime  @default(now())
+  projects   Project[]
+  tokens     Token[]
 }
 
-model Post {
+model Token {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  refreshToken String
+  expiresIn    Int
+  createdAt    DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  name        String
+  description String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  flows       Flow[]
+}
+
+model Flow {
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  name        String
+  description String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  nodes       Node[]
+  edges       Edge[]
+}
+
+model Node {
+  id          String   @id @default(uuid())
+  uuid        String
+  flow        Flow     @relation(fields: [flowId], references: [id])
+  flowId      String
+  type        String
+  position    Json
+  styles      Json
+  width       Int
+  height      Int
+  hidden      Boolean  @default(false)
+  description String   @default("")
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model Edge {
   id        String   @id @default(uuid())
-  title     String
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
+  uuid      String
+  flow      Flow     @relation(fields: [flowId], references: [id])
+  flowId    String
+  source    String
+  target    String
+  type      String
+  label     String   @default("")
+  hidden    Boolean  @default(false)
+  markerEnd Json
   updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model OauthState {
+  id          String   @id @default(uuid())
+  state       String   @unique
+  redirectUrl String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
 }
