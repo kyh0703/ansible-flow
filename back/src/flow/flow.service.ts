@@ -23,30 +23,25 @@ export class FlowService {
     })
   }
 
-  // 플로우 단건 조회
   async findOne(projectId: string, id: string): Promise<Flow> {
     const flow = await this.prisma.flow.findFirst({ where: { id, projectId } })
     if (!flow) throw new NotFoundException('Flow not found')
     return flow
   }
 
-  // 플로우 생성
   async create(projectId: string, createFlowDto: CreateFlowDto): Promise<Flow> {
     return this.prisma.flow.create({ data: { ...createFlowDto, projectId } })
   }
 
-  // 플로우 수정
   async update(
     projectId: string,
     id: string,
     updateFlowDto: UpdateFlowDto,
   ): Promise<Flow> {
-    // projectId 일치하는지 검증
     const flow = await this.findOne(projectId, id)
     return this.prisma.flow.update({ where: { id }, data: updateFlowDto })
   }
 
-  // 플로우 삭제
   async delete(projectId: string, id: string): Promise<Flow> {
     // projectId 일치하는지 검증
     const flow = await this.findOne(projectId, id)

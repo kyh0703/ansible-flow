@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Logger,
   Post,
   Body,
   Patch,
@@ -17,6 +18,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 @ApiTags('users')
 @Controller('users')
 export class UserController {
+  private logger: Logger = new Logger(UserController.name)
+
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: '유저 페이징 목록 조회' })

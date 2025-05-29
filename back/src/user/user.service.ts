@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import type { User } from 'generated/client'
 
 @Injectable()
 export class UserService {
+  private logger: Logger = new Logger(UserService.name)
+
   constructor(private readonly prisma: PrismaService) {}
 
   async pagination(params: { skip: number; take: number }) {
@@ -26,7 +29,7 @@ export class UserService {
     return user
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     return this.prisma.user.create({ data: createUserDto })
   }
 

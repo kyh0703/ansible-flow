@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt'
 import { PrismaService } from '../../prisma/prisma.service'
 
 @Injectable()
-export class JwtAuthMiddleware implements NestMiddleware {
+export class AuthMiddleware implements NestMiddleware {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
@@ -27,6 +27,7 @@ export class JwtAuthMiddleware implements NestMiddleware {
       })
       if (!user) throw new UnauthorizedException('User not found')
       req.user = user
+      req.currentUser = user
       next()
     } catch (e) {
       throw new UnauthorizedException(`Invalid token ${e.message}`)
