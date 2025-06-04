@@ -8,7 +8,6 @@ import { UpdateNodeDto } from './dto/update-node.dto'
 export class NodeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // 노드 다건 생성
   async createMany(
     projectId: string,
     flowId: string,
@@ -19,7 +18,6 @@ export class NodeService {
     return this.findMany(projectId, flowId)
   }
 
-  // 노드 다건 수정
   async updateMany(
     projectId: string,
     flowId: string,
@@ -39,7 +37,6 @@ export class NodeService {
     return results
   }
 
-  // 노드 다건 삭제
   async deleteMany(
     projectId: string,
     flowId: string,
@@ -53,7 +50,6 @@ export class NodeService {
     return ids
   }
 
-  // 노드 단건 조회
   async findOne(projectId: string, flowId: string, id: string): Promise<Node> {
     const node = await this.prisma.node.findFirst({
       where: { id, flowId, flow: { projectId } },
@@ -62,7 +58,6 @@ export class NodeService {
     return node
   }
 
-  // (옵션) 플로우 하위 전체 노드 조회
   async findMany(projectId: string, flowId: string): Promise<Node[]> {
     return this.prisma.node.findMany({
       where: { flowId, flow: { projectId } },

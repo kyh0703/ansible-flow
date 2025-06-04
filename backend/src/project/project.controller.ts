@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
-  Req,
 } from '@nestjs/common'
-import { ProjectService } from './project.service'
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import type { User } from 'generated/client'
+import { CurrentUser } from 'src/user/user.decorator'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
-import { Request } from 'express'
+import { ProjectService } from './project.service'
 
 @ApiTags('projects')
 @Controller('projects')
@@ -36,17 +36,15 @@ export class ProjectController {
   })
   @Get('pagination')
   async pagination(
+    @CurrentUser() user: User,
     @Query('page') page: string = '1',
     @Query('pageSize') pageSize: string = '10',
-    @Req() req: Request,
   ) {
-    // 실제 서비스에서는 req.user에서 userId 추출, 여기서는 임시로 userId를 쿼리로 받음
-    const user = req.user
     const pageNum = Math.max(Number(page), 1)
     const pageSizeNum = Math.max(Number(pageSize), 1)
     const skip = (pageNum - 1) * pageSizeNum
     const { items, total } = await this.projectService.pagination({
-      userId,
+      userId: user.id,
       skip,
       take: pageSizeNum,
     })
@@ -75,11 +73,13 @@ export class ProjectController {
   @ApiResponse({ status: 201, description: '생성된 프로젝트 반환' })
   @Post()
   async create(
+    @CurrentUser() user: User,
     @Body() createProjectDto: CreateProjectDto,
-    @Req() req: Request,
   ) {
-    const userId = (req.user as any).id
-    return this.projectService.create({ ...createProjectDto, userId })
+    return this.projectService.create({
+      ...createProjectDto,
+      userId: user.id,
+    })
   }
 
   @ApiOperation({ summary: '프로젝트 수정' })

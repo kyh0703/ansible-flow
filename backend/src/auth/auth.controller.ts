@@ -1,29 +1,35 @@
 import {
-  Controller,
-  Post,
   Body,
-  Res,
-  Req,
-  UseGuards,
+  Controller,
   Get,
   HttpCode,
+  Inject,
+  Post,
+  Req,
+  Res,
+  UseGuards,
 } from '@nestjs/common'
+import { type ConfigType } from '@nestjs/config'
+import { Request, Response } from 'express'
+import appConfig from 'src/config/app.config'
+import { CurrentUser } from 'src/user/user.decorator'
 import { AuthService } from './auth.service'
-import { RegisterDto } from './dto/register.dto'
 import { LoginDto } from './dto/login.dto'
-import { JwtAuthGuard } from './guards/jwt.guard'
-import { GoogleAuthGuard } from './guards/google.guard'
-import { KakaoAuthGuard } from './guards/kakao.guard'
+import { RegisterDto } from './dto/register.dto'
 import { GithubAuthGuard } from './guards/github.guard'
+import { GoogleAuthGuard } from './guards/google.guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
-import { Response, Request } from 'express'
-import { ConfigService } from '@nestjs/config'
+import { JwtAuthGuard } from './guards/jwt.guard'
+import { KakaoAuthGuard } from './guards/kakao.guard'
+import type { User } from 'generated/client'
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+
+    @Inject(appConfig.KEY)
+    private readonly config: ConfigType<typeof appConfig>,
   ) {}
 
   @Post('register')
@@ -56,23 +62,21 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   async refresh(
+    @CurrentUser() user: User,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = req.user
-    const { accessToken, refreshToken } = await this.authService.generateTokens(
-      user.userId,
+    const { accessToken, refreshToken } = this.authService.generateTokens(
+      user.id,
       user.email,
     )
     this.setCookieWithRefreshToken(res, refreshToken)
     return { accessToken }
   }
 
-  // Google OAuth
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   googleAuth() {
-    // Google Authentication 불러옴 - Guard가 처리
     return
   }
 
@@ -85,7 +89,7 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
     this.setCookieWithRefreshToken(res, refreshToken)
     res.redirect(
-      `${process.env.FRONTEND_URL || 'http://localhost:5173'}?token=${accessToken}`,
+      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
     )
   }
 
@@ -106,11 +110,10 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
     this.setCookieWithRefreshToken(res, refreshToken)
     res.redirect(
-      `${process.env.FRONTEND_URL || 'http://localhost:5173'}?token=${accessToken}`,
+      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
     )
   }
 
-  // Github OAuth
   @Get('github')
   @UseGuards(GithubAuthGuard)
   githubAuth() {
@@ -126,7 +129,7 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
     this.setCookieWithRefreshToken(res, refreshToken)
     res.redirect(
-      `${process.env.FRONTEND_URL || 'http://localhost:5173'}?token=${accessToken}`,
+      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
     )
   }
 
@@ -142,7 +145,7 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: this.config.env === 'production',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     })

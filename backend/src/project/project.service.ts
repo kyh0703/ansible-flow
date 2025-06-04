@@ -42,4 +42,15 @@ export class ProjectService {
   async delete(id: string): Promise<Project> {
     return this.prisma.project.delete({ where: { id } })
   }
+
+  async isUserMemberOfProject(
+    userId: string,
+    projectId: string,
+  ): Promise<boolean> {
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+    })
+    if (!project) return false
+    return project.userId === userId
+  }
 }
