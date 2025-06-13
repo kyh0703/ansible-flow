@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common'
-import { PassportModule } from '@nestjs/passport'
-import { JwtModule, JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import { AuthService } from './auth.service'
+import { JwtModule } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport'
+import { PrismaModule } from '../prisma/prisma.module'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthController } from './auth.controller'
-import { GoogleStrategy } from './strategies/google.strategy'
-import { KakaoStrategy } from './strategies/kakao.strategy'
-import { GithubStrategy } from './strategies/github.strategy'
-import { JwtStrategy } from './strategies/jwt.strategy'
+import { AuthService } from './auth.service'
 import { JwtAuthGuard } from './guards/jwt.guard'
+import { AuthMiddleware } from './middleware/auth.middleware'
+import { GithubStrategy } from './strategies/github.strategy'
+import { GoogleStrategy } from './strategies/google.strategy'
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy'
-import { PrismaModule } from '../prisma/prisma.module'
+import { JwtStrategy } from './strategies/jwt.strategy'
+import { KakaoStrategy } from './strategies/kakao.strategy'
 
 @Module({
   imports: [
@@ -20,13 +21,16 @@ import { PrismaModule } from '../prisma/prisma.module'
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_ACCESS_SECRET'),
-        signOptions: { expiresIn: config.get<string>('JWT_ACCESS_EXPIRES_IN') },
+        secret: config.get<string>('auth.accessTokenSecret'),
+        signOptions: {
+          expiresIn: config.get<string>('auth.accessTokenExpiresIn'),
+        },
       }),
     }),
   ],
   controllers: [AuthController],
   providers: [
+    AuthMiddleware,
     AuthService,
     GoogleStrategy,
     KakaoStrategy,
@@ -34,9 +38,8 @@ import { PrismaModule } from '../prisma/prisma.module'
     JwtStrategy,
     JwtRefreshStrategy,
     JwtAuthGuard,
-    JwtService,
     PrismaService,
   ],
-  exports: [AuthService],
+  exports: [AuthService, AuthMiddleware],
 })
 export class AuthModule {}

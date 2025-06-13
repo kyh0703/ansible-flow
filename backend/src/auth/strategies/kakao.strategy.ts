@@ -1,19 +1,21 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { type ConfigType } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
-import { Strategy, Profile } from 'passport-kakao'
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Profile, Strategy } from 'passport-kakao'
+import authConfig from 'src/config/auth.config'
 import { AuthService } from '../auth.service'
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(
-    private readonly configService: ConfigService,
+    @Inject(authConfig.KEY)
+    private readonly authCfg: ConfigType<typeof authConfig>,
     private readonly authService: AuthService,
   ) {
     super({
-      clientID: configService.get<string>('KAKAO_CLIENT_ID')!,
-      clientSecret: configService.get<string>('KAKAO_CLIENT_SECRET')!,
-      callbackURL: configService.get<string>('KAKAO_REDIRECT_URI')!,
+      clientID: authCfg.kakaoId ?? '',
+      clientSecret: authCfg.kakaoSecret ?? '',
+      callbackURL: authCfg.kakaoRedirectURI ?? '',
     })
   }
 

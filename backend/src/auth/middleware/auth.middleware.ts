@@ -4,14 +4,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
-import { JwtService } from '@nestjs/jwt'
 import { PrismaService } from '../../prisma/prisma.service'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {

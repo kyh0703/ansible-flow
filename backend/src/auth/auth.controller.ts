@@ -5,13 +5,16 @@ import {
   HttpCode,
   Inject,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common'
-import { type ConfigType } from '@nestjs/config'
+import type { ConfigType } from '@nestjs/config'
 import { Request, Response } from 'express'
+import type { User } from 'generated/client'
 import appConfig from 'src/config/app.config'
+import authConfig from 'src/config/auth.config'
 import { CurrentUser } from 'src/user/user.decorator'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
@@ -21,20 +24,28 @@ import { GoogleAuthGuard } from './guards/google.guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
 import { JwtAuthGuard } from './guards/jwt.guard'
 import { KakaoAuthGuard } from './guards/kakao.guard'
-import type { User } from 'generated/client'
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
-
     @Inject(appConfig.KEY)
-    private readonly config: ConfigType<typeof appConfig>,
+    private readonly appCfg: ConfigType<typeof appConfig>,
+
+    @Inject(authConfig.KEY)
+    private readonly authCfg: ConfigType<typeof authConfig>,
+
+    private readonly authService: AuthService,
   ) {}
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto)
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this.authService.register(registerDto)
+    this.setCookieWithRefreshToken(res, refreshToken)
+    return { accessToken }
   }
 
   @Post('login')
@@ -51,11 +62,7 @@ export class AuthController {
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-    })
+    this.clearCookie(res)
     return { message: '로그아웃 완료' }
   }
 
@@ -66,12 +73,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = this.authService.generateTokens(
-      user.id,
-      user.email,
-    )
-    this.setCookieWithRefreshToken(res, refreshToken)
-    return { accessToken }
+    return
   }
 
   @Get('google')
@@ -83,35 +85,23 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(
-    @Req() req,
+    @Query('state') state: string,
+    @Query('code') code: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
-    this.setCookieWithRefreshToken(res, refreshToken)
-    res.redirect(
-      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
-    )
+    res.redirect(`${this.authCfg.frontendUrl}`)
   }
 
-  // Kakao OAuth
   @Get('kakao')
   @UseGuards(KakaoAuthGuard)
-  kakaoAuth() {
-    // Kakao Authentication 불러옴
+  kakaoAuth(@Req() req: Request) {
     return
   }
 
   @Get('kakao/callback')
   @UseGuards(KakaoAuthGuard)
-  async kakaoAuthCallback(
-    @Req() req,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
-    this.setCookieWithRefreshToken(res, refreshToken)
-    res.redirect(
-      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
-    )
+  async kakaoAuthCallback(@Res({ passthrough: true }) res: Response) {
+    res.redirect(`${this.authCfg.frontendUrl}`)
   }
 
   @Get('github')
@@ -126,28 +116,30 @@ export class AuthController {
     @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.oauthLogin(req)
-    this.setCookieWithRefreshToken(res, refreshToken)
-    res.redirect(
-      `${process.env.FRONTEND_URL ?? 'http://localhost:5173'}?token=${accessToken}`,
-    )
+    res.redirect(`${this.authCfg.frontendUrl}`)
   }
 
-  // 현재 인증된 사용자 정보 가져오기
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getProfile(@Req() req) {
-    return req.user
+    return req.currentUser
   }
 
-  // 리프레시 토큰을 쿠키에 설정하는 헬퍼 메서드
   private setCookieWithRefreshToken(res: Response, refreshToken: string) {
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('token', refreshToken, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: this.config.env === 'production',
+      secure: this.appCfg.env === 'production',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    })
+  }
+
+  private clearCookie(res: Response) {
+    res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
     })
   }
 }

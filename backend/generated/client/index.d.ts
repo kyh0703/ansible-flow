@@ -6026,7 +6026,6 @@ export namespace Prisma {
 
   export type NodeMinAggregateOutputType = {
     id: string | null
-    uuid: string | null
     flowId: string | null
     type: string | null
     width: number | null
@@ -6039,7 +6038,6 @@ export namespace Prisma {
 
   export type NodeMaxAggregateOutputType = {
     id: string | null
-    uuid: string | null
     flowId: string | null
     type: string | null
     width: number | null
@@ -6052,7 +6050,6 @@ export namespace Prisma {
 
   export type NodeCountAggregateOutputType = {
     id: number
-    uuid: number
     flowId: number
     type: number
     position: number
@@ -6079,7 +6076,6 @@ export namespace Prisma {
 
   export type NodeMinAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     type?: true
     width?: true
@@ -6092,7 +6088,6 @@ export namespace Prisma {
 
   export type NodeMaxAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     type?: true
     width?: true
@@ -6105,7 +6100,6 @@ export namespace Prisma {
 
   export type NodeCountAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     type?: true
     position?: true
@@ -6207,7 +6201,6 @@ export namespace Prisma {
 
   export type NodeGroupByOutputType = {
     id: string
-    uuid: string
     flowId: string
     type: string
     position: JsonValue
@@ -6241,7 +6234,6 @@ export namespace Prisma {
 
   export type NodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     type?: boolean
     position?: boolean
@@ -6257,7 +6249,6 @@ export namespace Prisma {
 
   export type NodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     type?: boolean
     position?: boolean
@@ -6273,7 +6264,6 @@ export namespace Prisma {
 
   export type NodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     type?: boolean
     position?: boolean
@@ -6289,7 +6279,6 @@ export namespace Prisma {
 
   export type NodeSelectScalar = {
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     type?: boolean
     position?: boolean
@@ -6302,7 +6291,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type NodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "flowId" | "type" | "position" | "styles" | "width" | "height" | "hidden" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["node"]>
+  export type NodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "flowId" | "type" | "position" | "styles" | "width" | "height" | "hidden" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["node"]>
   export type NodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     flow?: boolean | FlowDefaultArgs<ExtArgs>
   }
@@ -6320,7 +6309,6 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      uuid: string
       flowId: string
       type: string
       position: Prisma.JsonValue
@@ -6756,7 +6744,6 @@ export namespace Prisma {
    */
   interface NodeFieldRefs {
     readonly id: FieldRef<"Node", 'String'>
-    readonly uuid: FieldRef<"Node", 'String'>
     readonly flowId: FieldRef<"Node", 'String'>
     readonly type: FieldRef<"Node", 'String'>
     readonly position: FieldRef<"Node", 'Json'>
@@ -7191,7 +7178,6 @@ export namespace Prisma {
 
   export type EdgeMinAggregateOutputType = {
     id: string | null
-    uuid: string | null
     flowId: string | null
     source: string | null
     target: string | null
@@ -7204,7 +7190,6 @@ export namespace Prisma {
 
   export type EdgeMaxAggregateOutputType = {
     id: string | null
-    uuid: string | null
     flowId: string | null
     source: string | null
     target: string | null
@@ -7217,7 +7202,6 @@ export namespace Prisma {
 
   export type EdgeCountAggregateOutputType = {
     id: number
-    uuid: number
     flowId: number
     source: number
     target: number
@@ -7233,7 +7217,6 @@ export namespace Prisma {
 
   export type EdgeMinAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     source?: true
     target?: true
@@ -7246,7 +7229,6 @@ export namespace Prisma {
 
   export type EdgeMaxAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     source?: true
     target?: true
@@ -7259,7 +7241,6 @@ export namespace Prisma {
 
   export type EdgeCountAggregateInputType = {
     id?: true
-    uuid?: true
     flowId?: true
     source?: true
     target?: true
@@ -7346,7 +7327,6 @@ export namespace Prisma {
 
   export type EdgeGroupByOutputType = {
     id: string
-    uuid: string
     flowId: string
     source: string
     target: string
@@ -7377,7 +7357,6 @@ export namespace Prisma {
 
   export type EdgeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     source?: boolean
     target?: boolean
@@ -7392,7 +7371,6 @@ export namespace Prisma {
 
   export type EdgeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     source?: boolean
     target?: boolean
@@ -7407,7 +7385,6 @@ export namespace Prisma {
 
   export type EdgeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     source?: boolean
     target?: boolean
@@ -7422,7 +7399,6 @@ export namespace Prisma {
 
   export type EdgeSelectScalar = {
     id?: boolean
-    uuid?: boolean
     flowId?: boolean
     source?: boolean
     target?: boolean
@@ -7434,7 +7410,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type EdgeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "flowId" | "source" | "target" | "type" | "label" | "hidden" | "markerEnd" | "updatedAt" | "createdAt", ExtArgs["result"]["edge"]>
+  export type EdgeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "flowId" | "source" | "target" | "type" | "label" | "hidden" | "markerEnd" | "updatedAt" | "createdAt", ExtArgs["result"]["edge"]>
   export type EdgeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     flow?: boolean | FlowDefaultArgs<ExtArgs>
   }
@@ -7452,7 +7428,6 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      uuid: string
       flowId: string
       source: string
       target: string
@@ -7887,7 +7862,6 @@ export namespace Prisma {
    */
   interface EdgeFieldRefs {
     readonly id: FieldRef<"Edge", 'String'>
-    readonly uuid: FieldRef<"Edge", 'String'>
     readonly flowId: FieldRef<"Edge", 'String'>
     readonly source: FieldRef<"Edge", 'String'>
     readonly target: FieldRef<"Edge", 'String'>
@@ -8321,7 +8295,6 @@ export namespace Prisma {
 
   export type OauthStateMinAggregateOutputType = {
     id: string | null
-    state: string | null
     redirectUrl: string | null
     expiresAt: Date | null
     createdAt: Date | null
@@ -8329,7 +8302,6 @@ export namespace Prisma {
 
   export type OauthStateMaxAggregateOutputType = {
     id: string | null
-    state: string | null
     redirectUrl: string | null
     expiresAt: Date | null
     createdAt: Date | null
@@ -8337,7 +8309,6 @@ export namespace Prisma {
 
   export type OauthStateCountAggregateOutputType = {
     id: number
-    state: number
     redirectUrl: number
     expiresAt: number
     createdAt: number
@@ -8347,7 +8318,6 @@ export namespace Prisma {
 
   export type OauthStateMinAggregateInputType = {
     id?: true
-    state?: true
     redirectUrl?: true
     expiresAt?: true
     createdAt?: true
@@ -8355,7 +8325,6 @@ export namespace Prisma {
 
   export type OauthStateMaxAggregateInputType = {
     id?: true
-    state?: true
     redirectUrl?: true
     expiresAt?: true
     createdAt?: true
@@ -8363,7 +8332,6 @@ export namespace Prisma {
 
   export type OauthStateCountAggregateInputType = {
     id?: true
-    state?: true
     redirectUrl?: true
     expiresAt?: true
     createdAt?: true
@@ -8444,7 +8412,6 @@ export namespace Prisma {
 
   export type OauthStateGroupByOutputType = {
     id: string
-    state: string
     redirectUrl: string
     expiresAt: Date
     createdAt: Date
@@ -8469,7 +8436,6 @@ export namespace Prisma {
 
   export type OauthStateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    state?: boolean
     redirectUrl?: boolean
     expiresAt?: boolean
     createdAt?: boolean
@@ -8477,7 +8443,6 @@ export namespace Prisma {
 
   export type OauthStateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    state?: boolean
     redirectUrl?: boolean
     expiresAt?: boolean
     createdAt?: boolean
@@ -8485,7 +8450,6 @@ export namespace Prisma {
 
   export type OauthStateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    state?: boolean
     redirectUrl?: boolean
     expiresAt?: boolean
     createdAt?: boolean
@@ -8493,20 +8457,18 @@ export namespace Prisma {
 
   export type OauthStateSelectScalar = {
     id?: boolean
-    state?: boolean
     redirectUrl?: boolean
     expiresAt?: boolean
     createdAt?: boolean
   }
 
-  export type OauthStateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "state" | "redirectUrl" | "expiresAt" | "createdAt", ExtArgs["result"]["oauthState"]>
+  export type OauthStateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "redirectUrl" | "expiresAt" | "createdAt", ExtArgs["result"]["oauthState"]>
 
   export type $OauthStatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OauthState"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      state: string
       redirectUrl: string
       expiresAt: Date
       createdAt: Date
@@ -8934,7 +8896,6 @@ export namespace Prisma {
    */
   interface OauthStateFieldRefs {
     readonly id: FieldRef<"OauthState", 'String'>
-    readonly state: FieldRef<"OauthState", 'String'>
     readonly redirectUrl: FieldRef<"OauthState", 'String'>
     readonly expiresAt: FieldRef<"OauthState", 'DateTime'>
     readonly createdAt: FieldRef<"OauthState", 'DateTime'>
@@ -9366,7 +9327,6 @@ export namespace Prisma {
 
   export const NodeScalarFieldEnum: {
     id: 'id',
-    uuid: 'uuid',
     flowId: 'flowId',
     type: 'type',
     position: 'position',
@@ -9384,7 +9344,6 @@ export namespace Prisma {
 
   export const EdgeScalarFieldEnum: {
     id: 'id',
-    uuid: 'uuid',
     flowId: 'flowId',
     source: 'source',
     target: 'target',
@@ -9401,7 +9360,6 @@ export namespace Prisma {
 
   export const OauthStateScalarFieldEnum: {
     id: 'id',
-    state: 'state',
     redirectUrl: 'redirectUrl',
     expiresAt: 'expiresAt',
     createdAt: 'createdAt'
@@ -9781,7 +9739,6 @@ export namespace Prisma {
     OR?: NodeWhereInput[]
     NOT?: NodeWhereInput | NodeWhereInput[]
     id?: StringFilter<"Node"> | string
-    uuid?: StringFilter<"Node"> | string
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
@@ -9797,7 +9754,6 @@ export namespace Prisma {
 
   export type NodeOrderByWithRelationInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
@@ -9816,7 +9772,6 @@ export namespace Prisma {
     AND?: NodeWhereInput | NodeWhereInput[]
     OR?: NodeWhereInput[]
     NOT?: NodeWhereInput | NodeWhereInput[]
-    uuid?: StringFilter<"Node"> | string
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
@@ -9832,7 +9787,6 @@ export namespace Prisma {
 
   export type NodeOrderByWithAggregationInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
@@ -9855,7 +9809,6 @@ export namespace Prisma {
     OR?: NodeScalarWhereWithAggregatesInput[]
     NOT?: NodeScalarWhereWithAggregatesInput | NodeScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Node"> | string
-    uuid?: StringWithAggregatesFilter<"Node"> | string
     flowId?: StringWithAggregatesFilter<"Node"> | string
     type?: StringWithAggregatesFilter<"Node"> | string
     position?: JsonWithAggregatesFilter<"Node">
@@ -9873,7 +9826,6 @@ export namespace Prisma {
     OR?: EdgeWhereInput[]
     NOT?: EdgeWhereInput | EdgeWhereInput[]
     id?: StringFilter<"Edge"> | string
-    uuid?: StringFilter<"Edge"> | string
     flowId?: StringFilter<"Edge"> | string
     source?: StringFilter<"Edge"> | string
     target?: StringFilter<"Edge"> | string
@@ -9888,7 +9840,6 @@ export namespace Prisma {
 
   export type EdgeOrderByWithRelationInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     source?: SortOrder
     target?: SortOrder
@@ -9906,7 +9857,6 @@ export namespace Prisma {
     AND?: EdgeWhereInput | EdgeWhereInput[]
     OR?: EdgeWhereInput[]
     NOT?: EdgeWhereInput | EdgeWhereInput[]
-    uuid?: StringFilter<"Edge"> | string
     flowId?: StringFilter<"Edge"> | string
     source?: StringFilter<"Edge"> | string
     target?: StringFilter<"Edge"> | string
@@ -9921,7 +9871,6 @@ export namespace Prisma {
 
   export type EdgeOrderByWithAggregationInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     source?: SortOrder
     target?: SortOrder
@@ -9941,7 +9890,6 @@ export namespace Prisma {
     OR?: EdgeScalarWhereWithAggregatesInput[]
     NOT?: EdgeScalarWhereWithAggregatesInput | EdgeScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Edge"> | string
-    uuid?: StringWithAggregatesFilter<"Edge"> | string
     flowId?: StringWithAggregatesFilter<"Edge"> | string
     source?: StringWithAggregatesFilter<"Edge"> | string
     target?: StringWithAggregatesFilter<"Edge"> | string
@@ -9958,7 +9906,6 @@ export namespace Prisma {
     OR?: OauthStateWhereInput[]
     NOT?: OauthStateWhereInput | OauthStateWhereInput[]
     id?: StringFilter<"OauthState"> | string
-    state?: StringFilter<"OauthState"> | string
     redirectUrl?: StringFilter<"OauthState"> | string
     expiresAt?: DateTimeFilter<"OauthState"> | Date | string
     createdAt?: DateTimeFilter<"OauthState"> | Date | string
@@ -9966,7 +9913,6 @@ export namespace Prisma {
 
   export type OauthStateOrderByWithRelationInput = {
     id?: SortOrder
-    state?: SortOrder
     redirectUrl?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
@@ -9974,18 +9920,16 @@ export namespace Prisma {
 
   export type OauthStateWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    state?: string
     AND?: OauthStateWhereInput | OauthStateWhereInput[]
     OR?: OauthStateWhereInput[]
     NOT?: OauthStateWhereInput | OauthStateWhereInput[]
     redirectUrl?: StringFilter<"OauthState"> | string
     expiresAt?: DateTimeFilter<"OauthState"> | Date | string
     createdAt?: DateTimeFilter<"OauthState"> | Date | string
-  }, "id" | "state">
+  }, "id">
 
   export type OauthStateOrderByWithAggregationInput = {
     id?: SortOrder
-    state?: SortOrder
     redirectUrl?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
@@ -9999,7 +9943,6 @@ export namespace Prisma {
     OR?: OauthStateScalarWhereWithAggregatesInput[]
     NOT?: OauthStateScalarWhereWithAggregatesInput | OauthStateScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"OauthState"> | string
-    state?: StringWithAggregatesFilter<"OauthState"> | string
     redirectUrl?: StringWithAggregatesFilter<"OauthState"> | string
     expiresAt?: DateTimeWithAggregatesFilter<"OauthState"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"OauthState"> | Date | string
@@ -10297,7 +10240,6 @@ export namespace Prisma {
 
   export type NodeCreateInput = {
     id?: string
-    uuid: string
     type: string
     position: JsonNullValueInput | InputJsonValue
     styles: JsonNullValueInput | InputJsonValue
@@ -10312,7 +10254,6 @@ export namespace Prisma {
 
   export type NodeUncheckedCreateInput = {
     id?: string
-    uuid: string
     flowId: string
     type: string
     position: JsonNullValueInput | InputJsonValue
@@ -10327,7 +10268,6 @@ export namespace Prisma {
 
   export type NodeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
     styles?: JsonNullValueInput | InputJsonValue
@@ -10342,7 +10282,6 @@ export namespace Prisma {
 
   export type NodeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     flowId?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
@@ -10357,7 +10296,6 @@ export namespace Prisma {
 
   export type NodeCreateManyInput = {
     id?: string
-    uuid: string
     flowId: string
     type: string
     position: JsonNullValueInput | InputJsonValue
@@ -10372,7 +10310,6 @@ export namespace Prisma {
 
   export type NodeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
     styles?: JsonNullValueInput | InputJsonValue
@@ -10386,7 +10323,6 @@ export namespace Prisma {
 
   export type NodeUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     flowId?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
@@ -10401,7 +10337,6 @@ export namespace Prisma {
 
   export type EdgeCreateInput = {
     id?: string
-    uuid: string
     source: string
     target: string
     type: string
@@ -10415,7 +10350,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedCreateInput = {
     id?: string
-    uuid: string
     flowId: string
     source: string
     target: string
@@ -10429,7 +10363,6 @@ export namespace Prisma {
 
   export type EdgeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -10443,7 +10376,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     flowId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
@@ -10457,7 +10389,6 @@ export namespace Prisma {
 
   export type EdgeCreateManyInput = {
     id?: string
-    uuid: string
     flowId: string
     source: string
     target: string
@@ -10471,7 +10402,6 @@ export namespace Prisma {
 
   export type EdgeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -10484,7 +10414,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     flowId?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
@@ -10498,7 +10427,6 @@ export namespace Prisma {
 
   export type OauthStateCreateInput = {
     id?: string
-    state: string
     redirectUrl: string
     expiresAt: Date | string
     createdAt?: Date | string
@@ -10506,7 +10434,6 @@ export namespace Prisma {
 
   export type OauthStateUncheckedCreateInput = {
     id?: string
-    state: string
     redirectUrl: string
     expiresAt: Date | string
     createdAt?: Date | string
@@ -10514,7 +10441,6 @@ export namespace Prisma {
 
   export type OauthStateUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
     redirectUrl?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10522,7 +10448,6 @@ export namespace Prisma {
 
   export type OauthStateUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
     redirectUrl?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10530,7 +10455,6 @@ export namespace Prisma {
 
   export type OauthStateCreateManyInput = {
     id?: string
-    state: string
     redirectUrl: string
     expiresAt: Date | string
     createdAt?: Date | string
@@ -10538,7 +10462,6 @@ export namespace Prisma {
 
   export type OauthStateUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
     redirectUrl?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10546,7 +10469,6 @@ export namespace Prisma {
 
   export type OauthStateUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    state?: StringFieldUpdateOperationsInput | string
     redirectUrl?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10894,7 +10816,6 @@ export namespace Prisma {
 
   export type NodeCountOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
@@ -10914,7 +10835,6 @@ export namespace Prisma {
 
   export type NodeMaxOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     type?: SortOrder
     width?: SortOrder
@@ -10927,7 +10847,6 @@ export namespace Prisma {
 
   export type NodeMinOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     type?: SortOrder
     width?: SortOrder
@@ -10966,7 +10885,6 @@ export namespace Prisma {
 
   export type EdgeCountOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     source?: SortOrder
     target?: SortOrder
@@ -10980,7 +10898,6 @@ export namespace Prisma {
 
   export type EdgeMaxOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     source?: SortOrder
     target?: SortOrder
@@ -10993,7 +10910,6 @@ export namespace Prisma {
 
   export type EdgeMinOrderByAggregateInput = {
     id?: SortOrder
-    uuid?: SortOrder
     flowId?: SortOrder
     source?: SortOrder
     target?: SortOrder
@@ -11006,7 +10922,6 @@ export namespace Prisma {
 
   export type OauthStateCountOrderByAggregateInput = {
     id?: SortOrder
-    state?: SortOrder
     redirectUrl?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
@@ -11014,7 +10929,6 @@ export namespace Prisma {
 
   export type OauthStateMaxOrderByAggregateInput = {
     id?: SortOrder
-    state?: SortOrder
     redirectUrl?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
@@ -11022,7 +10936,6 @@ export namespace Prisma {
 
   export type OauthStateMinOrderByAggregateInput = {
     id?: SortOrder
-    state?: SortOrder
     redirectUrl?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
@@ -11830,7 +11743,6 @@ export namespace Prisma {
 
   export type NodeCreateWithoutFlowInput = {
     id?: string
-    uuid: string
     type: string
     position: JsonNullValueInput | InputJsonValue
     styles: JsonNullValueInput | InputJsonValue
@@ -11844,7 +11756,6 @@ export namespace Prisma {
 
   export type NodeUncheckedCreateWithoutFlowInput = {
     id?: string
-    uuid: string
     type: string
     position: JsonNullValueInput | InputJsonValue
     styles: JsonNullValueInput | InputJsonValue
@@ -11867,7 +11778,6 @@ export namespace Prisma {
 
   export type EdgeCreateWithoutFlowInput = {
     id?: string
-    uuid: string
     source: string
     target: string
     type: string
@@ -11880,7 +11790,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedCreateWithoutFlowInput = {
     id?: string
-    uuid: string
     source: string
     target: string
     type: string
@@ -11950,7 +11859,6 @@ export namespace Prisma {
     OR?: NodeScalarWhereInput[]
     NOT?: NodeScalarWhereInput | NodeScalarWhereInput[]
     id?: StringFilter<"Node"> | string
-    uuid?: StringFilter<"Node"> | string
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
@@ -11984,7 +11892,6 @@ export namespace Prisma {
     OR?: EdgeScalarWhereInput[]
     NOT?: EdgeScalarWhereInput | EdgeScalarWhereInput[]
     id?: StringFilter<"Edge"> | string
-    uuid?: StringFilter<"Edge"> | string
     flowId?: StringFilter<"Edge"> | string
     source?: StringFilter<"Edge"> | string
     target?: StringFilter<"Edge"> | string
@@ -12208,7 +12115,6 @@ export namespace Prisma {
 
   export type NodeCreateManyFlowInput = {
     id?: string
-    uuid: string
     type: string
     position: JsonNullValueInput | InputJsonValue
     styles: JsonNullValueInput | InputJsonValue
@@ -12222,7 +12128,6 @@ export namespace Prisma {
 
   export type EdgeCreateManyFlowInput = {
     id?: string
-    uuid: string
     source: string
     target: string
     type: string
@@ -12235,7 +12140,6 @@ export namespace Prisma {
 
   export type NodeUpdateWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
     styles?: JsonNullValueInput | InputJsonValue
@@ -12249,7 +12153,6 @@ export namespace Prisma {
 
   export type NodeUncheckedUpdateWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
     styles?: JsonNullValueInput | InputJsonValue
@@ -12263,7 +12166,6 @@ export namespace Prisma {
 
   export type NodeUncheckedUpdateManyWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
     styles?: JsonNullValueInput | InputJsonValue
@@ -12277,7 +12179,6 @@ export namespace Prisma {
 
   export type EdgeUpdateWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -12290,7 +12191,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedUpdateWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -12303,7 +12203,6 @@ export namespace Prisma {
 
   export type EdgeUncheckedUpdateManyWithoutFlowInput = {
     id?: StringFieldUpdateOperationsInput | string
-    uuid?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     target?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string

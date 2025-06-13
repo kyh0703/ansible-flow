@@ -158,7 +158,6 @@ exports.Prisma.FlowScalarFieldEnum = {
 
 exports.Prisma.NodeScalarFieldEnum = {
   id: 'id',
-  uuid: 'uuid',
   flowId: 'flowId',
   type: 'type',
   position: 'position',
@@ -173,7 +172,6 @@ exports.Prisma.NodeScalarFieldEnum = {
 
 exports.Prisma.EdgeScalarFieldEnum = {
   id: 'id',
-  uuid: 'uuid',
   flowId: 'flowId',
   source: 'source',
   target: 'target',
@@ -187,7 +185,6 @@ exports.Prisma.EdgeScalarFieldEnum = {
 
 exports.Prisma.OauthStateScalarFieldEnum = {
   id: 'id',
-  state: 'state',
   redirectUrl: 'redirectUrl',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt'

@@ -92,7 +92,6 @@ model Edge {
 
 model OauthState {
   id           String    @id @default(uuid())
-  state        String    @unique
   redirectUrl  String
   expiresAt    DateTime
   createdAt    DateTime  @default(now())
