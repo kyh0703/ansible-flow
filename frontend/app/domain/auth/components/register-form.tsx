@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import * as z from 'zod'
 import { me, register } from '../services'
 
-const SignupSchema = z
+const RegisterSchema = z
   .object({
     email: z.string().email('유효한 이메일을 입력해 주세요.'),
     password: z
@@ -26,7 +26,7 @@ const SignupSchema = z
     path: ['confirmPassword'],
   })
 
-export type Register = z.infer<typeof SignupSchema>
+export type Register = z.infer<typeof RegisterSchema>
 
 export function RegisterForm() {
   const navigate = useNavigate()
@@ -36,7 +36,7 @@ export function RegisterForm() {
     control,
     formState: { errors },
   } = useForm<Register>({
-    resolver: zodResolver(SignupSchema),
+    resolver: zodResolver(RegisterSchema),
   })
 
   const onSubmit = async (data: Register) => {
@@ -74,7 +74,7 @@ export function RegisterForm() {
       )}
       <FormInput
         control={control}
-        name={'confirmPassword'}
+        name="confirmPassword"
         id="confirmPassword"
         type="password"
         placeholder="비밀번호 확인"

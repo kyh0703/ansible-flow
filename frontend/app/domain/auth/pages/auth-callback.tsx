@@ -1,7 +1,7 @@
 import { setToken } from '@/shared/services'
 import { useUserActions } from '@/shared/store/user'
 import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { me } from '../services'
 
 export default function AuthCallback() {

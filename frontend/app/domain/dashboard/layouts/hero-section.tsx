@@ -1,5 +1,3 @@
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import AuthForm from '../components/auth-form'
 import { Button } from '@/shared/ui/button'
 
 export default function HeroSection() {
@@ -17,16 +15,9 @@ export default function HeroSection() {
             </p>
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button size="lg" className="px-8">
-                  Get Started
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <AuthForm />
-              </DialogContent>
-            </Dialog>
+            <Button size="lg" className="px-8">
+              Get Started
+            </Button>
             <Button size="lg" variant="outline" className="px-8">
               Learn More
             </Button>

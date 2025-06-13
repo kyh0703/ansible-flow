@@ -9,13 +9,17 @@ import {
 export default [
   layout('./shared/providers/index.tsx', [
     index('./domain/dashboard/pages/home.tsx'),
-    route('/auth/callback', './domain/dashboard/pages/auth-callback.tsx'),
-    layout('./domain/projects/layouts/index.tsx', [
+    ...prefix('auth', [
+      route('/login', './domain/auth/pages/login.tsx'),
+      route('/register', './domain/auth/pages/register.tsx'),
+      route('/forgot-password', './domain/auth/pages/forgot-password.tsx'),
+      route('/callback', './domain/auth/pages/auth-callback.tsx'),
+    ]),
+    layout('./domain/project/layouts/index.tsx', [
       ...prefix('projects', [
-        index('./domain/projects/pages/index.tsx'),
-        route(':projectId', './domain/projects/pages/detail.tsx'),
-        route(':projectId/flows', './domain/projects/pages/flows.tsx'),
-        route(':projectId/flows/:flowId', './domain/flows/pages/detail.tsx'),
+        index('./domain/project/pages/index.tsx'),
+        route(':projectId', './domain/project/pages/detail.tsx'),
+        route(':projectId/flows/:flowId', './domain/flow/pages/detail.tsx'),
       ]),
     ]),
   ]),

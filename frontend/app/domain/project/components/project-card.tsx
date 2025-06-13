@@ -1,5 +1,3 @@
-import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import type { Project } from '@/shared/models/project'
 import { Button } from '@/shared/ui/button'
 import {
@@ -10,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card'
+import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router'
 
 type ProjectCardProps = {
   project: Project

@@ -79,7 +79,7 @@ export function LoginForm() {
         className="text-sm text-gray-500 hover:text-gray-700"
         variant="link"
       >
-        <Link to="/forgot-password">비밀번호를 잊으셨나요?</Link>
+        <Link to="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
     </form>
   )

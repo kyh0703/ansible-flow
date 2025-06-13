@@ -1,12 +1,10 @@
-'use client'
-
-import { useForm } from 'react-hook-form'
-import { useModalId } from '@/shared/contexts/modal-context'
-import { useModalActions, useModalData } from '@/shared/store/modal'
-import { ModalAction, ModalContent } from '@/shared/components/modal'
-import type { Project } from '@/shared/models/project'
 import FormInput from '@/shared/components/form-input'
+import { ModalAction, ModalContent } from '@/shared/components/modal'
+import { useModalId } from '@/shared/contexts/modal-context'
+import type { Project } from '@/shared/models/project'
+import { useModalActions, useModalData } from '@/shared/store/modal'
 import { Button } from '@/shared/ui/button'
+import { useForm } from 'react-hook-form'
 
 type ModalData = {
   mode: 'create' | 'update'

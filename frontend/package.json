@@ -41,7 +41,6 @@
     "react-intersection-observer": "^9.16.0",
     "react-resizable-panels": "^2.1.7",
     "react-router": "^7.3.0",
-    "react-router-dom": "^7.3.0",
     "react-toastify": "^11.0.5",
     "return-fetch": "^0.4.8",
     "tailwind-merge": "^3.0.2",

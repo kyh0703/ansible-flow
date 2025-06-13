@@ -1,11 +1,11 @@
-import { useInfiniteQueryProjects } from '@/domain/projects/services'
 import { Spinner } from '@/shared/ui/spinner'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
+import { useInfiniteQueryProjects } from '../services'
 import ProjectCard from './project-card'
 
-export default function ProjectList() {
+export default function FlowList() {
   const { ref, inView } = useInView({
     threshold: 0,
     delay: 0,

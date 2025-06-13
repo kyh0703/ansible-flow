@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/shared/ui/card'
 import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 interface FlowCardProps {
   flow: Flow
