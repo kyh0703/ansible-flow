@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   Inject,
+  Logger,
   Post,
   Query,
   Req,
@@ -27,6 +28,8 @@ import { KakaoAuthGuard } from './guards/kakao.guard'
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name)
+
   constructor(
     @Inject(appConfig.KEY)
     private readonly appCfg: ConfigType<typeof appConfig>,
@@ -121,8 +124,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async getProfile(@Req() req) {
-    return req.currentUser
+  async getProfile(@CurrentUser() user: User) {
+    return user
   }
 
   private setCookieWithRefreshToken(res: Response, refreshToken: string) {

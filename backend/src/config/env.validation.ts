@@ -1,11 +1,5 @@
 import { plainToInstance } from 'class-transformer'
-import {
-  IsEnum,
-  validateSync,
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-} from 'class-validator'
+import { IsEnum, IsNotEmpty, IsString, validateSync } from 'class-validator'
 
 enum Environment {
   Development = 'development',
@@ -19,27 +13,23 @@ class EnvironmentVariables {
 
   @IsNotEmpty()
   @IsString()
-  DB_TYPE: string
-
-  @IsNotEmpty()
-  @IsString()
-  DB_DATABASE: string
+  FRONTEND_URL: string
 
   @IsNotEmpty()
   @IsString()
   JWT_ACCESS_TOKEN_SECRET: string
 
   @IsNotEmpty()
-  @IsNumber()
-  JWT_ACCESS_TOKEN_EXPIRES_IN: number
+  @IsString()
+  JWT_ACCESS_TOKEN_EXPIRES_IN: string
 
   @IsNotEmpty()
   @IsString()
   JWT_REFRESH_TOKEN_SECRET: string
 
   @IsNotEmpty()
-  @IsNumber()
-  JWT_REFRESH_TOKEN_EXPIRES_IN: number
+  @IsString()
+  JWT_REFRESH_TOKEN_EXPIRES_IN: string
 
   @IsString()
   GOOGLE_CLIENT_ID: string
@@ -48,16 +38,10 @@ class EnvironmentVariables {
   GOOGLE_CLIENT_SECRET: string
 
   @IsString()
-  GOOGLE_REDIRECT_URI: string
+  GOOGLE_REDIRECT_URL: string
 
   @IsString()
-  GITHUB_CLIENT_ID: string
-
-  @IsString()
-  GITHUB_CLIENT_SECRET: string
-
-  @IsString()
-  GITHUB_REDIRECT_URI: string
+  GOOGLE_SCOPES: string
 
   @IsString()
   KAKAO_CLIENT_ID: string
@@ -66,7 +50,19 @@ class EnvironmentVariables {
   KAKAO_CLIENT_SECRET: string
 
   @IsString()
-  KAKAO_REDIRECT_URI: string
+  KAKAO_REDIRECT_URL: string
+
+  @IsString()
+  KAKAO_SCOPES: string
+
+  @IsString()
+  GITHUB_CLIENT_ID: string
+
+  @IsString()
+  GITHUB_CLIENT_SECRET: string
+
+  @IsString()
+  GITHUB_REDIRECT_URL: string
 }
 
 export function validate(config: Record<string, unknown>) {

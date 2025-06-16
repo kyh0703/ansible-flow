@@ -1,22 +1,23 @@
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
 import { ValidationPipe } from '@nestjs/common'
-import * as cookieParser from 'cookie-parser'
+import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import * as cookieParser from 'cookie-parser'
+import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './common/filters/http-exception.filter'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
-  // CORS 설정
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // 프론트엔드 서버 주소
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
     credentials: true,
   })
 
-  // 쿠키 파서 설정
-  app.use(cookieParser())
+  app.setGlobalPrefix('api/v1')
 
-  // 전역 파이프 설정
+  app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalInterceptors(new TransformInterceptor())
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,6 +25,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   )
+
+  app.use(cookieParser())
 
   const config = new DocumentBuilder()
     .setTitle('Ansible Flow API')

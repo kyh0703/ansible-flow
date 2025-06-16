@@ -3,7 +3,7 @@ import { fetchExtended, type ApiResponse, type Token } from '@/shared/services'
 export const register = async (data: {
   email: string
   password: string
-  confirmPassword: string
+  passwordConfirm: string
   name: string
 }) => {
   const response = await fetchExtended<ApiResponse<Token>>(

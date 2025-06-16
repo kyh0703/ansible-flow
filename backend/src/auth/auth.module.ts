@@ -7,7 +7,6 @@ import { PrismaService } from '../prisma/prisma.service'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { JwtAuthGuard } from './guards/jwt.guard'
-import { AuthMiddleware } from './middleware/auth.middleware'
 import { GithubStrategy } from './strategies/github.strategy'
 import { GoogleStrategy } from './strategies/google.strategy'
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy'
@@ -30,7 +29,6 @@ import { KakaoStrategy } from './strategies/kakao.strategy'
   ],
   controllers: [AuthController],
   providers: [
-    AuthMiddleware,
     AuthService,
     GoogleStrategy,
     KakaoStrategy,
@@ -40,6 +38,6 @@ import { KakaoStrategy } from './strategies/kakao.strategy'
     JwtAuthGuard,
     PrismaService,
   ],
-  exports: [AuthService, AuthMiddleware],
+  exports: [AuthService],
 })
 export class AuthModule {}

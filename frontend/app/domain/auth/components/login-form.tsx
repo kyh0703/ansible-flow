@@ -35,9 +35,9 @@ export function LoginForm() {
 
   const onSubmit = async (data: Login) => {
     try {
-      const response = await login(data)
+      const res = await login(data)
+      setToken(res)
       const user = await me()
-      setToken(response)
       setUser(user)
       navigate('/projects')
     } catch (error) {

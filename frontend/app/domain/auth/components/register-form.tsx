@@ -18,12 +18,12 @@ const RegisterSchema = z
       .string()
       .min(8, '비밀번호는 8자 이상이어야 합니다.')
       .max(32, '비밀번호는 32자 이하여야 합니다.'),
-    confirmPassword: z.string(),
+    passwordConfirm: z.string(),
     name: z.string().nonempty('이름을 입력해 주세요.'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.passwordConfirm, {
     message: '비밀번호가 일치하지 않습니다.',
-    path: ['confirmPassword'],
+    path: ['passwordConfirm'],
   })
 
 export type Register = z.infer<typeof RegisterSchema>
@@ -41,9 +41,9 @@ export function RegisterForm() {
 
   const onSubmit = async (data: Register) => {
     try {
-      const response = await register(data)
+      const res = await register(data)
+      setToken(res)
       const user = await me()
-      setToken(response)
       setUser(user)
       navigate('/projects')
     } catch (error) {
@@ -74,14 +74,14 @@ export function RegisterForm() {
       )}
       <FormInput
         control={control}
-        name="confirmPassword"
-        id="confirmPassword"
+        name="passwordConfirm"
+        id="passwordConfirm"
         type="password"
         placeholder="비밀번호 확인"
         required
       />
-      {errors.confirmPassword && (
-        <p className="error-msg">{errors.confirmPassword.message}</p>
+      {errors.passwordConfirm && (
+        <p className="error-msg">{errors.passwordConfirm.message}</p>
       )}
       <FormInput control={control} name="name" placeholder="이름" />
       {errors.name && <p className="error-msg">{errors.name.message}</p>}

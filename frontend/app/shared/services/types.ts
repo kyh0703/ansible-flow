@@ -1,13 +1,11 @@
 import { errorMessages, type ErrorCode } from '@/shared/constants/http-error'
 
-export type CustomResponse = {
-  code: number
-  message: string
-}
-
 export type ApiResponse<T> = {
+  statusCode: number
+  message: string | string[]
   data: T
-} & CustomResponse
+  error?: string | object
+}
 
 export class CustomError extends Error {
   public code: ErrorCode
