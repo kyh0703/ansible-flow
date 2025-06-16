@@ -25,17 +25,21 @@ model User {
   isAdmin    Boolean   @default(false)
   updatedAt  DateTime  @updatedAt
   createdAt  DateTime  @default(now())
-  projects   Project[]
   tokens     Token[]
+  projects   Project[]
 }
 
 model Token {
   id           String   @id @default(uuid())
-  user         User     @relation(fields: [userId], references: [id])
   userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   refreshToken String
-  expiresIn    Int
+  expiresAt    DateTime
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, refreshToken])
+  @@index([userId])
 }
 
 model Project {

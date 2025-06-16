@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Inject,
   Logger,
   Post,
@@ -33,10 +34,8 @@ export class AuthController {
   constructor(
     @Inject(appConfig.KEY)
     private readonly appCfg: ConfigType<typeof appConfig>,
-
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
-
     private readonly authService: AuthService,
   ) {}
 
@@ -45,9 +44,13 @@ export class AuthController {
     @Body() registerDto: RegisterDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    this.logger.log(`Register attempt for email: ${registerDto.email}`)
     const { accessToken, refreshToken } =
       await this.authService.register(registerDto)
     this.setCookieWithRefreshToken(res, refreshToken)
+    this.logger.log(
+      `User ${registerDto.email} registered and logged in successfully`,
+    )
     return { accessToken }
   }
 
@@ -57,26 +60,34 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
+    this.logger.log(`Login attempt for email: ${loginDto.email}`)
     const { accessToken, refreshToken } = await this.authService.login(loginDto)
     this.setCookieWithRefreshToken(res, refreshToken)
+    this.logger.log(`Login successful for email: ${loginDto.email}`)
     return { accessToken }
-  }
-
-  @Post('logout')
-  @UseGuards(JwtAuthGuard)
-  async logout(@Res({ passthrough: true }) res: Response) {
-    this.clearCookie(res)
-    return { message: '로그아웃 완료' }
   }
 
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   async refresh(
     @CurrentUser() user: User,
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return
+    this.logger.log(`Refresh attempt for user: ${user.email}`)
+    this.logger.log(`Refresh successful for user: ${user.email}`)
+    return { message: 'Refresh successful' }
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const refreshToken = req.cookies.token
+    if (refreshToken) {
+      await this.authService.revokeRefreshToken(refreshToken)
+      this.clearCookie(res)
+    }
+    return { message: 'Logged out successfully' }
   }
 
   @Get('google')

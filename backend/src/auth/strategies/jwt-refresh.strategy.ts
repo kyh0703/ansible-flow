@@ -25,6 +25,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
         },
       ]),
       secretOrKey: authCfg.refreshTokenSecret ?? '',
+      ignoreExpiration: false,
       passReqToCallback: true,
     })
   }

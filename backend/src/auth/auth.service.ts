@@ -3,11 +3,14 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
+import dayjs from 'dayjs'
+import ms from 'ms'
 import authConfig from 'src/config/auth.config'
 import { PrismaService } from '../prisma/prisma.service'
 import { LoginDto } from './dto/login.dto'
@@ -16,11 +19,13 @@ import { RegisterDto } from './dto/register.dto'
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name)
+
   constructor(
+    private readonly jwtService: JwtService,
+    private readonly prisma: PrismaService,
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -41,7 +46,19 @@ export class AuthService {
       data: { email, password: hash, name: name ?? '' },
     })
 
-    return this.generateTokens(newUser.id, newUser.email)
+    const payload = { email: newUser.email, sub: newUser.id }
+    const accessToken = this.generateAccessToken(payload)
+    const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
+
+    await this.prisma.token.create({
+      data: {
+        userId: newUser.id,
+        refreshToken,
+        expiresAt,
+      },
+    })
+
+    return { accessToken, refreshToken }
   }
 
   async login(loginDto: LoginDto) {
@@ -61,27 +78,45 @@ export class AuthService {
       )
     }
 
-    return this.generateTokens(user.id, user.email)
+    const payload = { email: user.email, sub: user.id }
+    const accessToken = this.generateAccessToken(payload)
+    const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
+
+    await this.saveNewRefreshToken(user.id, refreshToken, expiresAt)
+
+    return { accessToken, refreshToken }
   }
 
-  async refresh(refreshToken: string) {
-    try {
-      const payload = this.jwtService.verify(refreshToken, {
-        secret: this.authCfg.refreshTokenSecret ?? '',
-      })
-
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.sub },
-      })
-      if (!user) {
-        throw new ForbiddenException('접근 리프레시 토큰 에러')
-      }
-
-      return this.generateTokens(user.id, user.email)
-    } catch (e) {
-      console.error(e)
-      throw new ForbiddenException('리프레시 토큰이 유효하지 않습니다.')
+  async refresh(
+    userId: string,
+    oldRefreshToken: string,
+  ): Promise<{ accessToken: string; newRefreshToken: string }> {
+    const userWithTokens = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { tokens: { where: { refreshToken: oldRefreshToken } } },
+    })
+    if (!userWithTokens || userWithTokens.tokens.length === 0) {
+      await this.revokeAllUserRefreshTokens(userId)
+      throw new ForbiddenException('접근 리프레시 토큰 에러')
     }
+
+    const currentTokenRecord = userWithTokens.tokens[0]
+    if (currentTokenRecord.expiresAt < new Date()) {
+      await this.revokeAllUserRefreshTokens(userId)
+      throw new ForbiddenException('접근 리프레시 토큰 에러')
+    }
+
+    await this.prisma.token.delete({
+      where: { id: currentTokenRecord.id },
+    })
+
+    const payload = { email: userWithTokens.email, sub: userWithTokens.id }
+    const accessToken = this.generateAccessToken(payload)
+    const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
+
+    await this.saveNewRefreshToken(userId, refreshToken, expiresAt)
+
+    return { accessToken, newRefreshToken: refreshToken }
   }
 
   async validateOAuthUser(details: OAuthUserDto) {
@@ -100,19 +135,54 @@ export class AuthService {
     return user
   }
 
-  generateTokens(userId: string, email: string) {
-    const payload = { sub: userId, email }
-
-    const accessToken = this.jwtService.sign(payload, {
+  private generateAccessToken(payload: { email: string; sub: string }) {
+    return this.jwtService.sign(payload, {
       secret: this.authCfg.accessTokenSecret ?? '',
       expiresIn: this.authCfg.accessTokenExpiresIn ?? '',
     })
+  }
 
+  private generateRefreshToken(payload: { email: string; sub: string }) {
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.authCfg.refreshTokenSecret ?? '',
       expiresIn: this.authCfg.refreshTokenExpiresIn ?? '',
     })
 
-    return { accessToken, refreshToken }
+    const expiresInMs = ms(this.authCfg.refreshTokenExpiresIn ?? '')
+    const expiresAt = dayjs().add(expiresInMs, 'ms').toDate()
+
+    return { refreshToken, expiresAt }
+  }
+
+  private async saveNewRefreshToken(
+    userId: string,
+    refreshToken: string,
+    expiresAt: Date,
+  ) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10)
+
+    return this.prisma.token.create({
+      data: {
+        userId,
+        refreshToken: hashedRefreshToken,
+        expiresAt,
+      },
+    })
+  }
+
+  // 기존 Refresh Token 무효화
+  async revokeRefreshToken(refreshToken: string): Promise<void> {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10)
+    await this.prisma.token.deleteMany({
+      where: { refreshToken: hashedRefreshToken },
+    })
+  }
+
+  // 특정 사용자의 모든 Refresh Token 삭제
+  async revokeAllUserRefreshTokens(userId: string): Promise<void> {
+    await this.prisma.token.deleteMany({
+      where: { userId },
+    })
+    this.logger.warn(`Revoked all refresh tokens for user ${userId}`)
   }
 }

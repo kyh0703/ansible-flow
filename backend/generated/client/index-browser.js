@@ -134,8 +134,9 @@ exports.Prisma.TokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   refreshToken: 'refreshToken',
-  expiresIn: 'expiresIn',
-  createdAt: 'createdAt'
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
