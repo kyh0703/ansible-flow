@@ -17,7 +17,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       clientSecret: authCfg.githubSecret ?? '',
       callbackURL: authCfg.githubRedirectURI ?? '',
       scope: ['user:email'],
-      passReqToCallback: true,
     })
   }
 
@@ -27,12 +26,13 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     profile: any,
     done: Function,
   ): Promise<any> {
+    console.log('profile', profile)
     const { id, username, emails, photos } = profile
     const email =
       (emails && emails[0] && emails[0].value) || `${id}@github.user`
     const profileImage = (photos && photos[0] && photos[0].value) || null
 
-    const user = {
+    const userDto = {
       provider: 'github',
       providerId: id,
       email,
@@ -40,8 +40,16 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       profileImage,
     }
 
-    const savedUser = await this.authService.validateOAuthUser(user)
+    const {
+      user,
+      accessToken: issuedAccessToken,
+      refreshToken: issuedRefreshToken,
+    } = await this.authService.loginOrRegisterOAuthUser(userDto)
 
-    done(null, savedUser)
+    done(null, {
+      user,
+      accessToken: issuedAccessToken,
+      refreshToken: issuedRefreshToken,
+    })
   }
 }

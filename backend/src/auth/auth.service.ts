@@ -135,6 +135,15 @@ export class AuthService {
     return user
   }
 
+  async loginOrRegisterOAuthUser(details: OAuthUserDto) {
+    const user = await this.validateOAuthUser(details)
+    const payload = { email: user.email, sub: user.id }
+    const accessToken = this.generateAccessToken(payload)
+    const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
+    await this.saveNewRefreshToken(user.id, refreshToken, expiresAt)
+    return { user, accessToken, refreshToken }
+  }
+
   private generateAccessToken(payload: { email: string; sub: string }) {
     return this.jwtService.sign(payload, {
       secret: this.authCfg.accessTokenSecret ?? '',
@@ -147,10 +156,8 @@ export class AuthService {
       secret: this.authCfg.refreshTokenSecret ?? '',
       expiresIn: this.authCfg.refreshTokenExpiresIn ?? '',
     })
-
     const expiresInMs = ms(this.authCfg.refreshTokenExpiresIn ?? '')
     const expiresAt = dayjs().add(expiresInMs, 'ms').toDate()
-
     return { refreshToken, expiresAt }
   }
 

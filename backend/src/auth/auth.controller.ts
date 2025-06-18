@@ -7,7 +7,6 @@ import {
   Inject,
   Logger,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -96,26 +95,40 @@ export class AuthController {
     return
   }
 
+  private handleSocialCallback(req: Request, res: Response) {
+    const user = req.user
+    if (!user) {
+      res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
+      throw new Error('User not found')
+    }
+    this.setCookieWithRefreshToken(res, user.token.refreshToken)
+    res.redirect(
+      `${this.authCfg.frontendUrl}?token=${user.token.accessToken}&expires_in=${user.token.accessExpiresIn}`,
+    )
+  }
+
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(
-    @Query('state') state: string,
-    @Query('code') code: string,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    res.redirect(`${this.authCfg.frontendUrl}`)
+    this.handleSocialCallback(req, res)
   }
 
   @Get('kakao')
   @UseGuards(KakaoAuthGuard)
-  kakaoAuth(@Req() req: Request) {
+  kakaoAuth() {
     return
   }
 
   @Get('kakao/callback')
   @UseGuards(KakaoAuthGuard)
-  async kakaoAuthCallback(@Res({ passthrough: true }) res: Response) {
-    res.redirect(`${this.authCfg.frontendUrl}`)
+  async kakaoAuthCallback(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    this.handleSocialCallback(req, res)
   }
 
   @Get('github')
@@ -127,10 +140,10 @@ export class AuthController {
   @Get('github/callback')
   @UseGuards(GithubAuthGuard)
   async githubAuthCallback(
-    @Req() req,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    res.redirect(`${this.authCfg.frontendUrl}`)
+    this.handleSocialCallback(req, res)
   }
 
   @UseGuards(JwtAuthGuard)
