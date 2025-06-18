@@ -8,15 +8,15 @@ export default function OAuthButton() {
   )
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login?redirect_url=${redirectURL}`
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google?redirect=${redirectURL}`
   }
 
   const handleKakaoLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao/login?redirect_url=${redirectURL}`
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao?redirect=${redirectURL}`
   }
 
   const handleGithubLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github/login?redirect_url=${redirectURL}`
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github?redirect=${redirectURL}`
   }
 
   return (

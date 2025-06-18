@@ -1,4 +1,3 @@
-import type { User } from '@/shared/models/user'
 import { fetchExtended, type ApiResponse, type Token } from '@/shared/services'
 
 export const login = async ({
