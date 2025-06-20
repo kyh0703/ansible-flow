@@ -5,7 +5,7 @@ import { XIcon } from 'lucide-react'
 import { Suspense, useEffect, type PropsWithChildren } from 'react'
 import { createPortal } from 'react-dom'
 import { ModalProvider } from '../contexts/modal-context'
-import { cn } from '../lib/utils'
+import { cn } from '../lib/cn'
 import { Button } from '../ui/button'
 import { Spinner } from '../ui/spinner'
 

@@ -9,6 +9,7 @@ import {
 export default [
   layout('./shared/providers/index.tsx', [
     index('./domain/dashboard/pages/home.tsx'),
+    route('/subscription', './domain/subscription/pages/index.tsx'),
     ...prefix('auth', [
       route('/login', './domain/auth/pages/login.tsx'),
       route('/register', './domain/auth/pages/register.tsx'),

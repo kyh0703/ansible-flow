@@ -25,7 +25,7 @@ import {
   viewPort,
 } from './options'
 
-import { cn } from '@/shared/lib/utils'
+import { cn } from '@/shared/lib/cn'
 import { useTheme } from '@/shared/providers/theme-provider'
 import '@xyflow/react/dist/style.css'
 import { useEditMode } from '../../store/flow'
