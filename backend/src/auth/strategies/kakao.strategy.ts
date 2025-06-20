@@ -37,7 +37,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       profileImage,
     }
 
-    const savedUser = await this.authService.validateOAuthUser(user)
-    return savedUser
+    return user
   }
 }

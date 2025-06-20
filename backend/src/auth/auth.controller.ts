@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
 import { Request, Response } from 'express'
-import type { User } from 'generated/client'
+import type { OauthState, User } from 'generated/client'
 import appConfig from 'src/config/app.config'
 import authConfig from 'src/config/auth.config'
 import { CurrentUser } from 'src/user/user.decorator'
@@ -25,6 +25,7 @@ import { GoogleAuthGuard } from './guards/google.guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
 import { JwtAuthGuard } from './guards/jwt.guard'
 import { KakaoAuthGuard } from './guards/kakao.guard'
+import { OAuthUserDto } from './dto/oauth-user.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -95,15 +96,19 @@ export class AuthController {
     return
   }
 
-  private handleSocialCallback(req: Request, res: Response) {
-    const user = req.user
-    if (!user) {
+  private async handleSocialCallback(req: Request, res: Response) {
+    const oauthUser = req.user as OAuthUserDto | undefined
+    if (!oauthUser) {
       res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
       throw new Error('User not found')
     }
-    this.setCookieWithRefreshToken(res, user.token.refreshToken)
+
+    const { accessToken, refreshToken } =
+      await this.authService.loginOrRegisterOAuthUser(oauthUser)
+
+    this.setCookieWithRefreshToken(res, refreshToken)
     res.redirect(
-      `${this.authCfg.frontendUrl}?token=${user.token.accessToken}&expires_in=${user.token.accessExpiresIn}`,
+      `${this.authCfg.frontendUrl}?token=${accessToken}&expires_in=${this.authCfg.accessTokenExpiresIn}`,
     )
   }
 
@@ -113,7 +118,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    this.handleSocialCallback(req, res)
+    await this.handleSocialCallback(req, res)
   }
 
   @Get('kakao')
@@ -128,7 +133,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    this.handleSocialCallback(req, res)
+    await this.handleSocialCallback(req, res)
   }
 
   @Get('github')
@@ -143,7 +148,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    this.handleSocialCallback(req, res)
+    await this.handleSocialCallback(req, res)
   }
 
   @UseGuards(JwtAuthGuard)

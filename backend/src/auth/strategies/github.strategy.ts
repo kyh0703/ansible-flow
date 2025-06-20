@@ -3,14 +3,12 @@ import { type ConfigType } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-github2'
 import authConfig from 'src/config/auth.config'
-import { AuthService } from '../auth.service'
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
-    private readonly authService: AuthService,
   ) {
     super({
       clientID: authCfg.githubId ?? '',
@@ -32,7 +30,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       (emails && emails[0] && emails[0].value) || `${id}@github.user`
     const profileImage = (photos && photos[0] && photos[0].value) || null
 
-    const userDto = {
+    const user = {
       provider: 'github',
       providerId: id,
       email,
@@ -40,16 +38,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       profileImage,
     }
 
-    const {
-      user,
-      accessToken: issuedAccessToken,
-      refreshToken: issuedRefreshToken,
-    } = await this.authService.loginOrRegisterOAuthUser(userDto)
-
-    done(null, {
-      user,
-      accessToken: issuedAccessToken,
-      refreshToken: issuedRefreshToken,
-    })
+    done(null, user)
   }
 }

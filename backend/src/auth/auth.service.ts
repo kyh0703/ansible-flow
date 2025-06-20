@@ -9,8 +9,8 @@ import {
 import type { ConfigType } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
-import dayjs from 'dayjs'
-import ms from 'ms'
+import * as dayjs from 'dayjs'
+import * as ms from 'ms'
 import authConfig from 'src/config/auth.config'
 import { PrismaService } from '../prisma/prisma.service'
 import { LoginDto } from './dto/login.dto'
@@ -156,6 +156,7 @@ export class AuthService {
       secret: this.authCfg.refreshTokenSecret ?? '',
       expiresIn: this.authCfg.refreshTokenExpiresIn ?? '',
     })
+    console.log('>>>>>>>>', this.authCfg.refreshTokenExpiresIn)
     const expiresInMs = ms(this.authCfg.refreshTokenExpiresIn ?? '')
     const expiresAt = dayjs().add(expiresInMs, 'ms').toDate()
     return { refreshToken, expiresAt }
