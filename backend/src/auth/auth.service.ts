@@ -156,7 +156,6 @@ export class AuthService {
       secret: this.authCfg.refreshTokenSecret ?? '',
       expiresIn: this.authCfg.refreshTokenExpiresIn ?? '',
     })
-    console.log('>>>>>>>>', this.authCfg.refreshTokenExpiresIn)
     const expiresInMs = ms(this.authCfg.refreshTokenExpiresIn ?? '')
     const expiresAt = dayjs().add(expiresInMs, 'ms').toDate()
     return { refreshToken, expiresAt }

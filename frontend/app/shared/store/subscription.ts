@@ -1,5 +1,5 @@
 import { createStore } from '@/shared/lib/store'
-import { PlanType, UserSubscription } from '@/shared/types/subscription'
+import type { UserSubscription } from '@/shared/types/subscription'
 
 interface SubscriptionState {
   currentSubscription: UserSubscription
@@ -64,4 +64,5 @@ export const useSubscriptionStore = createStore<SubscriptionState>(
       }))
     },
   }),
+  { name: 'SubscriptionStore' },
 )

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Project } from 'generated/client'
 import { CreateProjectDto } from './dto/create-project.dto'
@@ -6,10 +6,13 @@ import { UpdateProjectDto } from './dto/update-project.dto'
 
 @Injectable()
 export class ProjectService {
+  private readonly logger = new Logger(ProjectService.name)
+
   constructor(private readonly prisma: PrismaService) {}
 
   async pagination(params: { userId: string; skip: number; take: number }) {
     const { userId, skip, take } = params
+    this.logger.log(`userId: ${userId}, skip: ${skip}, take: ${take}`)
     const [items, total] = await this.prisma.$transaction([
       this.prisma.project.findMany({
         where: { userId },
@@ -19,6 +22,7 @@ export class ProjectService {
       }),
       this.prisma.project.count({ where: { userId } }),
     ])
+    this.logger.log(`Found ${items.length} items, total: ${total}`)
     return { items, total }
   }
 

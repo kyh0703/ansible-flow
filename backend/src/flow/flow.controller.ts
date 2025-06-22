@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common'
 import { FlowService } from './flow.service'
 import { CreateFlowDto } from './dto/create-flow.dto'
+import { FlowPaginationResponseDto } from './dto/flow-pagination-response.dto'
 import { UpdateFlowDto } from './dto/update-flow.dto'
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 
 @ApiTags('flows')
@@ -19,19 +21,36 @@ export class FlowController {
   constructor(private readonly flowService: FlowService) {}
 
   @ApiOperation({ summary: '플로우 목록 조회' })
-  @ApiResponse({ status: 200, description: '플로우 목록 반환' })
+  @ApiResponse({
+    status: 200,
+    description: '플로우 목록 반환',
+    type: FlowPaginationResponseDto,
+  })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @Get()
   async findAll(
     @Param('projectId') projectId: string,
-    @Query('skip') skip?: string,
-    @Query('take') take?: string,
-  ) {
-    return this.flowService.findAll({
-      skip: skip ? Number(skip) : undefined,
-      take: take ? Number(take) : undefined,
+    @Query() query: PaginationQueryDto,
+  ): Promise<FlowPaginationResponseDto> {
+    const { page = 1, pageSize = 10 } = query
+    const skip = (page - 1) * pageSize
+    const { items, total } = await this.flowService.findAll({
       projectId,
+      skip,
+      take: pageSize,
     })
+    const totalPages = Math.ceil(total / pageSize)
+    return {
+      data: items,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    }
   }
 
   @ApiOperation({ summary: '플로우 단건 조회' })

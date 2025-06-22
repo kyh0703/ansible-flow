@@ -7,13 +7,17 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { User } from 'generated/client'
 import { CurrentUser } from 'src/user/user.decorator'
 import { CreateProjectDto } from './dto/create-project.dto'
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
+import { ProjectPaginationResponseDto } from './dto/pagination-response.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { ProjectService } from './project.service'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
 
 @ApiTags('projects')
 @Controller('projects')
@@ -21,61 +25,55 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @ApiOperation({ summary: '프로젝트 페이징 목록 조회' })
-  @ApiResponse({ status: 200, description: '프로젝트 페이징 목록 반환' })
-  @ApiQuery({
-    name: 'page',
-    required: false,
-    type: Number,
-    description: '페이지 번호(1부터)',
+  @ApiResponse({
+    status: 200,
+    description: '프로젝트 페이징 목록 반환',
+    type: ProjectPaginationResponseDto,
   })
-  @ApiQuery({
-    name: 'pageSize',
-    required: false,
-    type: Number,
-    description: '페이지 크기',
-  })
-  @Get('pagination')
+  @UseGuards(JwtAuthGuard)
+  @Get()
   async pagination(
     @CurrentUser() user: User,
-    @Query('page') page: string = '1',
-    @Query('pageSize') pageSize: string = '10',
-  ) {
-    const pageNum = Math.max(Number(page), 1)
-    const pageSizeNum = Math.max(Number(pageSize), 1)
-    const skip = (pageNum - 1) * pageSizeNum
+    @Query() query: PaginationQueryDto,
+  ): Promise<ProjectPaginationResponseDto> {
+    const { page = 1, pageSize = 10 } = query
+    const skip = (page - 1) * pageSize
     const { items, total } = await this.projectService.pagination({
       userId: user.id,
       skip,
-      take: pageSizeNum,
+      take: pageSize,
     })
-    const totalPages = Math.ceil(total / pageSizeNum)
+    const totalPages = Math.ceil(total / pageSize)
     return {
-      items,
+      data: items,
       meta: {
         total,
-        skip,
-        take: pageSizeNum,
-        hasMore: skip + pageSizeNum < total,
-        page: pageNum,
+        page,
+        pageSize,
         totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
       },
     }
   }
 
   @ApiOperation({ summary: '프로젝트 단건 조회' })
   @ApiResponse({ status: 200, description: '프로젝트 반환' })
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@CurrentUser() user: User, @Param('id') id: string) {
     return this.projectService.findOne(id)
   }
 
   @ApiOperation({ summary: '프로젝트 생성' })
   @ApiResponse({ status: 201, description: '생성된 프로젝트 반환' })
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
     @CurrentUser() user: User,
     @Body() createProjectDto: CreateProjectDto,
   ) {
+    console.log('user', user)
     return this.projectService.create({
       ...createProjectDto,
       userId: user.id,
@@ -84,6 +82,7 @@ export class ProjectController {
 
   @ApiOperation({ summary: '프로젝트 수정' })
   @ApiResponse({ status: 200, description: '수정된 프로젝트 반환' })
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -94,6 +93,7 @@ export class ProjectController {
 
   @ApiOperation({ summary: '프로젝트 삭제' })
   @ApiResponse({ status: 200, description: '삭제된 프로젝트 반환' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.projectService.delete(id)

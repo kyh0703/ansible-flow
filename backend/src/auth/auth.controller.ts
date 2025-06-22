@@ -108,7 +108,7 @@ export class AuthController {
 
     this.setCookieWithRefreshToken(res, refreshToken)
     res.redirect(
-      `${this.authCfg.frontendUrl}?token=${accessToken}&expires_in=${this.authCfg.accessTokenExpiresIn}`,
+      `${this.authCfg.frontendUrl}/auth/callback?token=${accessToken}&expires_in=${this.authCfg.accessTokenExpiresIn}`,
     )
   }
 

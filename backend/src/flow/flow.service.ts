@@ -11,16 +11,22 @@ export class FlowService {
   // 플로우 목록(페이징)
   async findAll(params: {
     projectId: string
-    skip?: number
-    take?: number
-  }): Promise<Flow[]> {
+    skip: number
+    take: number
+  }): Promise<{ items: Flow[]; total: number }> {
     const { projectId, skip, take } = params
-    return this.prisma.flow.findMany({
-      where: { projectId },
-      skip,
-      take,
-      orderBy: { createdAt: 'desc' },
-    })
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.flow.findMany({
+        where: { projectId },
+        skip,
+        take,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.flow.count({
+        where: { projectId },
+      }),
+    ])
+    return { items, total }
   }
 
   async findOne(projectId: string, id: string): Promise<Flow> {

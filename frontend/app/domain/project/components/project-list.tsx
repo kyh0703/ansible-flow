@@ -20,7 +20,7 @@ export default function ProjectList() {
     status,
   } = useInfiniteQuery(useInfiniteQueryProjects())
 
-  const projects = data?.pages.flatMap((page) => page.items) || []
+  const projects = data?.pages.flatMap((page) => page.data) || []
 
   useEffect(() => {
     if (inView) {
