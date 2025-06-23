@@ -1,26 +1,29 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
+  Controller,
   Delete,
+  Get,
+  Logger,
   Param,
+  Patch,
+  Post,
 } from '@nestjs/common'
-import { EdgeService } from './edge.service'
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { CreateEdgeDto } from './dto/create-edge.dto'
 import { UpdateEdgeDto } from './dto/update-edge.dto'
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-  ApiParam,
-} from '@nestjs/swagger'
+import { EdgeService } from './edge.service'
 
 @ApiTags('edges')
 @Controller('projects/:projectId/flows/:flowId/edges')
 export class EdgeController {
+  private readonly logger = new Logger(EdgeController.name)
+
   constructor(private readonly edgeService: EdgeService) {}
 
   @ApiOperation({ summary: '에지 다건 생성' })

@@ -1,7 +1,7 @@
 import type { Flow } from '@/shared/models/flow'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const getProjectFlow = async (projectId: number, flowId: number) => {
+export const getProjectFlow = async (projectId: string, flowId: string) => {
   const response = await fetchExtended<ApiResponse<Flow>>(
     `${import.meta.env.VITE_BASE_PATH}/projects/${projectId}/flows/${flowId}`,
     {

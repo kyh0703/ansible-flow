@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Logger,
 } from '@nestjs/common'
 import { FlowService } from './flow.service'
 import { CreateFlowDto } from './dto/create-flow.dto'
@@ -20,6 +21,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
 @ApiTags('flows')
 @Controller('projects/:projectId/flows')
 export class FlowController {
+  private logger = new Logger(FlowController.name)
+
   constructor(private readonly flowService: FlowService) {}
 
   @ApiOperation({ summary: '플로우 목록 조회' })

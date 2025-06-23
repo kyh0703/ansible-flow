@@ -6,6 +6,7 @@ import {
   Patch,
   Delete,
   Param,
+  Logger,
 } from '@nestjs/common'
 import { NodeService } from './node.service'
 import { CreateNodeDto } from './dto/create-node.dto'
@@ -21,6 +22,8 @@ import {
 @ApiTags('nodes')
 @Controller('projects/:projectId/flows/:flowId/nodes')
 export class NodeController {
+  private logger = new Logger(NodeController.name)
+
   constructor(private readonly nodeService: NodeService) {}
 
   @ApiOperation({ summary: '노드 다건 생성' })

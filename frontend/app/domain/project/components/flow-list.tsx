@@ -6,7 +6,7 @@ import { useInfiniteQueryFlows } from '../services'
 import FlowCard from './flow-card'
 
 interface FlowListProps {
-  projectId: number
+  projectId: string
 }
 
 export default function FlowList({ projectId }: FlowListProps) {
@@ -54,11 +54,17 @@ export default function FlowList({ projectId }: FlowListProps) {
       id="scrollableDiv"
     >
       {flows.length === 0 ? (
-        <div className="text-muted-foreground flex h-40 items-center justify-center">
-          플로우가 없습니다
+        <div className="flex h-[60vh] flex-col items-center justify-center space-y-4">
+          <div className="text-muted-foreground text-center">
+            <div className="mb-4 text-6xl">📋</div>
+            <h3 className="text-foreground text-lg font-semibold">
+              플로우가 없습니다
+            </h3>
+            <p className="text-sm">새로운 플로우를 생성해서 시작해보세요</p>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {flows.map((flow) => (
             <FlowCard key={flow.id} flow={flow} />
           ))}

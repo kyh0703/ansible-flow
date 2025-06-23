@@ -18,7 +18,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  private logger: Logger = new Logger(UserController.name)
+  private readonly logger = new Logger(UserController.name)
 
   constructor(private readonly userService: UserService) {}
 

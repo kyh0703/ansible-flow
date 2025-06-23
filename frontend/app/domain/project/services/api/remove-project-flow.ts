@@ -1,7 +1,7 @@
-import { fetchExtended, type CustomResponse } from '@/shared/services'
+import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const removeProjectFlow = async (projectId: number, flowId: number) => {
-  const response = await fetchExtended<CustomResponse>(
+export const removeProjectFlow = async (projectId: string, flowId: string) => {
+  const response = await fetchExtended<ApiResponse<null>>(
     `${import.meta.env.VITE_BASE_PATH}/projects/${projectId}/flows/${flowId}`,
     {
       method: 'DELETE',

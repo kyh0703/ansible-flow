@@ -53,6 +53,7 @@ export const returnFetchAuthRefresh: ReturnFetch = (args) =>
           .catch((error) => {
             refreshing = false
             refreshPromise = null
+            window.location.href = '/auth/login'
             throw error
           })
 

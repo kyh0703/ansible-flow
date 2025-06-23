@@ -3,7 +3,7 @@ import { fetchExtended, type ApiResponse } from '@/shared/services'
 
 export const addProject = async (project: Omit<Project, 'id'>) => {
   const response = await fetchExtended<
-    ApiResponse<{ id: number; updateTime: Date }>
+    ApiResponse<{ id: string; updateTime: Date }>
   >(`${import.meta.env.VITE_BASE_PATH}/projects`, {
     method: 'POST',
     headers: {

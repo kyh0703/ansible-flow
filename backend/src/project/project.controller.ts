@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -17,12 +18,13 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { ProjectPaginationResponseDto } from './dto/pagination-response.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
-import { ProjectMembershipGuard } from './guards/project-membership.guard'
 import { ProjectService } from './project.service'
 
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectController {
+  private logger = new Logger(ProjectController.name)
+
   constructor(private readonly projectService: ProjectService) {}
 
   @ApiOperation({ summary: '프로젝트 페이징 목록 조회' })
@@ -32,7 +34,7 @@ export class ProjectController {
     type: ProjectPaginationResponseDto,
   })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ProjectMembershipGuard)
+  @UseGuards(ProjectPaginationResponseDto)
   @Get()
   async pagination(
     @CurrentUser() user: User,
@@ -62,7 +64,6 @@ export class ProjectController {
   @ApiOperation({ summary: '프로젝트 단건 조회' })
   @ApiResponse({ status: 200, description: '프로젝트 반환' })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ProjectMembershipGuard)
   @Get(':id')
   async findOne(@CurrentUser() user: User, @Param('id') id: string) {
     return this.projectService.findOne(id)
@@ -71,7 +72,6 @@ export class ProjectController {
   @ApiOperation({ summary: '프로젝트 생성' })
   @ApiResponse({ status: 201, description: '생성된 프로젝트 반환' })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ProjectMembershipGuard)
   @Post()
   async create(
     @CurrentUser() user: User,
@@ -87,7 +87,6 @@ export class ProjectController {
   @ApiOperation({ summary: '프로젝트 수정' })
   @ApiResponse({ status: 200, description: '수정된 프로젝트 반환' })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ProjectMembershipGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -99,7 +98,6 @@ export class ProjectController {
   @ApiOperation({ summary: '프로젝트 삭제' })
   @ApiResponse({ status: 200, description: '삭제된 프로젝트 반환' })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ProjectMembershipGuard)
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.projectService.delete(id)

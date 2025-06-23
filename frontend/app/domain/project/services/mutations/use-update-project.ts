@@ -5,18 +5,22 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import type { Project } from '@/shared/models/project'
-import type { CustomResponse } from '@/shared/services'
 import { updateProject } from '../api'
 import { projectKey } from '../keys'
+import type { ApiResponse } from '@/shared/services'
 
-type Response = CustomResponse
-type Variables = { id: number; data: Partial<Project> }
-type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
+type Response = ApiResponse<null>
+type Variables = { id: string; data: Partial<Project> }
+type MutationOptions = UseMutationOptions<
+  Response,
+  ApiResponse<null>,
+  Variables
+>
 
 export const useUpdateProject = (options?: MutationOptions) => {
   const queryClient = useQueryClient()
 
-  return useMutation<Response, CustomResponse, Variables>({
+  return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
     mutationFn: ({ id, data }) => {
       return updateProject(id, data)

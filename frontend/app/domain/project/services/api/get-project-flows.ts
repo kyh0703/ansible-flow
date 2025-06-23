@@ -3,7 +3,7 @@ import { fetchExtended, type ApiResponse } from '@/shared/services'
 import type { PaginationResponse } from '@/shared/types/pagination'
 
 export const getProjectFlows = async (
-  projectId: number,
+  projectId: string,
   pageParam = 1,
   pageSize = 10,
 ) => {

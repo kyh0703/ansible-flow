@@ -3,10 +3,10 @@ import type { PaginationResponse } from '@/shared/types/pagination'
 import { getProjectFlows } from '../api'
 import { projectKey } from '../keys'
 
-export const useInfiniteQueryFlows = (projectId: number) => ({
+export const useInfiniteQueryFlows = (projectId: string) => ({
   queryKey: [projectKey.flows.lists(projectId)],
-  queryFn: ({ pageParam = 0 }) => getProjectFlows(projectId, pageParam, 10),
-  initialPageParam: 0,
+  queryFn: ({ pageParam = 1 }) => getProjectFlows(projectId, pageParam, 10),
+  initialPageParam: 1,
   getNextPageParam: (lastPage: PaginationResponse<Flow>) => {
     if (!lastPage.meta.hasNext) return undefined
     return lastPage.meta.page + 1
