@@ -1,45 +1,102 @@
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
-import {
-  ChevronDown,
-  Home,
-  FolderOpen,
-  Star,
-  Clock,
-  Settings,
-  Plus,
-  Search,
-} from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { useInfiniteQueryProjects } from '@/domain/project/services/queries'
+import type { Project } from '@/shared/models/project'
+import { useUser } from '@/shared/store/user'
+import { useModalActions } from '@/shared/store/modal'
+import { useSubscriptionStore } from '@/shared/store/subscription'
+import { ThemeButton } from '@/shared/components/theme-button'
+import { Button } from '@/shared/ui/button'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
+import { Input } from '@/shared/ui/input'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarFooter,
 } from '@/shared/ui/sidebar'
-import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
-import { useUser } from '@/shared/store/user'
-import { useInfiniteQueryProjects } from '@/domain/project/services/queries'
-import { useInfiniteQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import {
+  ChevronDown,
+  Clock,
+  FolderOpen,
+  Home,
+  Plus,
+  Search,
+  Settings,
+  Star,
+} from 'lucide-react'
 import { Suspense } from 'react'
-import type { Project } from '@/shared/models/project'
-import type { PaginationResponse } from '@/shared/types/pagination'
+import { Link, useLocation } from 'react-router'
+
+function ProjectsList() {
+  const { data } = useInfiniteQuery(useInfiniteQueryProjects())
+  const location = useLocation()
+
+  const projects = data?.pages.flatMap((page) => page.data) || []
+
+  return (
+    <SidebarMenu>
+      {projects.slice(0, 8).map((project: Project) => (
+        <SidebarMenuItem key={project.id}>
+          <SidebarMenuButton
+            asChild
+            isActive={location.pathname.includes(`/projects/${project.id}`)}
+          >
+            <Link
+              to={`/projects/${project.id}`}
+              className="group flex items-center gap-3 px-3 py-2 text-sm"
+            >
+              <div className="from-primary/20 to-primary/10 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br">
+                <FolderOpen className="text-primary h-2.5 w-2.5" />
+              </div>
+              <span className="truncate">{project.name}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
+}
+
+function ProjectsSkeleton() {
+  return (
+    <SidebarMenu>
+      {[...Array(5)].map((_, i) => (
+        <SidebarMenuItem key={i}>
+          <div className="flex items-center gap-3 px-3 py-2">
+            <Skeleton className="h-4 w-4 rounded" />
+            <Skeleton className="h-4 flex-1" />
+          </div>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
+}
 
 export default function AppSidebar() {
   const user = useUser()
   const location = useLocation()
+  const { openModal } = useModalActions()
+  const { canCreateProject } = useSubscriptionStore()
+
+  const handleAddClick = () => {
+    if (!canCreateProject()) {
+      openModal('upgrade-modal')
+      return
+    }
+    openModal('form-modal', { mode: 'create' })
+  }
 
   if (!user) {
     return null
@@ -90,12 +147,15 @@ export default function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <div className="relative mt-3">
-          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-          <Input
-            placeholder="Search projects..."
-            className="bg-muted/50 focus-visible:ring-ring h-8 border-0 pl-9 focus-visible:ring-1"
-          />
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <div className="relative flex-1">
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+            <Input
+              placeholder="Search projects..."
+              className="bg-muted/50 focus-visible:ring-ring h-8 border-0 pl-9 focus-visible:ring-1"
+            />
+          </div>
+          <ThemeButton />
         </div>
       </SidebarHeader>
 
@@ -147,7 +207,13 @@ export default function AppSidebar() {
           <SidebarGroupLabel className="text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase">
             <div className="flex w-full items-center justify-between">
               <span>Projects</span>
-              <Button variant="ghost" size="sm" className="h-5 w-5 p-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0"
+                onClick={handleAddClick}
+                disabled={!canCreateProject()}
+              >
                 <Plus className="h-3 w-3" />
               </Button>
             </div>
@@ -176,50 +242,5 @@ export default function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
-}
-
-function ProjectsList() {
-  const { data } = useInfiniteQuery(...useInfiniteQueryProjects)
-  const location = useLocation()
-
-  const projects = data?.pages.flatMap((page) => page.data) || []
-
-  return (
-    <SidebarMenu>
-      {projects.slice(0, 8).map((project: Project) => (
-        <SidebarMenuItem key={project.id}>
-          <SidebarMenuButton
-            asChild
-            isActive={location.pathname.includes(`/projects/${project.id}`)}
-          >
-            <Link
-              to={`/projects/${project.id}`}
-              className="group flex items-center gap-3 px-3 py-2 text-sm"
-            >
-              <div className="from-primary/20 to-primary/10 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br">
-                <FolderOpen className="text-primary h-2.5 w-2.5" />
-              </div>
-              <span className="truncate">{project.name}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
-  )
-}
-
-function ProjectsSkeleton() {
-  return (
-    <SidebarMenu>
-      {[...Array(5)].map((_, i) => (
-        <SidebarMenuItem key={i}>
-          <div className="flex items-center gap-3 px-3 py-2">
-            <Skeleton className="h-4 w-4 rounded" />
-            <Skeleton className="h-4 flex-1" />
-          </div>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
   )
 }

@@ -9,7 +9,7 @@ interface FlowListProps {
   projectId: string
 }
 
-export default function FlowList({ projectId }: FlowListProps) {
+export default function FlowList({ projectId }: Readonly<FlowListProps>) {
   const { ref, inView } = useInView({
     threshold: 0,
     delay: 0,

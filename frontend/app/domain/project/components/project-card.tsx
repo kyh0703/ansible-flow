@@ -1,21 +1,15 @@
 import type { Project } from '@/shared/models/project'
+import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/card'
-import { MoreHorizontal, Star, Users, FolderOpen, Calendar } from 'lucide-react'
-import { Link } from 'react-router'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
-import { Badge } from '@/shared/ui/badge'
+import { Calendar, FolderOpen, MoreHorizontal, Star, Users } from 'lucide-react'
+import { Link } from 'react-router'
 
 const getProjectColor = (id: string) => {
   const colors = [

@@ -1,6 +1,5 @@
 import { Button } from '@/shared/ui/button'
-import { Separator } from '@/shared/ui/separator'
-import { Plus, Crown } from 'lucide-react'
+import { Crown } from 'lucide-react'
 import ProjectList from './project-list'
 import ProjectModal from './project-modal'
 import { Modal } from '@/shared/components/modal'
@@ -11,9 +10,8 @@ import { useSubscriptionStore } from '@/shared/store/subscription'
 import { Link } from 'react-router'
 
 export default function ProjectDashboard() {
-  const { openModal, closeModal } = useModalActions()
-  const { canCreateProject, upgradeRequired, incrementProjectCount } =
-    useSubscriptionStore()
+  const { closeModal } = useModalActions()
+  const { incrementProjectCount } = useSubscriptionStore()
 
   const addProjectMutation = useAddProject({
     onSuccess: () => {
@@ -21,15 +19,6 @@ export default function ProjectDashboard() {
     },
   })
   const updateProjectMutation = useUpdateProject()
-
-  const handleAddClick = () => {
-    if (!canCreateProject()) {
-      openModal('upgrade-modal')
-      return
-    }
-    addProjectMutation.reset()
-    openModal('form-modal', { mode: 'create' })
-  }
 
   const handleSubmit = (mode: 'create' | 'update', project: Project) => {
     if (mode === 'create') {
@@ -72,19 +61,7 @@ export default function ProjectDashboard() {
         </div>
       </Modal>
 
-      <div className="flex h-full w-full flex-col gap-4">
-        <header className="flex h-16 w-full items-center justify-between p-4">
-          <h1 className="text-2xl font-bold">Project Dashboard</h1>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleAddClick}
-            disabled={!canCreateProject()}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </header>
-        <Separator />
+      <div className="flex h-full w-full flex-col">
         <main className="flex-1 p-4">
           <ProjectList />
         </main>

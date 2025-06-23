@@ -1,39 +1,21 @@
-import { ThemeButton } from '@/shared/components/theme-button'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { Crown, Plus, Search, Filter, LayoutGrid, List } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { Link } from 'react-router'
 import { useSubscriptionStore } from '@/shared/store/subscription'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 
-export default function Header() {
+export default function ProjectHeader() {
   const { currentSubscription, canCreateProject, upgradeRequired } =
     useSubscriptionStore()
-  const location = useLocation()
-
-  const getBreadcrumb = () => {
-    const paths = location.pathname.split('/').filter(Boolean)
-    if (paths.length === 1 && paths[0] === 'projects') {
-      return 'All Projects'
-    }
-    if (paths.length === 2) {
-      return `Project • ${paths[1]}`
-    }
-    if (paths.length === 3) {
-      return `Project • ${paths[1]} • ${paths[2]}`
-    }
-    return 'Projects'
-  }
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <div className="text-muted-foreground flex items-center gap-2 text-sm">
-            <span className="text-foreground font-medium">
-              {getBreadcrumb()}
-            </span>
+            <span className="text-foreground font-medium">All Projects</span>
           </div>
 
           <Separator orientation="vertical" className="h-6" />
@@ -111,8 +93,6 @@ export default function Header() {
             <Plus className="size-4" />
             New Project
           </Button>
-
-          <ThemeButton />
         </div>
       </div>
     </header>

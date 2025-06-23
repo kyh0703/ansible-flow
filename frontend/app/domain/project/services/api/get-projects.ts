@@ -1,4 +1,3 @@
-import type { Flow } from '@/shared/models/flow'
 import type { Project } from '@/shared/models/project'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 import type { PaginationResponse } from '@/shared/types/pagination'
