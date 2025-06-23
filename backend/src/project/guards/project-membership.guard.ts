@@ -12,7 +12,7 @@ export class ProjectMembershipGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest()
-    const userId = req.currentUser?.id
+    const userId = req.user?.id
     const projectId = req.params.projectId ?? req.body.projectId
     if (!userId || !projectId) {
       throw new ForbiddenException('User or projectId not found')
@@ -25,6 +25,7 @@ export class ProjectMembershipGuard implements CanActivate {
     if (!isMember) {
       throw new ForbiddenException('You do not have access to this project')
     }
+
     return true
   }
 }

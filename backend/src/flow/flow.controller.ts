@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { FlowService } from './flow.service'
 import { CreateFlowDto } from './dto/create-flow.dto'
@@ -14,6 +15,7 @@ import { FlowPaginationResponseDto } from './dto/flow-pagination-response.dto'
 import { UpdateFlowDto } from './dto/update-flow.dto'
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
 
 @ApiTags('flows')
 @Controller('projects/:projectId/flows')
@@ -27,6 +29,7 @@ export class FlowController {
     type: FlowPaginationResponseDto,
   })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Param('projectId') projectId: string,

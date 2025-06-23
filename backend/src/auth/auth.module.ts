@@ -38,6 +38,6 @@ import { KakaoStrategy } from './strategies/kakao.strategy'
     JwtAuthGuard,
     PrismaService,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JwtAuthGuard],
 })
 export class AuthModule {}
