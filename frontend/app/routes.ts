@@ -19,8 +19,11 @@ export default [
     layout('./domain/project/layouts/index.tsx', [
       ...prefix('projects', [
         index('./domain/project/pages/index.tsx'),
-        route(':projectId', './domain/project/pages/flows.tsx'),
-        route(':projectId/flows/:flowId', './domain/flow/pages/detail.tsx'),
+        route(':projectId/:projectName', './domain/project/pages/flows.tsx'),
+        route(
+          ':projectId/:projectName/:flowId',
+          './domain/flow/pages/detail.tsx',
+        ),
       ]),
     ]),
   ]),

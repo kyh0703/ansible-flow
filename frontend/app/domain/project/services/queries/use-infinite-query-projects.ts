@@ -4,7 +4,7 @@ import { getProjects } from '../api'
 import { projectKey } from '../keys'
 
 export const useInfiniteQueryProjects = () => ({
-  queryKey: [projectKey.lists],
+  queryKey: [projectKey.all],
   queryFn: ({ pageParam = 1 }) => getProjects(pageParam, 10),
   initialPageParam: 1,
   getNextPageParam: (lastPage: PaginationResponse<Project>) => {

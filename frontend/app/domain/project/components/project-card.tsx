@@ -106,7 +106,7 @@ export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
       </CardContent>
 
       <Link
-        to={`/projects/${project.id}`}
+        to={`/projects/${project.id}/${project.name}`}
         className="absolute inset-0 z-10"
         aria-label={`Open ${project.name} project`}
       />

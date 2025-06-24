@@ -1,10 +1,5 @@
-import { useInfiniteQueryProjects } from '@/domain/project/services/queries'
-import type { Project } from '@/shared/models/project'
-import { useUser } from '@/shared/store/user'
-import { useModalActions } from '@/shared/store/modal'
-import { useSubscriptionStore } from '@/shared/store/subscription'
 import { ThemeButton } from '@/shared/components/theme-button'
-import { Button } from '@/shared/ui/button'
+import { useUser } from '@/shared/store/user'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -25,49 +20,8 @@ import {
 } from '@/shared/ui/sidebar'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import {
-  ChevronDown,
-  Clock,
-  FolderOpen,
-  Home,
-  Plus,
-  Search,
-  Settings,
-  Star,
-} from 'lucide-react'
-import { Suspense } from 'react'
+import { ChevronDown, Clock, Home, Search, Star } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
-
-function ProjectsList() {
-  const { data } = useInfiniteQuery(useInfiniteQueryProjects())
-  const location = useLocation()
-
-  const projects = data?.pages.flatMap((page) => page.data) || []
-
-  return (
-    <SidebarMenu>
-      {projects.slice(0, 8).map((project: Project) => (
-        <SidebarMenuItem key={project.id}>
-          <SidebarMenuButton
-            asChild
-            isActive={location.pathname.includes(`/projects/${project.id}`)}
-          >
-            <Link
-              to={`/projects/${project.id}`}
-              className="group flex items-center gap-3 px-3 py-2 text-sm"
-            >
-              <div className="from-primary/20 to-primary/10 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded bg-gradient-to-br">
-                <FolderOpen className="text-primary h-2.5 w-2.5" />
-              </div>
-              <span className="truncate">{project.name}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
-  )
-}
 
 function ProjectsSkeleton() {
   return (
@@ -87,16 +41,6 @@ function ProjectsSkeleton() {
 export default function AppSidebar() {
   const user = useUser()
   const location = useLocation()
-  const { openModal } = useModalActions()
-  const { canCreateProject } = useSubscriptionStore()
-
-  const handleAddClick = () => {
-    if (!canCreateProject()) {
-      openModal('upgrade-modal')
-      return
-    }
-    openModal('form-modal', { mode: 'create' })
-  }
 
   if (!user) {
     return null
@@ -204,42 +148,21 @@ export default function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground px-3 text-xs font-semibold tracking-wider uppercase">
+          <SidebarGroupLabel className="text-muted-foreground px-3 text-xs font-semibold tracking-wider">
             <div className="flex w-full items-center justify-between">
-              <span>Projects</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-5 w-5 p-0"
-                onClick={handleAddClick}
-                disabled={!canCreateProject()}
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
+              <span>Starred</span>
             </div>
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          {/* <SidebarGroupContent>
             <Suspense fallback={<ProjectsSkeleton />}>
               <ProjectsList />
             </Suspense>
-          </SidebarGroupContent>
+          </SidebarGroupContent> */}
         </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="border-border/40 border-t p-4">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link
-                to="/settings"
-                className="flex items-center gap-3 px-3 py-2 text-sm"
-              >
-                <Settings className="h-4 w-4" />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarMenu></SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   )

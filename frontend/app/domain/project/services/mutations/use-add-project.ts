@@ -9,7 +9,7 @@ import type { ApiResponse } from '@/shared/services'
 import { addProject } from '../api'
 import { projectKey } from '../keys'
 
-type Response = { id: number; updateTime: Date }
+type Response = { id: string; updateTime: Date }
 type Variables = Omit<Project, 'id'>
 type MutationOptions = UseMutationOptions<
   Response,
@@ -26,7 +26,7 @@ export const useAddProject = (options?: MutationOptions) => {
       return addProject(project)
     },
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: projectKey.lists() })
+      queryClient.invalidateQueries({ queryKey: projectKey.all })
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

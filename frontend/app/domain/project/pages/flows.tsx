@@ -1,11 +1,10 @@
 import { Modal } from '@/shared/components/modal'
-import { Separator } from '@/shared/ui/separator'
 import { Spinner } from '@/shared/ui/spinner'
 import { Suspense } from 'react'
 import { useParams } from 'react-router'
+import FlowHeader from '../components/flow-header'
 import FlowList from '../components/flow-list'
 import FlowModal from '../components/flow-modal'
-import FlowHeader from '../components/flow-header'
 
 interface Flow {
   id?: number
@@ -14,9 +13,9 @@ interface Flow {
 }
 
 export default function FlowsPage() {
-  const { projectId } = useParams()
+  const { projectId, projectName } = useParams()
 
-  if (!projectId) {
+  if (!projectId || !projectName) {
     return <div>Project ID not found</div>
   }
 
@@ -35,7 +34,7 @@ export default function FlowsPage() {
       </Modal>
 
       <div className="flex h-full w-full flex-col">
-        <FlowHeader />
+        <FlowHeader projectName={projectName} />
         <main className="flex-1">
           <Suspense
             fallback={

@@ -1,3 +1,2 @@
-export * from './use-query-project'
-export * from './use-query-projects'
-export * from './use-query-project-flows'
+export * from './use-infinite-query-projects'
+export * from './use-infinite-query-project-flows'

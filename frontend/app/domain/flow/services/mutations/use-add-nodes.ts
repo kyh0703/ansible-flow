@@ -1,4 +1,4 @@
-import type { CustomResponse } from '@/shared/services'
+import type { ApiResponse } from '@/shared/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
 import { toast } from 'react-toastify'
@@ -7,10 +7,14 @@ import { toModelNode } from '../../utils'
 
 type Response = number[]
 type Variables = { projectId: number; flowId: number; nodes: AppNode[] }
-type MutationOptions = UseMutationOptions<Response, CustomResponse, Variables>
+type MutationOptions = UseMutationOptions<
+  Response,
+  ApiResponse<null>,
+  Variables
+>
 
 export const useAddNodes = (options?: MutationOptions) => {
-  return useMutation<Response, CustomResponse, Variables>({
+  return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
     mutationFn: ({ projectId, flowId, nodes }) => {
       return addNodes(

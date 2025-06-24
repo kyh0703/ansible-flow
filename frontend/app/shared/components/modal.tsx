@@ -1,5 +1,3 @@
-'use client'
-
 import { useIsModalOpen, useModalActions } from '@/shared/store/modal'
 import { XIcon } from 'lucide-react'
 import { Suspense, useEffect, type PropsWithChildren } from 'react'
@@ -40,8 +38,8 @@ const Modal = ({ id, title = '', className, children }: ModalProps) => {
               className={cn(
                 'w-2/6',
                 'flex flex-col items-center justify-center gap-5',
-                'text-dialog-foreground bg-accent p-6',
-                'rounded-sm',
+                'text-dialog-foreground bg-card p-6',
+                'border-border rounded-sm border shadow-lg',
                 className,
               )}
             >
@@ -69,7 +67,7 @@ const Modal = ({ id, title = '', className, children }: ModalProps) => {
 }
 
 const ModalContent = ({ children }: PropsWithChildren) => (
-  <div className="bg-accent text-accent-foreground z-10 h-full max-h-[440px] w-full overflow-y-scroll rounded-sm p-5 whitespace-pre-line">
+  <div className="bg-card text-card-foreground z-10 h-full max-h-[440px] w-full overflow-y-scroll rounded-sm p-5 whitespace-pre-line">
     {children}
   </div>
 )

@@ -4,7 +4,7 @@ import { getProjectFlows } from '../api'
 import { projectKey } from '../keys'
 
 export const useInfiniteQueryFlows = (projectId: string) => ({
-  queryKey: [projectKey.flows.lists(projectId)],
+  queryKey: [projectKey.flows(projectId)],
   queryFn: ({ pageParam = 1 }) => getProjectFlows(projectId, pageParam, 10),
   initialPageParam: 1,
   getNextPageParam: (lastPage: PaginationResponse<Flow>) => {

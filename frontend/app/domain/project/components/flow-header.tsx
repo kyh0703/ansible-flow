@@ -1,18 +1,25 @@
-import { Button } from '@/shared/ui/button'
-import { Badge } from '@/shared/ui/badge'
-import { Crown, Plus, Search, Filter, LayoutGrid, List } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { useModalActions } from '@/shared/store/modal'
 import { useSubscriptionStore } from '@/shared/store/subscription'
+import { Badge } from '@/shared/ui/badge'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/shared/ui/breadcrumb'
+import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
-import { useModalActions } from '@/shared/store/modal'
+import { Crown, Filter, LayoutGrid, List, Plus, Search } from 'lucide-react'
+import { Link, useParams } from 'react-router'
 
 interface FlowHeaderProps {
   projectName?: string
 }
 
 export default function FlowHeader({ projectName }: FlowHeaderProps) {
-  const { projectId } = useParams()
   const { currentSubscription } = useSubscriptionStore()
   const { openModal } = useModalActions()
 
@@ -24,13 +31,19 @@ export default function FlowHeader({ projectName }: FlowHeaderProps) {
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex min-w-0 flex-1 items-center gap-4">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
-            <span className="text-foreground font-medium">
-              {projectName
-                ? `Project • ${projectName}`
-                : `Project • ${projectId}`}
-            </span>
-          </div>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/projects">Projects</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{projectName}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
           <Separator orientation="vertical" className="h-6" />
 
@@ -75,13 +88,6 @@ export default function FlowHeader({ projectName }: FlowHeaderProps) {
               )}
               {currentSubscription.planName}
             </Badge>
-
-            <Link
-              to="/projects"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              ← Back to Projects
-            </Link>
           </div>
 
           <Button

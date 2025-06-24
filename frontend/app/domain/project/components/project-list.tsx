@@ -1,6 +1,7 @@
+import { useProjectSearch } from '@/shared/store/project'
 import { Spinner } from '@/shared/ui/spinner'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { useInfiniteQueryProjects } from '../services'
 import ProjectCard from './project-card'
@@ -20,7 +21,15 @@ export default function ProjectList() {
     status,
   } = useInfiniteQuery(useInfiniteQueryProjects())
 
-  const projects = data?.pages.flatMap((page) => page.data) || []
+  const search = useProjectSearch()
+  const allProjects = data?.pages.flatMap((page) => page.data) || []
+
+  const projects = useMemo(() => {
+    if (!search.trim()) return allProjects
+    return allProjects.filter((project) =>
+      project.name.toLowerCase().includes(search.toLowerCase()),
+    )
+  }, [allProjects, search])
 
   useEffect(() => {
     if (inView) {

@@ -1,22 +1,37 @@
-import { Button } from '@/shared/ui/button'
-import { Badge } from '@/shared/ui/badge'
-import { Crown, Plus, Search, Filter, LayoutGrid, List } from 'lucide-react'
-import { Link } from 'react-router'
+import { useModalActions } from '@/shared/store/modal'
+import { useProjectActions, useProjectSearch } from '@/shared/store/project'
 import { useSubscriptionStore } from '@/shared/store/subscription'
+import { Badge } from '@/shared/ui/badge'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@/shared/ui/breadcrumb'
+import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
+import { Crown, Plus, Search } from 'lucide-react'
+import { Link } from 'react-router'
 
 export default function ProjectHeader() {
+  const { openModal } = useModalActions()
   const { currentSubscription, canCreateProject, upgradeRequired } =
     useSubscriptionStore()
+  const search = useProjectSearch()
+  const { setSearch } = useProjectActions()
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex min-w-0 flex-1 items-center gap-4">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
-            <span className="text-foreground font-medium">All Projects</span>
-          </div>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbPage>All Projects</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
           <Separator orientation="vertical" className="h-6" />
 
@@ -25,24 +40,13 @@ export default function ProjectHeader() {
             <Input
               placeholder="Search projects..."
               className="bg-muted/50 focus-visible:ring-ring h-9 w-80 border-0 pl-9 focus-visible:ring-1"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-muted/50 flex items-center gap-1 rounded-lg p-1">
-            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-              <LayoutGrid className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Filter className="h-4 w-4" />
-          </Button>
-
           <Separator orientation="vertical" className="h-6" />
 
           <div className="flex items-center gap-2">
@@ -86,7 +90,7 @@ export default function ProjectHeader() {
               if (!canCreateProject()) {
                 window.location.href = '/subscription'
               } else {
-                console.log('새 프로젝트 생성')
+                openModal('form-modal', { mode: 'create' })
               }
             }}
           >

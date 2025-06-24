@@ -48,7 +48,6 @@ model Project {
   user         User      @relation(fields: [userId], references: [id])
   userId       String
   name         String
-  description  String?
   updatedAt    DateTime  @updatedAt
   createdAt    DateTime  @default(now())
   flows        Flow[]
@@ -59,7 +58,7 @@ model Flow {
   project      Project   @relation(fields: [projectId], references: [id])
   projectId    String
   name         String
-  description  String?
+  bookmarked   Boolean   @default(false)
   updatedAt    DateTime  @updatedAt
   createdAt    DateTime  @default(now())
   nodes        Node[]

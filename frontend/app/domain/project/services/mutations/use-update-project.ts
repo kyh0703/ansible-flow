@@ -27,7 +27,7 @@ export const useUpdateProject = (options?: MutationOptions) => {
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: [projectKey.detail(variables.id)],
+        queryKey: [projectKey.all],
       })
 
       if (options?.onSuccess) {

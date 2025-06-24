@@ -28,7 +28,6 @@ export default function ProjectModal({
   } = useForm<Project>({
     defaultValues: modalData?.data || {
       name: '',
-      description: '',
     },
   })
 
@@ -55,15 +54,6 @@ export default function ProjectModal({
               placeholder="Enter project name"
             />
             {errors.name && <p className="error-msg">{errors.name.message}</p>}
-            <h3>Description</h3>
-            <FormInput
-              control={control}
-              name="description"
-              placeholder="Enter project description"
-            />
-            {errors.description && (
-              <p className="error-msg">{errors.description.message}</p>
-            )}
           </div>
         </div>
       </ModalContent>

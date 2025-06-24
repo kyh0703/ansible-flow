@@ -143,7 +143,6 @@ exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   name: 'name',
-  description: 'description',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };
@@ -152,7 +151,7 @@ exports.Prisma.FlowScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
   name: 'name',
-  description: 'description',
+  bookmarked: 'bookmarked',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };

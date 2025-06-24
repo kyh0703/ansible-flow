@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
 import { CurrentUser } from 'src/user/user.decorator'
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { CreateProjectDto } from './dto/create-project.dto'
-import { ProjectPaginationResponseDto } from './dto/pagination-response.dto'
+import { ProjectPaginationResponseDto } from './dto/project-pagination-response.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { ProjectService } from './project.service'
 

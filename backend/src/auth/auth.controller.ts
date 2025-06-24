@@ -100,7 +100,7 @@ export class AuthController {
     const oauthUser = req.user as OAuthUserDto | undefined
     if (!oauthUser) {
       res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
-      throw new Error('User not found')
+      return
     }
 
     const { accessToken, refreshToken } =

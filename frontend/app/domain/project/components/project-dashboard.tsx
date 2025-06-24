@@ -21,6 +21,7 @@ export default function ProjectDashboard() {
   const updateProjectMutation = useUpdateProject()
 
   const handleSubmit = (mode: 'create' | 'update', project: Project) => {
+    console.log('!!!!', mode, project)
     if (mode === 'create') {
       addProjectMutation.mutate(project)
     } else {
