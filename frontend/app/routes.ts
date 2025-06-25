@@ -13,8 +13,9 @@ export default [
     ...prefix('auth', [
       route('/login', './domain/auth/pages/login.tsx'),
       route('/register', './domain/auth/pages/register.tsx'),
-      route('/forgot-password', './domain/auth/pages/forgot-password.tsx'),
       route('/callback', './domain/auth/pages/auth-callback.tsx'),
+      route('/forgot-password', './domain/auth/pages/forgot-password.tsx'),
+      route('/reset-password', './domain/auth/pages/reset-password.tsx'),
     ]),
     layout('./domain/project/layouts/index.tsx', [
       ...prefix('projects', [

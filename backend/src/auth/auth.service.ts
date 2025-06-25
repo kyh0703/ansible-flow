@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
@@ -11,6 +12,7 @@ import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import * as dayjs from 'dayjs'
 import * as ms from 'ms'
+import { randomBytes } from 'crypto'
 import authConfig from 'src/config/auth.config'
 import { PrismaService } from '../prisma/prisma.service'
 import { LoginDto } from './dto/login.dto'
@@ -191,5 +193,70 @@ export class AuthService {
       where: { userId },
     })
     this.logger.warn(`Revoked all refresh tokens for user ${userId}`)
+  }
+
+  async generatePasswordResetToken(email: string): Promise<string> {
+    const user = await this.prisma.user.findUnique({ where: { email } })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    const resetToken = randomBytes(32).toString('hex')
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1시간 후 만료
+
+    // 기존 토큰들을 모두 사용됨으로 표시
+    await this.prisma.passwordResetToken.updateMany({
+      where: { 
+        userId: user.id,
+        used: false 
+      },
+      data: { used: true }
+    })
+
+    // 새로운 토큰 생성
+    await this.prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        token: resetToken,
+        expiresAt,
+      },
+    })
+
+    return resetToken
+  }
+
+  async verifyPasswordResetToken(token: string): Promise<{ userId: string }> {
+    const resetToken = await this.prisma.passwordResetToken.findFirst({
+      where: {
+        token,
+        used: false,
+        expiresAt: {
+          gt: new Date(),
+        },
+      },
+    })
+
+    if (!resetToken) {
+      throw new BadRequestException('Invalid or expired reset token')
+    }
+
+    return { userId: resetToken.userId }
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    const { userId } = await this.verifyPasswordResetToken(token)
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    // 토큰을 사용됨으로 표시하고 비밀번호 업데이트를 트랜잭션으로 처리
+    await this.prisma.$transaction([
+      this.prisma.passwordResetToken.updateMany({
+        where: { token },
+        data: { used: true }
+      }),
+      this.prisma.user.update({
+        where: { id: userId },
+        data: { password: hashedPassword },
+      })
+    ])
   }
 }

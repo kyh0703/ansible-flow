@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { forgotPassword } from '../services/api/forgot-password'
+import { useSearchParams } from 'react-router'
 
 const ForgotPasswordSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
@@ -13,6 +15,9 @@ const ForgotPasswordSchema = z.object({
 type ForgotPassword = z.infer<typeof ForgotPasswordSchema>
 
 export default function ForgotPasswordForm() {
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('token')
+
   const {
     handleSubmit,
     control,
@@ -21,7 +26,15 @@ export default function ForgotPasswordForm() {
     resolver: zodResolver(ForgotPasswordSchema),
   })
 
-  const onSubmit = async (data: ForgotPassword) => {}
+  const onSubmit = async (data: ForgotPassword) => {
+    try {
+      await forgotPassword(data)
+      alert('비밀번호 재설정 링크가 이메일로 전송되었습니다.')
+    } catch (error) {
+      alert('비밀번호 재설정 요청에 실패했습니다. 다시 시도해 주세요.')
+      console.error(error)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

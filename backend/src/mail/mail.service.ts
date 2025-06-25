@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
-import { randomBytes } from 'crypto'
 
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendEmail(email: string) {}
-
-  async sendPasswordResetEmail(email: string, resetToken: string): Promise<void> {
+  async sendPasswordResetEmail(
+    email: string,
+    resetToken: string,
+  ): Promise<void> {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
-    
+
     await this.mailerService.sendMail({
       to: email,
       subject: '비밀번호 재설정',
@@ -26,11 +26,4 @@ export class MailService {
       `,
     })
   }
-
-  private generateTemporaryCOde(): string {
-    const tempCode = randomBytes(6).toString('hex')
-    return tempCode
-  }
-
-  async verifyCode(verificationCode: string, email: string) {}
 }

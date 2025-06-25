@@ -12,14 +12,17 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import type { User } from 'generated/client'
 import appConfig from 'src/config/app.config'
 import authConfig from 'src/config/auth.config'
 import { CurrentUser } from 'src/user/user.decorator'
+import { MailService } from '../mail/mail.service'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
 import { OAuthUserDto } from './dto/oauth-user.dto'
+import { RequestPasswordResetDto, ResetPasswordDto } from './dto/password-reset.dto'
 import { RegisterDto } from './dto/register.dto'
 import { GithubAuthGuard } from './guards/github.guard'
 import { GoogleAuthGuard } from './guards/google.guard'
@@ -27,6 +30,7 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
 import { JwtAuthGuard } from './guards/jwt.guard'
 import { KakaoAuthGuard } from './guards/kakao.guard'
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name)
@@ -37,6 +41,7 @@ export class AuthController {
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
     private readonly authService: AuthService,
+    private readonly mailService: MailService,
   ) {}
 
   @Post('register')
@@ -172,5 +177,36 @@ export class AuthController {
       sameSite: 'lax',
       path: '/',
     })
+  }
+
+  @ApiOperation({ summary: '비밀번호 재설정 요청' })
+  @ApiResponse({ status: 200, description: '비밀번호 재설정 이메일 발송' })
+  @Post('forgot-password')
+  async requestPasswordReset(
+    @Body() requestPasswordResetDto: RequestPasswordResetDto,
+  ) {
+    try {
+      const resetToken = await this.authService.generatePasswordResetToken(
+        requestPasswordResetDto.email,
+      )
+      await this.mailService.sendPasswordResetEmail(
+        requestPasswordResetDto.email,
+        resetToken,
+      )
+      return { message: '비밀번호 재설정 이메일이 발송되었습니다.' }
+    } catch (error) {
+      return { message: '이메일이 존재하지 않거나 오류가 발생했습니다.' }
+    }
+  }
+
+  @ApiOperation({ summary: '비밀번호 재설정' })
+  @ApiResponse({ status: 200, description: '비밀번호 재설정 완료' })
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    await this.authService.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.newPassword,
+    )
+    return { message: '비밀번호가 성공적으로 재설정되었습니다.' }
   }
 }

@@ -126,8 +126,6 @@ exports.Prisma.UserScalarFieldEnum = {
   provider: 'provider',
   providerId: 'providerId',
   isAdmin: 'isAdmin',
-  verificationCode: 'verificationCode',
-  expiresAt: 'expiresAt',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };
@@ -192,6 +190,15 @@ exports.Prisma.OauthStateScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -225,7 +232,8 @@ exports.Prisma.ModelName = {
   Flow: 'Flow',
   Node: 'Node',
   Edge: 'Edge',
-  OauthState: 'OauthState'
+  OauthState: 'OauthState',
+  PasswordResetToken: 'PasswordResetToken'
 };
 
 /**

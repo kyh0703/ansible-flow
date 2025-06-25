@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
+import { MailModule } from '../mail/mail.module'
 import { PrismaModule } from '../prisma/prisma.module'
 import { PrismaService } from '../prisma/prisma.service'
 import { AuthController } from './auth.controller'
@@ -17,6 +18,7 @@ import { KakaoStrategy } from './strategies/kakao.strategy'
   imports: [
     PassportModule,
     PrismaModule,
+    MailModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
