@@ -13,19 +13,19 @@ import {
 } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
 import { Request, Response } from 'express'
-import type { OauthState, User } from 'generated/client'
+import type { User } from 'generated/client'
 import appConfig from 'src/config/app.config'
 import authConfig from 'src/config/auth.config'
 import { CurrentUser } from 'src/user/user.decorator'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
+import { OAuthUserDto } from './dto/oauth-user.dto'
 import { RegisterDto } from './dto/register.dto'
 import { GithubAuthGuard } from './guards/github.guard'
 import { GoogleAuthGuard } from './guards/google.guard'
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
 import { JwtAuthGuard } from './guards/jwt.guard'
 import { KakaoAuthGuard } from './guards/kakao.guard'
-import { OAuthUserDto } from './dto/oauth-user.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -99,15 +99,14 @@ export class AuthController {
   private async handleSocialCallback(req: Request, res: Response) {
     const oauthUser = req.user as OAuthUserDto | undefined
     if (!oauthUser) {
-      res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
-      return
+      return res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
     }
 
     const { accessToken, refreshToken } =
       await this.authService.loginOrRegisterOAuthUser(oauthUser)
 
     this.setCookieWithRefreshToken(res, refreshToken)
-    res.redirect(
+    return res.redirect(
       `${this.authCfg.frontendUrl}/auth/callback?token=${accessToken}&expires_in=${this.authCfg.accessTokenExpiresIn}`,
     )
   }

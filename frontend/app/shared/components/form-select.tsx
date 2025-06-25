@@ -40,7 +40,7 @@ export default function FormSelect<T extends FieldValues>({
               key={field.value}
               defaultValue={field.value}
               onValueChange={(value) => {
-                onValueChange && onValueChange(value)
+                onValueChange?.(value)
                 field.onChange(value === '\u00A0' ? '' : value)
               }}
               {...props}

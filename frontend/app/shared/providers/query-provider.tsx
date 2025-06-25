@@ -3,7 +3,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import type { PropsWithChildren } from 'react'
 import queryClient from '@/shared/lib/query-client'
 
-export default function QueryProvider({ children }: PropsWithChildren) {
+export default function QueryProvider({
+  children,
+}: Readonly<PropsWithChildren>) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}

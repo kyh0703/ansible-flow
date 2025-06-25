@@ -16,7 +16,6 @@ export type FormInputProps<T extends FieldValues> = {
 export default function FormInput<T extends FieldValues>({
   control,
   name,
-  maxLength,
   ...props
 }: FormInputProps<T>) {
   const form = useForm()
