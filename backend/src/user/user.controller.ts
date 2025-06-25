@@ -13,14 +13,19 @@ import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { PaginationUserDto } from './dto/pagination-user.dto'
+import { RequestPasswordResetDto, ResetPasswordDto } from './dto/password-reset.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
+import { MailService } from '../mail/mail.service'
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
   private readonly logger = new Logger(UserController.name)
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly mailService: MailService,
+  ) {}
 
   @ApiOperation({ summary: '유저 페이징 목록 조회' })
   @ApiResponse({
@@ -88,5 +93,26 @@ export class UserController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.userService.delete(id)
+  }
+
+  @ApiOperation({ summary: '비밀번호 재설정 요청' })
+  @ApiResponse({ status: 200, description: '비밀번호 재설정 이메일 발송' })
+  @Post('password-reset/request')
+  async requestPasswordReset(@Body() requestPasswordResetDto: RequestPasswordResetDto) {
+    try {
+      const resetToken = await this.userService.generatePasswordResetToken(requestPasswordResetDto.email)
+      await this.mailService.sendPasswordResetEmail(requestPasswordResetDto.email, resetToken)
+      return { message: '비밀번호 재설정 이메일이 발송되었습니다.' }
+    } catch (error) {
+      return { message: '이메일이 존재하지 않거나 오류가 발생했습니다.' }
+    }
+  }
+
+  @ApiOperation({ summary: '비밀번호 재설정' })
+  @ApiResponse({ status: 200, description: '비밀번호 재설정 완료' })
+  @Post('password-reset/confirm')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    await this.userService.resetPassword(resetPasswordDto.token, resetPasswordDto.newPassword)
+    return { message: '비밀번호가 성공적으로 재설정되었습니다.' }
   }
 }
