@@ -1,16 +1,13 @@
-import { Button } from '@/shared/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card'
 import { Spinner } from '@/shared/ui/spinner'
 import { Suspense } from 'react'
-import { Link } from 'react-router'
-import ResetPasswordForm from '../components/forgot-password-form'
+import ResetPasswordForm from '../components/reset-password-form'
 
 export default function ResetPasswordPage() {
   return (
@@ -27,11 +24,6 @@ export default function ResetPasswordPage() {
             <CardContent>
               <ResetPasswordForm />
             </CardContent>
-            <CardFooter className="flex w-full items-center justify-center">
-              <Button variant="link" className="text-lg">
-                <Link to="/auth/login">로그인으로 돌아가기</Link>
-              </Button>
-            </CardFooter>
           </Card>
         </Suspense>
       </div>

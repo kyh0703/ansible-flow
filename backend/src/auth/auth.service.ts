@@ -15,6 +15,7 @@ import * as ms from 'ms'
 import { randomBytes } from 'crypto'
 import authConfig from 'src/config/auth.config'
 import { PrismaService } from '../prisma/prisma.service'
+import { MailService } from '../mail/mail.service'
 import { LoginDto } from './dto/login.dto'
 import type { OAuthUserDto } from './dto/oauth-user.dto'
 import { RegisterDto } from './dto/register.dto'
@@ -26,6 +27,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
   ) {}
@@ -206,11 +208,11 @@ export class AuthService {
 
     // 기존 토큰들을 모두 사용됨으로 표시
     await this.prisma.passwordResetToken.updateMany({
-      where: { 
+      where: {
         userId: user.id,
-        used: false 
+        used: false,
       },
-      data: { used: true }
+      data: { used: true },
     })
 
     // 새로운 토큰 생성
@@ -243,20 +245,48 @@ export class AuthService {
     return { userId: resetToken.userId }
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<void> {
+  async resetPassword(
+    token: string,
+    password: string,
+    passwordConfirm: string,
+  ): Promise<void> {
     const { userId } = await this.verifyPasswordResetToken(token)
-    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    if (password !== passwordConfirm) {
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.')
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // 사용자 정보 조회
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    })
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.')
+    }
 
     // 토큰을 사용됨으로 표시하고 비밀번호 업데이트를 트랜잭션으로 처리
     await this.prisma.$transaction([
       this.prisma.passwordResetToken.updateMany({
         where: { token },
-        data: { used: true }
+        data: { used: true },
       }),
       this.prisma.user.update({
         where: { id: userId },
         data: { password: hashedPassword },
-      })
+      }),
     ])
+
+    // 비밀번호 변경 완료 알림 메일 발송
+    try {
+      await this.mailService.sendPasswordResetSuccessEmail(user.email)
+      this.logger.log(`Password reset success email sent to ${user.email}`)
+    } catch (error) {
+      this.logger.error(`Failed to send password reset success email to ${user.email}`, error)
+      // 메일 발송 실패는 비밀번호 변경을 방해하지 않음
+    }
   }
 }

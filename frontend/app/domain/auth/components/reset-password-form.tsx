@@ -1,34 +1,35 @@
 import FormInput from '@/shared/components/form-input'
 import { Button } from '@/shared/ui/button'
 import { Label } from '@/shared/ui/label'
+import logger from '@/shared/utils/logger'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Lock } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useSearchParams } from 'react-router'
 import * as z from 'zod'
+import { resetPassword } from '../services/api/reset-password'
 
 const ResetPasswordSchema = z
   .object({
     password: z
       .string({ required_error: '새 비밀번호를 입력하여 주세요' })
       .min(8, '비밀번호는 최소 8자 이상이어야 합니다'),
-    confirmPassword: z.string({
+    passwordConfirm: z.string({
       required_error: '비밀번호 확인을 입력하여 주세요',
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.passwordConfirm, {
     message: '비밀번호가 일치하지 않습니다',
     path: ['confirmPassword'],
   })
 
 type ResetPassword = z.infer<typeof ResetPasswordSchema>
 
-interface ResetPasswordFormProps {
-  onSubmit: (data: { password: string }) => Promise<void>
-}
+export default function ResetPasswordForm() {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('token')
 
-export default function ResetPasswordForm({
-  onSubmit,
-}: ResetPasswordFormProps) {
   const {
     handleSubmit,
     control,
@@ -37,14 +38,23 @@ export default function ResetPasswordForm({
     resolver: zodResolver(ResetPasswordSchema),
   })
 
-  const handleFormSubmit = async (data: ResetPassword) => {
-    try {
-      await onSubmit({ password: data.password })
-    } catch (error) {
-      console.error(error)
-    }
+  if (!token) {
+    return (
+      <p className="text-red-500">
+        비밀번호 재설정 토큰이 유효하지 않습니다. 다시 시도해 주세요.
+      </p>
+    )
   }
 
+  const handleFormSubmit = async (data: ResetPassword) => {
+    try {
+      await resetPassword({ token, ...data })
+      alert('비밀번호가 성공적으로 변경되었습니다.')
+      navigate('/auth/login')
+    } catch (error) {
+      logger.error('비밀번호 재설정 실패:', error)
+    }
+  }
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <div className="grid gap-4">
@@ -71,14 +81,14 @@ export default function ResetPasswordForm({
             <Lock className="text-muted-foreground absolute top-3 left-3 h-4 w-4" />
             <FormInput
               control={control}
-              name="confirmPassword"
+              name="passwordConfirm"
               type="password"
               className="pl-10"
               placeholder="비밀번호를 다시 입력하세요"
               required
             />
-            {errors.confirmPassword && (
-              <p className="error-msg">{errors.confirmPassword.message}</p>
+            {errors.passwordConfirm && (
+              <p className="error-msg">{errors.passwordConfirm.message}</p>
             )}
           </div>
         </div>

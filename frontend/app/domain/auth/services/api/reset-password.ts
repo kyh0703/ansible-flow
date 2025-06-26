@@ -1,7 +1,11 @@
-import { fetchExtended, type ApiResponse, type Token } from '@/shared/services'
+import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const resetPassword = async (data: { email: string }) => {
-  const response = await fetchExtended<ApiResponse<Token>>(
+export const resetPassword = async (data: {
+  token: string
+  password: string
+  passwordConfirm: string
+}) => {
+  const response = await fetchExtended<ApiResponse<null>>(
     `${import.meta.env.VITE_BASE_PATH}/auth/reset-password`,
     {
       method: 'POST',

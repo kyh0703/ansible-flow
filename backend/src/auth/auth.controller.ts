@@ -22,7 +22,10 @@ import { MailService } from '../mail/mail.service'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
 import { OAuthUserDto } from './dto/oauth-user.dto'
-import { RequestPasswordResetDto, ResetPasswordDto } from './dto/password-reset.dto'
+import {
+  RequestPasswordResetDto,
+  ResetPasswordDto,
+} from './dto/password-reset.dto'
 import { RegisterDto } from './dto/register.dto'
 import { GithubAuthGuard } from './guards/github.guard'
 import { GoogleAuthGuard } from './guards/google.guard'
@@ -185,18 +188,20 @@ export class AuthController {
   async requestPasswordReset(
     @Body() requestPasswordResetDto: RequestPasswordResetDto,
   ) {
-    try {
-      const resetToken = await this.authService.generatePasswordResetToken(
-        requestPasswordResetDto.email,
-      )
-      await this.mailService.sendPasswordResetEmail(
-        requestPasswordResetDto.email,
-        resetToken,
-      )
-      return { message: '비밀번호 재설정 이메일이 발송되었습니다.' }
-    } catch (error) {
-      return { message: '이메일이 존재하지 않거나 오류가 발생했습니다.' }
-    }
+    this.logger.log(
+      `Password reset request received for email: ${requestPasswordResetDto.email}`,
+    )
+    const resetToken = await this.authService.generatePasswordResetToken(
+      requestPasswordResetDto.email,
+    )
+    await this.mailService.sendPasswordResetEmail(
+      requestPasswordResetDto.email,
+      resetToken,
+    )
+    this.logger.log(
+      `Password reset email sent to ${requestPasswordResetDto.email}`,
+    )
+    return { message: '비밀번호 재설정 이메일이 발송되었습니다.' }
   }
 
   @ApiOperation({ summary: '비밀번호 재설정' })
@@ -205,7 +210,8 @@ export class AuthController {
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     await this.authService.resetPassword(
       resetPasswordDto.token,
-      resetPasswordDto.newPassword,
+      resetPasswordDto.password,
+      resetPasswordDto.passwordConfirm,
     )
     return { message: '비밀번호가 성공적으로 재설정되었습니다.' }
   }

@@ -6,7 +6,6 @@ import { Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { forgotPassword } from '../services/api/forgot-password'
-import { useSearchParams } from 'react-router'
 
 const ForgotPasswordSchema = z.object({
   email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
@@ -15,9 +14,6 @@ const ForgotPasswordSchema = z.object({
 type ForgotPassword = z.infer<typeof ForgotPasswordSchema>
 
 export default function ForgotPasswordForm() {
-  const [searchParams] = useSearchParams()
-  const token = searchParams.get('token')
-
   const {
     handleSubmit,
     control,

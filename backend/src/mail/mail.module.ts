@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config'
           secure: true,
         },
         defaults: {
-          from: `Waa <${configService.get<string>('email.address')}>`,
+          from: `Ansible Flow <${configService.get<string>('email.address')}>`,
         },
       }),
     }),
