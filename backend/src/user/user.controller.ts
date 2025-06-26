@@ -13,6 +13,7 @@ import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { PaginationUserDto } from './dto/pagination-user.dto'
+import { UserDto } from './dto/user.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 
 @ApiTags('users')
@@ -28,6 +29,8 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Fiber 스타일 페이징 유저 목록 반환',
+    type: UserDto,
+    isArray: true,
   })
   @ApiQuery({
     name: 'page',
@@ -65,28 +68,28 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '유저 단건 조회' })
-  @ApiResponse({ status: 200, description: '유저 반환' })
+  @ApiResponse({ status: 200, description: '유저 반환', type: UserDto })
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id)
   }
 
   @ApiOperation({ summary: '유저 생성' })
-  @ApiResponse({ status: 201, description: '생성된 유저 반환' })
+  @ApiResponse({ status: 201, description: '생성된 유저 반환', type: UserDto })
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
 
   @ApiOperation({ summary: '유저 수정' })
-  @ApiResponse({ status: 200, description: '수정된 유저 반환' })
+  @ApiResponse({ status: 200, description: '수정된 유저 반환', type: UserDto })
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto)
   }
 
   @ApiOperation({ summary: '유저 삭제' })
-  @ApiResponse({ status: 200, description: '삭제된 유저 반환' })
+  @ApiResponse({ status: 200, description: '삭제된 유저 반환', type: UserDto })
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.userService.delete(id)
