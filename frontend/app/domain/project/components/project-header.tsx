@@ -1,4 +1,5 @@
-import { useModalActions } from '@/shared/store/modal'
+import { Modal } from '@/shared/components/modal'
+import type { Project } from '@/shared/models/project'
 import { useProjectActions, useProjectSearch } from '@/shared/store/project'
 import { useSubscriptionStore } from '@/shared/store/subscription'
 import { Badge } from '@/shared/ui/badge'
@@ -12,14 +13,18 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Plus, Search } from 'lucide-react'
+import { overlay } from 'overlay-kit'
 import { Link } from 'react-router'
+import { useAddProject } from '../services'
+import ProjectModal from './project-modal'
 
 export default function ProjectHeader() {
-  const { openModal } = useModalActions()
   const { currentSubscription, canCreateProject, upgradeRequired } =
     useSubscriptionStore()
   const search = useProjectSearch()
   const { setSearch } = useProjectActions()
+
+  const addProjectMutation = useAddProject()
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
@@ -86,12 +91,21 @@ export default function ProjectHeader() {
             size="sm"
             className="flex h-8 items-center gap-1"
             disabled={!canCreateProject()}
-            onClick={() => {
+            onClick={async () => {
               if (!canCreateProject()) {
                 window.location.href = '/subscription'
-              } else {
-                openModal('form-modal', { mode: 'create' })
+                return
               }
+              const result = await overlay.openAsync(
+                ({ isOpen, close, unmount }) => (
+                  <Modal isOpen={isOpen} title="New Project" onExit={unmount}>
+                    <ProjectModal mode="create" onClose={close} />
+                  </Modal>
+                ),
+              )
+              if (!result) return
+              const newProject = result as Project
+              addProjectMutation.mutate(newProject)
             }}
           >
             <Plus className="size-4" />

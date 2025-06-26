@@ -1,45 +1,32 @@
 import FormInput from '@/shared/components/form-input'
 import { ModalAction, ModalContent } from '@/shared/components/modal'
-import { useModalId } from '@/shared/contexts/modal-context'
 import type { Project } from '@/shared/models/project'
-import { useModalActions, useModalData } from '@/shared/store/modal'
 import { Button } from '@/shared/ui/button'
 import { useForm } from 'react-hook-form'
 
-type ModalData = {
+type ProjectModalProps = {
   mode: 'create' | 'update'
-  data?: Project
+  initialData?: Project
+  onClose?: (param: unknown) => void
 }
 
 export default function ProjectModal({
-  onSubmit,
-}: Readonly<{
-  onSubmit?: (mode: 'create' | 'update', data: Project) => void
-}>) {
-  const id = useModalId()
-  const modalData = useModalData() as ModalData
-  const { closeModal } = useModalActions()
-
+  mode,
+  initialData,
+  onClose,
+}: Readonly<ProjectModalProps>) {
   const {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<Project>({
-    defaultValues: modalData?.data || {
+    defaultValues: initialData ?? {
       name: '',
     },
   })
 
-  const handleCancelClick = () => {
-    closeModal(id)
-    reset()
-  }
-
   const onSubmitModal = (project: Project) => {
-    closeModal(id)
-    reset()
-    onSubmit?.(modalData.mode, project)
+    onClose?.({ mode, project })
   }
 
   return (
@@ -58,7 +45,7 @@ export default function ProjectModal({
         </div>
       </ModalContent>
       <ModalAction>
-        <Button variant="destructive" onClick={handleCancelClick}>
+        <Button variant="destructive" onClick={() => onClose?.(null)}>
           Cancel
         </Button>
         <Button type="submit">Save</Button>

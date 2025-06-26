@@ -1,41 +1,9 @@
-import { Button } from '@/shared/ui/button'
-import { Crown } from 'lucide-react'
 import ProjectList from './project-list'
-import ProjectModal from './project-modal'
-import { Modal } from '@/shared/components/modal'
-import type { Project } from '@/shared/models/project'
-import { useModalActions } from '@/shared/store/modal'
-import { useAddProject, useUpdateProject } from '../services'
-import { useSubscriptionStore } from '@/shared/store/subscription'
-import { Link } from 'react-router'
 
 export default function ProjectDashboard() {
-  const { closeModal } = useModalActions()
-  const { incrementProjectCount } = useSubscriptionStore()
-
-  const addProjectMutation = useAddProject({
-    onSuccess: () => {
-      incrementProjectCount()
-    },
-  })
-  const updateProjectMutation = useUpdateProject()
-
-  const handleSubmit = (mode: 'create' | 'update', project: Project) => {
-    console.log('!!!!', mode, project)
-    if (mode === 'create') {
-      addProjectMutation.mutate(project)
-    } else {
-      updateProjectMutation.mutate({ id: project.id, data: project })
-    }
-  }
-
   return (
     <>
-      <Modal id="form-modal" title="Project Form">
-        <ProjectModal onSubmit={handleSubmit} />
-      </Modal>
-
-      <Modal id="upgrade-modal" title="Upgrade Required">
+      {/* <Modal id="upgrade-modal" title="Upgrade Required">
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-amber-600">
             <Crown className="size-5" />
@@ -60,7 +28,7 @@ export default function ProjectDashboard() {
             </Link>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
 
       <div className="flex h-full w-full flex-col">
         <main className="flex-1 p-4">
