@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Lock } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
+import { toast } from 'sonner'
 import * as z from 'zod'
 import { resetPassword } from '../services/api/reset-password'
 
@@ -49,7 +50,7 @@ export default function ResetPasswordForm() {
   const handleFormSubmit = async (data: ResetPassword) => {
     try {
       await resetPassword({ token, ...data })
-      alert('비밀번호가 성공적으로 변경되었습니다.')
+      toast('비밀번호가 성공적으로 변경되었습니다.')
       navigate('/auth/login')
     } catch (error) {
       logger.error('비밀번호 재설정 실패:', error)

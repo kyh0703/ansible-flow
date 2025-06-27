@@ -18,25 +18,24 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/ui/sidebar'
-import { Skeleton } from '@/shared/ui/skeleton'
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
 import { ChevronDown, Clock, Home, Search, Star } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 
-function ProjectsSkeleton() {
-  return (
-    <SidebarMenu>
-      {[...Array(5)].map((_, i) => (
-        <SidebarMenuItem key={i}>
-          <div className="flex items-center gap-3 px-3 py-2">
-            <Skeleton className="h-4 w-4 rounded" />
-            <Skeleton className="h-4 flex-1" />
-          </div>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
-  )
-}
+// function ProjectsSkeleton() {
+//   return (
+//     <SidebarMenu>
+//       {[...Array(5)].map((_, i) => (
+//         <SidebarMenuItem key={i}>
+//           <div className="flex items-center gap-3 px-3 py-2">
+//             <Skeleton className="h-4 w-4 rounded" />
+//             <Skeleton className="h-4 flex-1" />
+//           </div>
+//         </SidebarMenuItem>
+//       ))}
+//     </SidebarMenu>
+//   )
+// }
 
 export default function AppSidebar() {
   const user = useUser()

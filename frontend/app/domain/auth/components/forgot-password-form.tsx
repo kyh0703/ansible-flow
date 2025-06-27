@@ -4,6 +4,7 @@ import { Label } from '@/shared/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as z from 'zod'
 import { forgotPassword } from '../services/api/forgot-password'
 
@@ -25,9 +26,9 @@ export default function ForgotPasswordForm() {
   const onSubmit = async (data: ForgotPassword) => {
     try {
       await forgotPassword(data)
-      alert('비밀번호 재설정 링크가 이메일로 전송되었습니다.')
+      toast('비밀번호 재설정 링크가 이메일로 전송되었습니다.')
     } catch (error) {
-      alert('비밀번호 재설정 요청에 실패했습니다. 다시 시도해 주세요.')
+      toast('비밀번호 재설정 요청에 실패했습니다. 다시 시도해 주세요.')
       console.error(error)
     }
   }

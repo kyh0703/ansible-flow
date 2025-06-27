@@ -4,11 +4,8 @@ import type { User } from '../models/user'
 
 type UserState = {
   user: User | null
-  isInitialized: boolean
   actions: {
     setUser: (user: User | null) => void
-    setInitialized: (initialized: boolean) => void
-    logout: () => void
   }
 }
 
@@ -20,15 +17,6 @@ const useUserStore = createPersistStore<UserState>(
       setUser: (user) =>
         set((state) => {
           state.user = user
-        }),
-      setInitialized: (initialized) =>
-        set((state) => {
-          state.isInitialized = initialized
-        }),
-      logout: () =>
-        set((state) => {
-          state.user = null
-          state.isInitialized = true
         }),
     },
   }),
@@ -43,6 +31,3 @@ const useUserStore = createPersistStore<UserState>(
 
 export const useUser = () => useUserStore((state) => state.user)
 export const useUserActions = () => useUserStore((state) => state.actions)
-export const useIsAuthenticated = () => useUserStore((state) => !!state.user)
-export const useIsInitialized = () =>
-  useUserStore((state) => state.isInitialized)

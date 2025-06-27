@@ -11,6 +11,7 @@ import type { Route } from './+types/root'
 
 import 'react-toastify/dist/ReactToastify.css'
 import './app.css'
+import { Toaster } from './shared/ui/sonner'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -36,6 +37,7 @@ export function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
       </head>
       <body>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

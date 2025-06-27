@@ -32,8 +32,8 @@ export default function ProjectList() {
   }, [allProjects, search])
 
   useEffect(() => {
-    if (inView) {
-      !isFetching && hasNextPage && fetchNextPage()
+    if (inView && !isFetching && hasNextPage) {
+      fetchNextPage()
     }
   }, [inView])
 
