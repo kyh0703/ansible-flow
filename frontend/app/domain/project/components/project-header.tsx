@@ -14,11 +14,12 @@ import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Plus, Search } from 'lucide-react'
 import { overlay } from 'overlay-kit'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useAddProject } from '../services'
 import ProjectModal from './project-modal'
 
 export default function ProjectHeader() {
+  const navigate = useNavigate()
   const { currentSubscription, canCreateProject, upgradeRequired } =
     useSubscriptionStore()
   const search = useProjectSearch()
@@ -93,7 +94,7 @@ export default function ProjectHeader() {
             disabled={!canCreateProject()}
             onClick={async () => {
               if (!canCreateProject()) {
-                window.location.href = '/subscription'
+                navigate('/subscription')
                 return
               }
               const result = await overlay.openAsync(

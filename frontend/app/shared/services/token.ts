@@ -2,7 +2,6 @@ let token: Token | null = null
 
 export type Token = {
   accessToken: string
-  accessExpiresIn: number
 }
 
 export const getToken = (): Token | null => {

@@ -9,6 +9,7 @@ export const me = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     },
   )
 

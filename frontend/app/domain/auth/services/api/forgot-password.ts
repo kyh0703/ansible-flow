@@ -8,6 +8,7 @@ export const forgotPassword = async (data: { email: string }) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     },
   )

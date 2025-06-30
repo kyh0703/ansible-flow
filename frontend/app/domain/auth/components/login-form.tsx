@@ -1,6 +1,6 @@
 import FormInput from '@/shared/components/form-input'
+import { useAuth } from '@/shared/providers/auth-provider'
 import { setToken } from '@/shared/services'
-import { useUserActions } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
 import { extractErrorMessage } from '@/shared/utils/errors'
 import logger from '@/shared/utils/logger'
@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { login, me } from '../services'
+import { login } from '../services'
 import OAuthButton from './oauth-button'
 
 const LoginSchema = z.object({
@@ -24,11 +24,12 @@ type Login = z.infer<typeof LoginSchema>
 
 export function LoginForm() {
   const navigate = useNavigate()
-  const { setUser } = useUserActions()
+  const { checkAuth } = useAuth()
+
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Login>({
     resolver: zodResolver(LoginSchema),
   })
@@ -37,9 +38,9 @@ export function LoginForm() {
     try {
       const res = await login(data)
       setToken(res)
-      const user = await me()
-      setUser(user)
+      await checkAuth()
       navigate('/projects')
+      toast.success('로그인되었습니다')
     } catch (error) {
       toast.error(extractErrorMessage(error))
       logger.error(error)
@@ -69,8 +70,8 @@ export function LoginForm() {
       {errors.password && (
         <p className="error-msg">{errors.password.message}</p>
       )}
-      <Button className="w-full" type="submit">
-        로그인
+      <Button className="w-full" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? '로그인 중...' : '로그인'}
       </Button>
       <section className="flex gap-2">
         <OAuthButton />

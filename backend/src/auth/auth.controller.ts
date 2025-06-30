@@ -79,12 +79,15 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(
-    @CurrentUser() user: User,
+    @CurrentUser() user,
     @Res({ passthrough: true }) res: Response,
   ) {
-    this.logger.log(`Refresh attempt for user: ${user.email}`)
-    this.logger.log(`Refresh successful for user: ${user.email}`)
-    return { message: 'Refresh successful' }
+    const { accessToken, newRefreshToken } = await this.authService.refresh(
+      user.userId,
+      user.refreshToken,
+    )
+    this.setCookieWithRefreshToken(res, newRefreshToken)
+    return { accessToken }
   }
 
   @Post('logout')

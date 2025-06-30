@@ -8,6 +8,7 @@ export const refresh = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
     },
   )
 

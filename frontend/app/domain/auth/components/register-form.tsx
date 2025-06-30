@@ -1,6 +1,6 @@
 import FormInput from '@/shared/components/form-input'
+import { useAuth } from '@/shared/providers/auth-provider'
 import { setToken } from '@/shared/services'
-import { useUserActions } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
 import { extractErrorMessage } from '@/shared/utils/errors'
 import logger from '@/shared/utils/logger'
@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
-import { me, register } from '../services'
+import { register } from '../services'
 
 const RegisterSchema = z
   .object({
@@ -30,7 +30,8 @@ export type Register = z.infer<typeof RegisterSchema>
 
 export function RegisterForm() {
   const navigate = useNavigate()
-  const { setUser } = useUserActions()
+  const { checkAuth } = useAuth()
+
   const {
     handleSubmit,
     control,
@@ -43,9 +44,9 @@ export function RegisterForm() {
     try {
       const res = await register(data)
       setToken(res)
-      const user = await me()
-      setUser(user)
+      await checkAuth()
       navigate('/projects')
+      toast.success('회원가입이 완료되었습니다')
     } catch (error) {
       toast.error(extractErrorMessage(error))
       logger.error(error)

@@ -1,9 +1,18 @@
 import { LogoIcon } from '@/shared/components/icon'
 import { ThemeButton } from '@/shared/components/theme-button'
+import { useUser } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 export default function Header() {
+  const navigate = useNavigate()
+  const user = useUser()
+
+  if (user) {
+    navigate('/projects')
+    return null
+  }
+
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between px-8">
@@ -35,9 +44,9 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-4">
           <ThemeButton />
-          <Link to="/auth/login">
-            <Button>Login</Button>
-          </Link>
+          <Button>
+            <Link to="/auth/login">Login</Link>
+          </Button>
         </div>
       </div>
     </header>

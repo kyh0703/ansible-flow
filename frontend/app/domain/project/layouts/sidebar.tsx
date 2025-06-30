@@ -1,8 +1,14 @@
-import { ThemeButton } from '@/shared/components/theme-button'
-import { useUser } from '@/shared/store/user'
+import { logout } from '@/domain/auth/services'
+import { useTheme } from '@/shared/providers/theme-provider'
+import { setToken } from '@/shared/services'
+import { useUser, useUserActions } from '@/shared/store/user'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { Input } from '@/shared/ui/input'
@@ -18,9 +24,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/ui/sidebar'
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
-import { ChevronDown, Clock, Home, Search, Star } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
+import { ChevronDown, Clock, Home, LogOut, Search, Star } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router'
 
 // function ProjectsSkeleton() {
 //   return (
@@ -38,11 +44,22 @@ import { Link, useLocation } from 'react-router'
 // }
 
 export default function AppSidebar() {
+  const { setTheme } = useTheme()
   const user = useUser()
+  const { setUser } = useUserActions()
   const location = useLocation()
+  const navigate = useNavigate()
 
-  if (!user) {
-    return null
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch (error) {
+      console.error('Logout failed:', error)
+    } finally {
+      setUser(null)
+      setToken(null)
+      navigate('/', { replace: true })
+    }
   }
 
   return (
@@ -56,15 +73,31 @@ export default function AppSidebar() {
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded">
                       <span className="text-primary text-xs font-semibold">
-                        A
+                        {/* user image */}
                       </span>
                     </div>
-                    <span>Acme Inc</span>
+                    <span>{user?.name}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 opacity-60" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem onClick={() => setTheme('system')}>
+                        System
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme('light')}>
+                        Light
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme('dark')}>
+                        Dark
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuItem>
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded">
@@ -85,20 +118,25 @@ export default function AppSidebar() {
                     <span>Acme Corp.</span>
                   </div>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
 
         <div className="mt-3 flex items-center justify-between gap-2">
-          <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-            <Input
-              placeholder="Search projects..."
-              className="bg-muted/50 focus-visible:ring-ring h-8 border-0 pl-9 focus-visible:ring-1"
-            />
-          </div>
-          <ThemeButton />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+          <Input
+            placeholder="Search projects..."
+            className="bg-muted/50 focus-visible:ring-ring h-8 border-0 pl-9 focus-visible:ring-1"
+          />
         </div>
       </SidebarHeader>
 

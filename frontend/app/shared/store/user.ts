@@ -22,7 +22,7 @@ const useUserStore = createPersistStore<UserState>(
   }),
   {
     name: 'UserStore',
-    storage: createJSONStorage(() => sessionStorage),
+    storage: createJSONStorage(() => localStorage),
     partialize: (state) => ({
       user: state.user,
     }),

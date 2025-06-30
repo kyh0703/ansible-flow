@@ -12,7 +12,6 @@ export default function AuthCallback() {
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const token = params.get('token')
-    const expiresIn = params.get('expires_in')
 
     const setUserInfo = async () => {
       const user = await me()
@@ -20,17 +19,14 @@ export default function AuthCallback() {
     }
 
     if (token) {
-      const expiryTimestamp = Math.floor(
-        (Date.now() + Number(expiresIn) * 1000) / 1000,
-      )
-      setToken({
-        accessToken: token,
-        accessExpiresIn: expiryTimestamp,
-      })
+      setToken({ accessToken: token })
       setUserInfo()
       navigate('/projects')
     } else {
-      navigate('/dashboard', { state: { error: '인증에 실패했습니다.' } })
+      navigate('/', {
+        state: { error: '인증에 실패했습니다.' },
+        replace: true,
+      })
     }
   }, [])
 

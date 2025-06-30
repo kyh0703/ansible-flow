@@ -219,7 +219,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/kyh0703/Project/ansible-flow/backend/generated/client",
+      "value": "D:\\Project\\ansible-flow\\backend\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -228,7 +228,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       },
       {
@@ -238,10 +238,14 @@ const config = {
       {
         "fromEnvVar": null,
         "value": "darwin-arm64"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "windows"
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/kyh0703/Project/ansible-flow/backend/prisma/schema.prisma",
+    "sourceFilePath": "D:\\Project\\ansible-flow\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -255,6 +259,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -263,8 +268,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\", \"darwin-arm64\"]\n  output        = \"../generated/client\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                  String               @id @default(uuid())\n  email               String               @unique\n  password            String?\n  name                String\n  bio                 String?\n  provider            String?\n  providerId          String?\n  isAdmin             Boolean              @default(false)\n  updatedAt           DateTime             @updatedAt\n  createdAt           DateTime             @default(now())\n  tokens              Token[]\n  projects            Project[]\n  passwordResetTokens PasswordResetToken[]\n}\n\nmodel Token {\n  id           String   @id @default(uuid())\n  userId       String\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  refreshToken String\n  expiresAt    DateTime\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  @@unique([userId, refreshToken])\n  @@index([userId])\n}\n\nmodel Project {\n  id        String   @id @default(uuid())\n  user      User     @relation(fields: [userId], references: [id])\n  userId    String\n  name      String\n  updatedAt DateTime @updatedAt\n  createdAt DateTime @default(now())\n  flows     Flow[]\n}\n\nmodel Flow {\n  id         String   @id @default(uuid())\n  project    Project  @relation(fields: [projectId], references: [id])\n  projectId  String\n  name       String\n  bookmarked Boolean  @default(false)\n  updatedAt  DateTime @updatedAt\n  createdAt  DateTime @default(now())\n  nodes      Node[]\n  edges      Edge[]\n}\n\nmodel Node {\n  id          String   @id @default(uuid())\n  flow        Flow     @relation(fields: [flowId], references: [id])\n  flowId      String\n  type        String\n  position    Json\n  styles      Json\n  width       Int\n  height      Int\n  hidden      Boolean  @default(false)\n  description String   @default(\"\")\n  updatedAt   DateTime @updatedAt\n  createdAt   DateTime @default(now())\n}\n\nmodel Edge {\n  id        String   @id @default(uuid())\n  flow      Flow     @relation(fields: [flowId], references: [id])\n  flowId    String\n  source    String\n  target    String\n  type      String\n  label     String   @default(\"\")\n  hidden    Boolean  @default(false)\n  markerEnd Json\n  updatedAt DateTime @updatedAt\n  createdAt DateTime @default(now())\n}\n\nmodel OauthState {\n  id          String   @id @default(uuid())\n  redirectUrl String\n  expiresAt   DateTime\n  createdAt   DateTime @default(now())\n}\n\nmodel PasswordResetToken {\n  id        String   @id @default(uuid())\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  token     String   @unique\n  expiresAt DateTime\n  used      Boolean  @default(false)\n  createdAt DateTime @default(now())\n\n  @@index([userId])\n  @@index([token])\n}\n",
-  "inlineSchemaHash": "b2b75e072793d7786bcc79cbce4c7a9a3196475b260454151dfec067add10a14",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\", \"darwin-arm64\", \"windows\"]\n  output        = \"../generated/client\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                  String               @id @default(uuid())\n  email               String               @unique\n  password            String?\n  name                String\n  bio                 String?\n  provider            String?\n  providerId          String?\n  isAdmin             Boolean              @default(false)\n  updatedAt           DateTime             @updatedAt\n  createdAt           DateTime             @default(now())\n  tokens              Token[]\n  projects            Project[]\n  passwordResetTokens PasswordResetToken[]\n}\n\nmodel Token {\n  id           String   @id @default(uuid())\n  userId       String\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  refreshToken String\n  expiresAt    DateTime\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  @@unique([userId, refreshToken])\n  @@index([userId])\n}\n\nmodel Project {\n  id        String   @id @default(uuid())\n  user      User     @relation(fields: [userId], references: [id])\n  userId    String\n  name      String\n  updatedAt DateTime @updatedAt\n  createdAt DateTime @default(now())\n  flows     Flow[]\n}\n\nmodel Flow {\n  id         String   @id @default(uuid())\n  project    Project  @relation(fields: [projectId], references: [id])\n  projectId  String\n  name       String\n  bookmarked Boolean  @default(false)\n  updatedAt  DateTime @updatedAt\n  createdAt  DateTime @default(now())\n  nodes      Node[]\n  edges      Edge[]\n}\n\nmodel Node {\n  id          String   @id @default(uuid())\n  flow        Flow     @relation(fields: [flowId], references: [id])\n  flowId      String\n  type        String\n  position    Json\n  styles      Json\n  width       Int\n  height      Int\n  hidden      Boolean  @default(false)\n  description String   @default(\"\")\n  updatedAt   DateTime @updatedAt\n  createdAt   DateTime @default(now())\n}\n\nmodel Edge {\n  id        String   @id @default(uuid())\n  flow      Flow     @relation(fields: [flowId], references: [id])\n  flowId    String\n  source    String\n  target    String\n  type      String\n  label     String   @default(\"\")\n  hidden    Boolean  @default(false)\n  markerEnd Json\n  updatedAt DateTime @updatedAt\n  createdAt DateTime @default(now())\n}\n\nmodel OauthState {\n  id          String   @id @default(uuid())\n  redirectUrl String\n  expiresAt   DateTime\n  createdAt   DateTime @default(now())\n}\n\nmodel PasswordResetToken {\n  id        String   @id @default(uuid())\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  token     String   @unique\n  expiresAt DateTime\n  used      Boolean  @default(false)\n  createdAt DateTime @default(now())\n\n  @@index([userId])\n  @@index([token])\n}\n",
+  "inlineSchemaHash": "6f79a68fa976eda6e68d258d0c23cf1298d1e9cab648d9de7452453e25b0cf29",
   "copyEngine": true
 }
 
@@ -303,12 +308,16 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
-path.join(process.cwd(), "generated/client/libquery_engine-darwin-arm64.dylib.node")
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "generated/client/query_engine-windows.dll.node")
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process.cwd(), "generated/client/libquery_engine-debian-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+path.join(process.cwd(), "generated/client/libquery_engine-darwin-arm64.dylib.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/client/schema.prisma")
