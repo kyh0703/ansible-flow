@@ -25,7 +25,16 @@ import {
   SidebarMenuItem,
 } from '@/shared/ui/sidebar'
 import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
-import { ChevronDown, Clock, Home, LogOut, Search, Star } from 'lucide-react'
+import {
+  ChevronDown,
+  Clock,
+  Home,
+  LogOut,
+  Search,
+  Star,
+  SunMoon,
+  Trash,
+} from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
 
 // function ProjectsSkeleton() {
@@ -83,7 +92,10 @@ export default function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Theme</DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger className="space-x-3">
+                    <SunMoon className="size-4" />
+                    <span>Theme</span>
+                  </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       <DropdownMenuItem onClick={() => setTheme('system')}>
@@ -98,31 +110,8 @@ export default function AppSidebar() {
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
-                <DropdownMenuItem>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded">
-                      <span className="text-primary text-xs font-semibold">
-                        A
-                      </span>
-                    </div>
-                    <span>Acme Inc</span>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-6 w-6 items-center justify-center rounded bg-blue-500/10">
-                      <span className="text-xs font-semibold text-blue-500">
-                        B
-                      </span>
-                    </div>
-                    <span>Acme Corp.</span>
-                  </div>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-red-600 focus:text-red-600"
-                >
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -131,7 +120,7 @@ export default function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="relative mt-3 flex items-center justify-between gap-2">
           <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
           <Input
             placeholder="Search projects..."
@@ -166,6 +155,17 @@ export default function AppSidebar() {
                   >
                     <Clock className="h-4 w-4" />
                     <span>Recent</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/projects/trash"
+                    className="flex items-center gap-3 px-3 py-2 text-sm"
+                  >
+                    <Trash className="h-4 w-4" />
+                    <span>Trash</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

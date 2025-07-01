@@ -24,11 +24,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     profile: any,
     done: Function,
   ): Promise<any> {
-    console.log('profile', profile)
     const { id, username, emails, photos } = profile
-    const email =
-      (emails && emails[0] && emails[0].value) || `${id}@github.user`
-    const profileImage = (photos && photos[0] && photos[0].value) || null
+    const email = emails?.[0]?.value ?? `${id}@github.user`
+    const profileImage = photos?.[0]?.value ?? null
 
     const user = {
       provider: 'github',
