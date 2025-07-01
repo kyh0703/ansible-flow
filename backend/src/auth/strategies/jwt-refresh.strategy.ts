@@ -4,6 +4,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Request } from 'express'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import authConfig from 'src/config/auth.config'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -32,7 +33,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
 
   async validate(req: Request, payload: any) {
     const refreshToken = req?.cookies?.token
-
     return {
       userId: payload.sub,
       email: payload.email,

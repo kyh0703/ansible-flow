@@ -97,15 +97,25 @@ export class AuthService {
   ): Promise<{ accessToken: string; newRefreshToken: string }> {
     const userWithTokens = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { tokens: { where: { refreshToken: oldRefreshToken } } },
+      include: { tokens: true },
     })
     if (!userWithTokens || userWithTokens.tokens.length === 0) {
       await this.revokeAllUserRefreshTokens(userId)
       throw new ForbiddenException('접근 리프레시 토큰 에러')
     }
 
-    const currentTokenRecord = userWithTokens.tokens[0]
+    const matchedToken = userWithTokens?.tokens.find((token) =>
+      bcrypt.compareSync(oldRefreshToken, token.refreshToken),
+    )
+    if (!matchedToken) {
+      this.logger.warn(`Refresh token not found for user: ${userId}`)
+      await this.revokeAllUserRefreshTokens(userId)
+      throw new ForbiddenException('접근 리프레시 토큰 에러')
+    }
+
+    const currentTokenRecord = matchedToken
     if (currentTokenRecord.expiresAt < new Date()) {
+      this.logger.warn(`Refresh token expired for user: ${userId}`)
       await this.revokeAllUserRefreshTokens(userId)
       throw new ForbiddenException('접근 리프레시 토큰 에러')
     }
@@ -119,7 +129,6 @@ export class AuthService {
     const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
 
     await this.saveNewRefreshToken(userId, refreshToken, expiresAt)
-
     return { accessToken, newRefreshToken: refreshToken }
   }
 
@@ -145,6 +154,9 @@ export class AuthService {
     const accessToken = this.generateAccessToken(payload)
     const { refreshToken, expiresAt } = this.generateRefreshToken(payload)
     await this.saveNewRefreshToken(user.id, refreshToken, expiresAt)
+    this.logger.log(
+      `loginOrRegisterOAuthUser ${user.email} ${accessToken} ${refreshToken}`,
+    )
     return { user, accessToken, refreshToken }
   }
 
@@ -171,7 +183,9 @@ export class AuthService {
     expiresAt: Date,
   ) {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10)
-
+    this.logger.log(
+      `save new refresh token: ${refreshToken} hashed: ${hashedRefreshToken}`,
+    )
     return this.prisma.token.create({
       data: {
         userId,
@@ -285,7 +299,10 @@ export class AuthService {
       await this.mailService.sendPasswordResetSuccessEmail(user.email)
       this.logger.log(`Password reset success email sent to ${user.email}`)
     } catch (error) {
-      this.logger.error(`Failed to send password reset success email to ${user.email}`, error)
+      this.logger.error(
+        `Failed to send password reset success email to ${user.email}`,
+        error,
+      )
       // 메일 발송 실패는 비밀번호 변경을 방해하지 않음
     }
   }

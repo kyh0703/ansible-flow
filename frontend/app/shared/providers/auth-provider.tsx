@@ -20,23 +20,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// // Public routes that don't require authentication
-// const PUBLIC_ROUTES = [
-//   '/auth/login',
-//   '/auth/register',
-//   '/auth/callback',
-//   '/auth/forgot-password',
-//   '/auth/reset-password',
-// ]
-
-// // Routes that should redirect to /projects if authenticated
-// const AUTH_ROUTES = [
-//   '/auth/login',
-//   '/auth/register',
-//   '/auth/forgot-password',
-//   '/auth/reset-password',
-// ]
-
 export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
   const [isAuthLoading, setIsAuthLoading] = useState(true)
   const { setUser } = useUserActions()

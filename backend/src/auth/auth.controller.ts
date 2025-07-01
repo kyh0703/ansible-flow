@@ -110,24 +110,22 @@ export class AuthController {
   private async handleSocialCallback(req: Request, res: Response) {
     const oauthUser = req.user as OAuthUserDto | undefined
     if (!oauthUser) {
-      return res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
+      res.redirect(`${this.authCfg.frontendUrl}/auth/login`)
+      return
     }
 
     const { accessToken, refreshToken } =
       await this.authService.loginOrRegisterOAuthUser(oauthUser)
 
     this.setCookieWithRefreshToken(res, refreshToken)
-    return res.redirect(
+    res.redirect(
       `${this.authCfg.frontendUrl}/auth/callback?token=${accessToken}&expires_in=${this.authCfg.accessTokenExpiresIn}`,
     )
   }
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleAuthCallback(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
     await this.handleSocialCallback(req, res)
   }
 
@@ -139,10 +137,7 @@ export class AuthController {
 
   @Get('kakao/callback')
   @UseGuards(KakaoAuthGuard)
-  async kakaoAuthCallback(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async kakaoAuthCallback(@Req() req: Request, @Res() res: Response) {
     await this.handleSocialCallback(req, res)
   }
 
@@ -154,10 +149,7 @@ export class AuthController {
 
   @Get('github/callback')
   @UseGuards(GithubAuthGuard)
-  async githubAuthCallback(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async githubAuthCallback(@Req() req: Request, @Res() res: Response) {
     await this.handleSocialCallback(req, res)
   }
 
