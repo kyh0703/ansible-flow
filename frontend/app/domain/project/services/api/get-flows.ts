@@ -2,7 +2,7 @@ import type { Flow } from '@/shared/models/flow'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 import type { PaginationResponse } from '@/shared/types/pagination'
 
-export const getProjectFlows = async (
+export const getFlows = async (
   projectId: string,
   pageParam = 1,
   pageSize = 10,

@@ -23,7 +23,7 @@ import { ProjectService } from './project.service'
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectController {
-  private logger = new Logger(ProjectController.name)
+  private readonly logger = new Logger(ProjectController.name)
 
   constructor(private readonly projectService: ProjectService) {}
 
@@ -46,6 +46,41 @@ export class ProjectController {
       userId: user.id,
       skip,
       take: pageSize,
+    })
+    const totalPages = Math.ceil(total / pageSize)
+    return {
+      data: items,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+    }
+  }
+
+  @ApiOperation({ summary: '프로젝트 휴지통 목록 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '프로젝트 휴지통 목록 반환',
+    type: ProjectPaginationResponseDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(ProjectPaginationResponseDto)
+  @Get('trashed')
+  async trashedPagination(
+    @CurrentUser() user: User,
+    @Query() query: PaginationQueryDto,
+  ): Promise<ProjectPaginationResponseDto> {
+    const { page = 1, pageSize = 10 } = query
+    const skip = (page - 1) * pageSize
+    const { items, total } = await this.projectService.pagination({
+      userId: user.id,
+      skip,
+      take: pageSize,
+      trashed: true,
     })
     const totalPages = Math.ceil(total / pageSize)
     return {

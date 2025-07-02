@@ -143,6 +143,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   name: 'name',
+  trashedAt: 'trashedAt',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };
