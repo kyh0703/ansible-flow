@@ -1641,6 +1641,7 @@ export namespace Prisma {
     password: string | null
     name: string | null
     bio: string | null
+    profileImage: string | null
     provider: string | null
     providerId: string | null
     isAdmin: boolean | null
@@ -1654,6 +1655,7 @@ export namespace Prisma {
     password: string | null
     name: string | null
     bio: string | null
+    profileImage: string | null
     provider: string | null
     providerId: string | null
     isAdmin: boolean | null
@@ -1667,6 +1669,7 @@ export namespace Prisma {
     password: number
     name: number
     bio: number
+    profileImage: number
     provider: number
     providerId: number
     isAdmin: number
@@ -1682,6 +1685,7 @@ export namespace Prisma {
     password?: true
     name?: true
     bio?: true
+    profileImage?: true
     provider?: true
     providerId?: true
     isAdmin?: true
@@ -1695,6 +1699,7 @@ export namespace Prisma {
     password?: true
     name?: true
     bio?: true
+    profileImage?: true
     provider?: true
     providerId?: true
     isAdmin?: true
@@ -1708,6 +1713,7 @@ export namespace Prisma {
     password?: true
     name?: true
     bio?: true
+    profileImage?: true
     provider?: true
     providerId?: true
     isAdmin?: true
@@ -1794,6 +1800,7 @@ export namespace Prisma {
     password: string | null
     name: string
     bio: string | null
+    profileImage: string | null
     provider: string | null
     providerId: string | null
     isAdmin: boolean
@@ -1824,6 +1831,7 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     bio?: boolean
+    profileImage?: boolean
     provider?: boolean
     providerId?: boolean
     isAdmin?: boolean
@@ -1841,6 +1849,7 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     bio?: boolean
+    profileImage?: boolean
     provider?: boolean
     providerId?: boolean
     isAdmin?: boolean
@@ -1854,6 +1863,7 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     bio?: boolean
+    profileImage?: boolean
     provider?: boolean
     providerId?: boolean
     isAdmin?: boolean
@@ -1867,6 +1877,7 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     bio?: boolean
+    profileImage?: boolean
     provider?: boolean
     providerId?: boolean
     isAdmin?: boolean
@@ -1874,7 +1885,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "bio" | "provider" | "providerId" | "isAdmin" | "updatedAt" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "bio" | "profileImage" | "provider" | "providerId" | "isAdmin" | "updatedAt" | "createdAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tokens?: boolean | User$tokensArgs<ExtArgs>
     projects?: boolean | User$projectsArgs<ExtArgs>
@@ -1897,6 +1908,7 @@ export namespace Prisma {
       password: string | null
       name: string
       bio: string | null
+      profileImage: string | null
       provider: string | null
       providerId: string | null
       isAdmin: boolean
@@ -2333,6 +2345,7 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly bio: FieldRef<"User", 'String'>
+    readonly profileImage: FieldRef<"User", 'String'>
     readonly provider: FieldRef<"User", 'String'>
     readonly providerId: FieldRef<"User", 'String'>
     readonly isAdmin: FieldRef<"User", 'Boolean'>
@@ -10456,6 +10469,7 @@ export namespace Prisma {
     password: 'password',
     name: 'name',
     bio: 'bio',
+    profileImage: 'profileImage',
     provider: 'provider',
     providerId: 'providerId',
     isAdmin: 'isAdmin',
@@ -10663,6 +10677,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     name?: StringFilter<"User"> | string
     bio?: StringNullableFilter<"User"> | string | null
+    profileImage?: StringNullableFilter<"User"> | string | null
     provider?: StringNullableFilter<"User"> | string | null
     providerId?: StringNullableFilter<"User"> | string | null
     isAdmin?: BoolFilter<"User"> | boolean
@@ -10679,6 +10694,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     name?: SortOrder
     bio?: SortOrderInput | SortOrder
+    profileImage?: SortOrderInput | SortOrder
     provider?: SortOrderInput | SortOrder
     providerId?: SortOrderInput | SortOrder
     isAdmin?: SortOrder
@@ -10698,6 +10714,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     name?: StringFilter<"User"> | string
     bio?: StringNullableFilter<"User"> | string | null
+    profileImage?: StringNullableFilter<"User"> | string | null
     provider?: StringNullableFilter<"User"> | string | null
     providerId?: StringNullableFilter<"User"> | string | null
     isAdmin?: BoolFilter<"User"> | boolean
@@ -10714,6 +10731,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     name?: SortOrder
     bio?: SortOrderInput | SortOrder
+    profileImage?: SortOrderInput | SortOrder
     provider?: SortOrderInput | SortOrder
     providerId?: SortOrderInput | SortOrder
     isAdmin?: SortOrder
@@ -10733,6 +10751,7 @@ export namespace Prisma {
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     name?: StringWithAggregatesFilter<"User"> | string
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
+    profileImage?: StringNullableWithAggregatesFilter<"User"> | string | null
     provider?: StringNullableWithAggregatesFilter<"User"> | string | null
     providerId?: StringNullableWithAggregatesFilter<"User"> | string | null
     isAdmin?: BoolWithAggregatesFilter<"User"> | boolean
@@ -11210,6 +11229,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -11226,6 +11246,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -11242,6 +11263,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -11258,6 +11280,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -11274,6 +11297,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -11287,6 +11311,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -11300,6 +11325,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -11888,6 +11914,7 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     bio?: SortOrder
+    profileImage?: SortOrder
     provider?: SortOrder
     providerId?: SortOrder
     isAdmin?: SortOrder
@@ -11901,6 +11928,7 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     bio?: SortOrder
+    profileImage?: SortOrder
     provider?: SortOrder
     providerId?: SortOrder
     isAdmin?: SortOrder
@@ -11914,6 +11942,7 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     bio?: SortOrder
+    profileImage?: SortOrder
     provider?: SortOrder
     providerId?: SortOrder
     isAdmin?: SortOrder
@@ -13055,6 +13084,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13070,6 +13100,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13101,6 +13132,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -13116,6 +13148,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -13131,6 +13164,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13146,6 +13180,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13206,6 +13241,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -13221,6 +13257,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -13561,6 +13598,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13576,6 +13614,7 @@ export namespace Prisma {
     password?: string | null
     name: string
     bio?: string | null
+    profileImage?: string | null
     provider?: string | null
     providerId?: string | null
     isAdmin?: boolean
@@ -13607,6 +13646,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
@@ -13622,6 +13662,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: NullableStringFieldUpdateOperationsInput | string | null
     providerId?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean

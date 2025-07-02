@@ -80,10 +80,18 @@ export default function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="bg-muted/50 hover:bg-muted h-10 w-full justify-between rounded-lg px-3 text-sm font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded">
-                      <span className="text-primary text-xs font-semibold">
-                        {/* user image */}
-                      </span>
+                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded overflow-hidden">
+                      {user?.profileImage ? (
+                        <img 
+                          src={user.profileImage} 
+                          alt={user.name || 'User profile'} 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-primary text-xs font-semibold">
+                          {user?.name?.charAt(0)?.toUpperCase() ?? 'U'}
+                        </span>
+                      )}
                     </div>
                     <span>{user?.name}</span>
                   </div>

@@ -21,6 +21,7 @@ model User {
   password     String?
   name         String
   bio          String?
+  profileImage String?
   provider     String?
   providerId   String?
   isAdmin      Boolean   @default(false)

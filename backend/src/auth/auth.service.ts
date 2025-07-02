@@ -133,17 +133,30 @@ export class AuthService {
   }
 
   async validateOAuthUser(details: OAuthUserDto) {
-    const { provider, providerId, email, name } = details
+    const { provider, providerId, email, name, profileImage } = details
 
     let user = await this.prisma.user.findUnique({ where: { email } })
-    user ??= await this.prisma.user.create({
-      data: {
-        email,
-        name: name ?? email.split('@')[0],
-        provider,
-        providerId,
-      },
-    })
+    
+    if (user) {
+      // 기존 사용자의 경우 프로필 이미지 업데이트
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          profileImage,
+        },
+      })
+    } else {
+      // 신규 사용자 생성
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          name: name ?? email.split('@')[0],
+          provider,
+          providerId,
+          profileImage,
+        },
+      })
+    }
 
     return user
   }
