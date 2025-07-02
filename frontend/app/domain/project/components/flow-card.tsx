@@ -11,7 +11,7 @@ import {
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router'
 
-interface FlowCardProps {
+type FlowCardProps = {
   flow: Flow
 }
 

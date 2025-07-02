@@ -19,7 +19,7 @@ import { Link, useSearchParams } from 'react-router'
 import { useAddFlow } from '../services/mutations/use-add-flow'
 import ProjectModal from './project-modal'
 
-interface FlowHeaderProps {
+type FlowHeaderProps = {
   projectName?: string
 }
 

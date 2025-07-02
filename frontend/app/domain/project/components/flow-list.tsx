@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer'
 import { useInfiniteQueryFlows } from '../services'
 import FlowCard from './flow-card'
 
-interface FlowListProps {
+type FlowListProps = {
   projectId: string
 }
 
@@ -27,8 +27,8 @@ export default function FlowList({ projectId }: Readonly<FlowListProps>) {
   const flows = data?.pages.flatMap((page) => page.data) || []
 
   useEffect(() => {
-    if (inView) {
-      !isFetching && hasNextPage && fetchNextPage()
+    if (inView && !isFetching && hasNextPage) {
+      fetchNextPage()
     }
   }, [inView])
 
