@@ -14,17 +14,37 @@ import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Plus, Search } from 'lucide-react'
 import { overlay } from 'overlay-kit'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useAddProject } from '../services'
 import ProjectModal from './project-modal'
 
 export default function ProjectHeader() {
+  const navigate = useNavigate()
   const { currentSubscription, canCreateProject, upgradeRequired } =
     useSubscriptionStore()
   const search = useProjectSearch()
   const { setSearch } = useProjectActions()
 
   const addProjectMutation = useAddProject()
+
+  const handleNewProject = async () => {
+    if (!canCreateProject()) {
+      navigate('/subscription')
+      return
+    }
+
+    const result = await overlay.openAsync(({ isOpen, close, unmount }) => (
+      <Modal isOpen={isOpen} title="New Project" onExit={unmount}>
+        <ProjectModal mode="create" onClose={close} />
+      </Modal>
+    ))
+    if (!result) {
+      return
+    }
+
+    const newProject = result as Project
+    addProjectMutation.mutate(newProject)
+  }
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
@@ -91,22 +111,7 @@ export default function ProjectHeader() {
             size="sm"
             className="flex h-8 items-center gap-1"
             disabled={!canCreateProject()}
-            onClick={async () => {
-              if (!canCreateProject()) {
-                window.location.href = '/subscription'
-                return
-              }
-              const result = await overlay.openAsync(
-                ({ isOpen, close, unmount }) => (
-                  <Modal isOpen={isOpen} title="New Project" onExit={unmount}>
-                    <ProjectModal mode="create" onClose={close} />
-                  </Modal>
-                ),
-              )
-              if (!result) return
-              const newProject = result as Project
-              addProjectMutation.mutate(newProject)
-            }}
+            onClick={handleNewProject}
           >
             <Plus className="size-4" />
             New Project

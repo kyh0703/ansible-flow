@@ -1,4 +1,3 @@
-import { useUser } from '@/shared/store/user'
 import { Button } from '@/shared/ui/button'
 import {
   Card,
@@ -10,18 +9,10 @@ import {
 } from '@/shared/ui/card'
 import { Spinner } from '@/shared/ui/spinner'
 import { Suspense } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { LoginForm } from '../components/login-form'
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-  const user = useUser()
-
-  if (!user) {
-    navigate('/projects')
-    return
-  }
-
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4 py-12 text-base sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">

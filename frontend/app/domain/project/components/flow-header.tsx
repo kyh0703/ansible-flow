@@ -1,4 +1,3 @@
-import { useModalActions } from '@/shared/store/modal'
 import { useSubscriptionStore } from '@/shared/store/subscription'
 import { Badge } from '@/shared/ui/badge'
 import {
@@ -13,19 +12,14 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Filter, LayoutGrid, List, Plus, Search } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { Link } from 'react-router'
 
-interface FlowHeaderProps {
+type FlowHeaderProps = {
   projectName?: string
 }
 
-export default function FlowHeader({ projectName }: FlowHeaderProps) {
+export default function FlowHeader({ projectName }: Readonly<FlowHeaderProps>) {
   const { currentSubscription } = useSubscriptionStore()
-  const { openModal } = useModalActions()
-
-  const handleNewFlow = () => {
-    openModal('flow-modal', { mode: 'create' })
-  }
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
@@ -93,7 +87,7 @@ export default function FlowHeader({ projectName }: FlowHeaderProps) {
           <Button
             size="sm"
             className="flex h-8 items-center gap-1"
-            onClick={handleNewFlow}
+            onClick={async () => {}}
           >
             <Plus className="size-4" />
             New Flow
