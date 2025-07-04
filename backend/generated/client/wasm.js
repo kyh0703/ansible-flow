@@ -123,6 +123,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   bio: 'bio',
+  profileImage: 'profileImage',
   provider: 'provider',
   providerId: 'providerId',
   isAdmin: 'isAdmin',
@@ -143,6 +144,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   name: 'name',
+  trashedAt: 'trashedAt',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };

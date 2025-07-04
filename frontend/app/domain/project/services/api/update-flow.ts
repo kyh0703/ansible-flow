@@ -1,9 +1,9 @@
 import type { Flow } from '@/shared/models/flow'
 import { fetchExtended, type ApiResponse } from '@/shared/services'
 
-export const updateProjectFlow = async (
-  projectId: number,
-  flowId: number,
+export const updateFlow = async (
+  projectId: string,
+  flowId: string,
   data: Partial<Flow>,
 ) => {
   const response = await fetchExtended<ApiResponse<Flow>>(

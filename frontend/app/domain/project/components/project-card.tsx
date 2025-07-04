@@ -23,7 +23,7 @@ const getProjectColor = (id: string) => {
   return colors[parseInt(id.toString(), 36) % colors.length]
 }
 
-interface ProjectCardProps {
+type ProjectCardProps = {
   project: Project
 }
 

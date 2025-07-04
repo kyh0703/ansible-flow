@@ -1,3 +1,5 @@
+import { Modal } from '@/shared/components/modal'
+import type { Flow } from '@/shared/models/flow'
 import { useSubscriptionStore } from '@/shared/store/subscription'
 import { Badge } from '@/shared/ui/badge'
 import {
@@ -12,14 +14,21 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Filter, LayoutGrid, List, Plus, Search } from 'lucide-react'
-import { Link } from 'react-router'
+import { overlay } from 'overlay-kit'
+import { Link, useSearchParams } from 'react-router'
+import { useAddFlow } from '../services/mutations/use-add-flow'
+import ProjectModal from './project-modal'
 
 type FlowHeaderProps = {
   projectName?: string
 }
 
 export default function FlowHeader({ projectName }: Readonly<FlowHeaderProps>) {
+  const [searchParams] = useSearchParams()
+  const projectId = searchParams.get('projectId') ?? ''
   const { currentSubscription } = useSubscriptionStore()
+
+  const addFlowMutation = useAddFlow()
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
@@ -87,7 +96,18 @@ export default function FlowHeader({ projectName }: Readonly<FlowHeaderProps>) {
           <Button
             size="sm"
             className="flex h-8 items-center gap-1"
-            onClick={async () => {}}
+            onClick={async () => {
+              const result = await overlay.openAsync(
+                ({ isOpen, close, unmount }) => (
+                  <Modal isOpen={isOpen} title="New Flow" onExit={unmount}>
+                    <ProjectModal mode="create" onClose={close} />
+                  </Modal>
+                ),
+              )
+              if (!result) return
+              const newFlow = result as Flow
+              addFlowMutation.mutate({ projectId, flow: newFlow })
+            }}
           >
             <Plus className="size-4" />
             New Flow

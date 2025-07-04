@@ -35,9 +35,9 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-4">
           <ThemeButton />
-          <Link to="/auth/login">
-            <Button>Login</Button>
-          </Link>
+          <Button>
+            <Link to="/auth/login">Login</Link>
+          </Button>
         </div>
       </div>
     </header>

@@ -10,12 +10,27 @@ export class ProjectService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async pagination(params: { userId: string; skip: number; take: number }) {
-    const { userId, skip, take } = params
+  async pagination(params: {
+    userId: string
+    skip: number
+    take: number
+    trashed?: boolean
+  }) {
+    const { userId, skip, take, trashed } = params
     this.logger.log(`userId: ${userId}, skip: ${skip}, take: ${take}`)
+
+    const trashedFilter = trashed
+      ? { trashedAt: { not: null } }
+      : { trashedAt: null }
+
+    const where = {
+      userId,
+      ...trashedFilter,
+    }
+
     const [items, total] = await this.prisma.$transaction([
       this.prisma.project.findMany({
-        where: { userId },
+        where,
         skip,
         take,
         orderBy: { createdAt: 'desc' },
