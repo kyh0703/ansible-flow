@@ -111,22 +111,7 @@ export default function ProjectHeader() {
             size="sm"
             className="flex h-8 items-center gap-1"
             disabled={!canCreateProject()}
-            onClick={async () => {
-              if (!canCreateProject()) {
-                navigate('/subscription')
-                return
-              }
-              const result = await overlay.openAsync(
-                ({ isOpen, close, unmount }) => (
-                  <Modal isOpen={isOpen} title="New Project" onExit={unmount}>
-                    <ProjectModal mode="create" onClose={close} />
-                  </Modal>
-                ),
-              )
-              if (!result) return
-              const newProject = result as Project
-              addProjectMutation.mutate(newProject)
-            }}
+            onClick={handleNewProject}
           >
             <Plus className="size-4" />
             New Project
