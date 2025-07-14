@@ -13,7 +13,7 @@ export default function FlowsPage() {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <FlowHeader projectName={projectName} />
+      <FlowHeader projectId={projectId} projectName={projectName} />
       <main className="flex-1">
         <Suspense
           fallback={

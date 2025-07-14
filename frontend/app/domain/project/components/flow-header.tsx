@@ -15,17 +15,19 @@ import { Input } from '@/shared/ui/input'
 import { Separator } from '@/shared/ui/separator'
 import { Crown, Filter, LayoutGrid, List, Plus, Search } from 'lucide-react'
 import { overlay } from 'overlay-kit'
-import { Link, useSearchParams } from 'react-router'
+import { Link } from 'react-router'
 import { useAddFlow } from '../services/mutations/use-add-flow'
-import ProjectModal from './project-modal'
+import FlowModal from './flow-modal'
 
 type FlowHeaderProps = {
-  projectName?: string
+  projectId: string
+  projectName: string
 }
 
-export default function FlowHeader({ projectName }: Readonly<FlowHeaderProps>) {
-  const [searchParams] = useSearchParams()
-  const projectId = searchParams.get('projectId') ?? ''
+export default function FlowHeader({
+  projectId,
+  projectName,
+}: Readonly<FlowHeaderProps>) {
   const { currentSubscription } = useSubscriptionStore()
 
   const addFlowMutation = useAddFlow()
@@ -100,7 +102,7 @@ export default function FlowHeader({ projectName }: Readonly<FlowHeaderProps>) {
               const result = await overlay.openAsync(
                 ({ isOpen, close, unmount }) => (
                   <Modal isOpen={isOpen} title="New Flow" onExit={unmount}>
-                    <ProjectModal mode="create" onClose={close} />
+                    <FlowModal onClose={close} />
                   </Modal>
                 ),
               )
