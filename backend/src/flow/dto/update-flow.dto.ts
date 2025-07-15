@@ -1,19 +1,19 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
 export class UpdateFlowDto {
-  @ApiPropertyOptional({ description: '소속 프로젝트 ID' })
-  @IsOptional()
-  @IsString()
-  projectId?: string
-
   @ApiPropertyOptional({ description: '플로우 이름' })
   @IsOptional()
   @IsString()
   name?: string
 
-  @ApiPropertyOptional({ description: '플로우 설명' })
+  @ApiPropertyOptional({ description: '플로우 즐겨찾기' })
   @IsOptional()
   @IsBoolean()
-  bookmarked?: boolean
+  starred?: boolean
+
+  @ApiPropertyOptional({ description: '플로우 설명' })
+  @IsOptional()
+  @IsString()
+  description?: string
 }

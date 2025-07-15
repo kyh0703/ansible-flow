@@ -10,4 +10,9 @@ export class CreateFlowDto {
   @IsOptional()
   @IsBoolean()
   starred?: boolean
+
+  @ApiPropertyOptional({ description: '플로우 설명' })
+  @IsOptional()
+  @IsString()
+  description?: string
 }

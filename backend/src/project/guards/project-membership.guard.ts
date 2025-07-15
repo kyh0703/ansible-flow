@@ -14,6 +14,7 @@ export class ProjectMembershipGuard implements CanActivate {
     const req = context.switchToHttp().getRequest()
     const userId = req.user?.id
     const projectId = req.params.projectId ?? req.body.projectId
+
     if (!userId || !projectId) {
       throw new ForbiddenException('User or projectId not found')
     }

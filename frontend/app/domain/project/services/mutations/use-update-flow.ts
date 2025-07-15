@@ -27,9 +27,8 @@ export const useUpdateFlow = (options?: MutationOptions) => {
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: [projectKey.all],
+        queryKey: [projectKey.flows(variables.projectId)],
       })
-
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

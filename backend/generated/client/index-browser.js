@@ -154,6 +154,7 @@ exports.Prisma.FlowScalarFieldEnum = {
   projectId: 'projectId',
   name: 'name',
   starred: 'starred',
+  description: 'description',
   updatedAt: 'updatedAt',
   createdAt: 'createdAt'
 };

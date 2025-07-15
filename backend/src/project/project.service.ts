@@ -17,7 +17,10 @@ export class ProjectService {
     trashed?: boolean
   }) {
     const { userId, skip, take, trashed } = params
-    this.logger.log(`userId: ${userId}, skip: ${skip}, take: ${take}`)
+
+    this.logger.log(
+      `Pagination, userId: ${userId}, skip: ${skip}, take: ${take}, trashed: ${trashed}`,
+    )
 
     const trashedFilter = trashed
       ? { trashedAt: { not: null } }
@@ -37,7 +40,11 @@ export class ProjectService {
       }),
       this.prisma.project.count({ where: { userId } }),
     ])
-    this.logger.log(`Found ${items.length} items, total: ${total}`)
+
+    this.logger.log(
+      `Pagination, userId: ${userId}, skip: ${skip}, take: ${take}, trashed: ${trashed}, Found ${items.length} items, total: ${total}`,
+    )
+
     return { items, total }
   }
 

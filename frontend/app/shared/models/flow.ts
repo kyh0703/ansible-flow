@@ -1,9 +1,9 @@
 export interface Flow {
-  id: number
-  projectId: number
+  id: string
+  projectId: string
   name: string
   starred?: boolean
-  description: string
-  updateAt: string
-  createAt: string
+  description?: string
+  updatedAt?: string
+  createdAt?: string
 }

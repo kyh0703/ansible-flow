@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Flow } from 'generated/client'
 import { CreateFlowDto } from './dto/create-flow.dto'
@@ -6,6 +6,8 @@ import { UpdateFlowDto } from './dto/update-flow.dto'
 
 @Injectable()
 export class FlowService {
+  private readonly logger = new Logger(FlowService.name)
+
   constructor(private readonly prisma: PrismaService) {}
 
   // 플로우 목록(페이징)
@@ -36,6 +38,7 @@ export class FlowService {
   }
 
   async create(projectId: string, createFlowDto: CreateFlowDto): Promise<Flow> {
+    this.logger.log(`Creating flow for project ${projectId}`)
     return this.prisma.flow.create({ data: { ...createFlowDto, projectId } })
   }
 
@@ -49,7 +52,6 @@ export class FlowService {
   }
 
   async delete(projectId: string, id: string): Promise<Flow> {
-    // projectId 일치하는지 검증
     const flow = await this.findOne(projectId, id)
     return this.prisma.flow.delete({ where: { id } })
   }
@@ -64,5 +66,4 @@ export class FlowService {
       include: { nodes: true, edges: true },
     })
   }
-
 }

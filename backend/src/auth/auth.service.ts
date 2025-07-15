@@ -136,7 +136,7 @@ export class AuthService {
     const { provider, providerId, email, name, profileImage } = details
 
     let user = await this.prisma.user.findUnique({ where: { email } })
-    
+
     if (user) {
       // 기존 사용자의 경우 프로필 이미지 업데이트
       user = await this.prisma.user.update({
@@ -197,7 +197,7 @@ export class AuthService {
   ) {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10)
     this.logger.log(
-      `save new refresh token: ${refreshToken} hashed: ${hashedRefreshToken}`,
+      `Save new refresh token: ${refreshToken} hashed: ${hashedRefreshToken}`,
     )
     return this.prisma.token.create({
       data: {

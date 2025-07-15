@@ -20,11 +20,12 @@ export default function FlowModal({
   } = useForm<Flow>({
     defaultValues: initialData ?? {
       name: '',
+      description: '',
     },
   })
 
   const onSubmitModal = (flow: Flow) => {
-    onClose?.({ flow })
+    onClose?.(flow)
   }
 
   return (
@@ -39,6 +40,17 @@ export default function FlowModal({
               placeholder="Enter Flow name"
             />
             {errors.name && <p className="error-msg">{errors.name.message}</p>}
+          </div>
+          <div className="space-y-3">
+            <h3>Description</h3>
+            <FormInput
+              control={control}
+              name="description"
+              placeholder="Enter Flow description"
+            />
+            {errors.description && (
+              <p className="error-msg">{errors.description.message}</p>
+            )}
           </div>
         </div>
       </ModalContent>

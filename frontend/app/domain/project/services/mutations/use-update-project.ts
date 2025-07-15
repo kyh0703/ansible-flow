@@ -29,7 +29,6 @@ export const useUpdateProject = (options?: MutationOptions) => {
       queryClient.invalidateQueries({
         queryKey: [projectKey.all],
       })
-
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

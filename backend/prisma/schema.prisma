@@ -64,6 +64,7 @@ model Flow {
   projectId    String
   name         String
   starred      Boolean   @default(false)
+  description  String?
   updatedAt    DateTime  @updatedAt
   createdAt    DateTime  @default(now())
   nodes        Node[]

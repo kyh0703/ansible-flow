@@ -59,15 +59,16 @@ model Project {
 }
 
 model Flow {
-  id        String   @id @default(uuid())
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId String
-  name      String
-  starred   Boolean  @default(false)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  nodes     Node[]
-  edges     Edge[]
+  id          String   @id @default(uuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  name        String
+  starred     Boolean  @default(false)
+  description String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  nodes       Node[]
+  edges       Edge[]
 }
 
 model Node {

@@ -26,7 +26,7 @@ export const useAddProject = (options?: MutationOptions) => {
       return addProject(project)
     },
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey: projectKey.all })
+      queryClient.invalidateQueries({ queryKey: [projectKey.all] })
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import type { ConfigType } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
@@ -7,6 +7,8 @@ import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(JwtStrategy.name)
+
   constructor(
     @Inject(authConfig.KEY)
     private readonly authCfg: ConfigType<typeof authConfig>,
@@ -23,6 +25,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     })
+
+    this.logger.log(`Validated user: ${user?.id}`)
 
     return user
   }

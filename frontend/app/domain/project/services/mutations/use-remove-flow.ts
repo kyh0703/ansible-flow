@@ -1,7 +1,12 @@
 import type { ApiResponse } from '@/shared/services'
-import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQueryClient,
+  type UseMutationOptions,
+} from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { removeFlow } from '../api'
+import { projectKey } from '../keys'
 
 type Response = ApiResponse<null>
 type Variables = { projectId: string; flowId: string }
@@ -11,13 +16,18 @@ type MutationOptions = UseMutationOptions<
   Variables
 >
 
-export const useRemoveProject = (options?: MutationOptions) => {
+export const useRemoveFlow = (options?: MutationOptions) => {
+  const queryClient = useQueryClient()
+
   return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
     mutationFn: ({ projectId, flowId }) => {
       return removeFlow(projectId, flowId)
     },
     onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [projectKey.flows(variables.projectId)],
+      })
       if (options?.onSuccess) {
         options?.onSuccess(data, variables, context)
       }

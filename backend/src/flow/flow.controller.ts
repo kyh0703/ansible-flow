@@ -17,11 +17,12 @@ import { UpdateFlowDto } from './dto/update-flow.dto'
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
+import { ProjectMembershipGuard } from 'src/project/guards/project-membership.guard'
 
 @ApiTags('flows')
 @Controller('projects/:projectId/flows')
 export class FlowController {
-  private logger = new Logger(FlowController.name)
+  private readonly logger = new Logger(FlowController.name)
 
   constructor(private readonly flowService: FlowService) {}
 
@@ -32,7 +33,7 @@ export class FlowController {
     type: FlowPaginationResponseDto,
   })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get()
   async findAll(
     @Param('projectId') projectId: string,
@@ -63,6 +64,7 @@ export class FlowController {
   @ApiResponse({ status: 200, description: '플로우 반환' })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'id', description: '플로우 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id')
   async findOne(
     @Param('projectId') projectId: string,
@@ -74,11 +76,13 @@ export class FlowController {
   @ApiOperation({ summary: '플로우 생성' })
   @ApiResponse({ status: 201, description: '생성된 플로우 반환' })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Post()
   async create(
     @Param('projectId') projectId: string,
     @Body() createFlowDto: CreateFlowDto,
   ) {
+    this.logger.log(`Creating flow for project ${projectId}`)
     return this.flowService.create(projectId, createFlowDto)
   }
 
@@ -86,6 +90,7 @@ export class FlowController {
   @ApiResponse({ status: 200, description: '수정된 플로우 반환' })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'id', description: '플로우 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Patch(':id')
   async update(
     @Param('projectId') projectId: string,
@@ -99,6 +104,7 @@ export class FlowController {
   @ApiResponse({ status: 200, description: '삭제된 플로우 반환' })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'id', description: '플로우 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Delete(':id')
   async delete(@Param('projectId') projectId: string, @Param('id') id: string) {
     return this.flowService.delete(projectId, id)
@@ -108,6 +114,7 @@ export class FlowController {
   @ApiResponse({ status: 200, description: '플로우 구조 반환' })
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'id', description: '플로우 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id/structure')
   async findStructure(
     @Param('projectId') projectId: string,

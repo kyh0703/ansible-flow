@@ -5010,6 +5010,7 @@ export namespace Prisma {
     projectId: string | null
     name: string | null
     starred: boolean | null
+    description: string | null
     updatedAt: Date | null
     createdAt: Date | null
   }
@@ -5019,6 +5020,7 @@ export namespace Prisma {
     projectId: string | null
     name: string | null
     starred: boolean | null
+    description: string | null
     updatedAt: Date | null
     createdAt: Date | null
   }
@@ -5028,6 +5030,7 @@ export namespace Prisma {
     projectId: number
     name: number
     starred: number
+    description: number
     updatedAt: number
     createdAt: number
     _all: number
@@ -5039,6 +5042,7 @@ export namespace Prisma {
     projectId?: true
     name?: true
     starred?: true
+    description?: true
     updatedAt?: true
     createdAt?: true
   }
@@ -5048,6 +5052,7 @@ export namespace Prisma {
     projectId?: true
     name?: true
     starred?: true
+    description?: true
     updatedAt?: true
     createdAt?: true
   }
@@ -5057,6 +5062,7 @@ export namespace Prisma {
     projectId?: true
     name?: true
     starred?: true
+    description?: true
     updatedAt?: true
     createdAt?: true
     _all?: true
@@ -5139,6 +5145,7 @@ export namespace Prisma {
     projectId: string
     name: string
     starred: boolean
+    description: string | null
     updatedAt: Date
     createdAt: Date
     _count: FlowCountAggregateOutputType | null
@@ -5165,6 +5172,7 @@ export namespace Prisma {
     projectId?: boolean
     name?: boolean
     starred?: boolean
+    description?: boolean
     updatedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -5178,6 +5186,7 @@ export namespace Prisma {
     projectId?: boolean
     name?: boolean
     starred?: boolean
+    description?: boolean
     updatedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -5188,6 +5197,7 @@ export namespace Prisma {
     projectId?: boolean
     name?: boolean
     starred?: boolean
+    description?: boolean
     updatedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -5198,11 +5208,12 @@ export namespace Prisma {
     projectId?: boolean
     name?: boolean
     starred?: boolean
+    description?: boolean
     updatedAt?: boolean
     createdAt?: boolean
   }
 
-  export type FlowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "name" | "starred" | "updatedAt" | "createdAt", ExtArgs["result"]["flow"]>
+  export type FlowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "name" | "starred" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["flow"]>
   export type FlowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     nodes?: boolean | Flow$nodesArgs<ExtArgs>
@@ -5228,6 +5239,7 @@ export namespace Prisma {
       projectId: string
       name: string
       starred: boolean
+      description: string | null
       updatedAt: Date
       createdAt: Date
     }, ExtArgs["result"]["flow"]>
@@ -5660,6 +5672,7 @@ export namespace Prisma {
     readonly projectId: FieldRef<"Flow", 'String'>
     readonly name: FieldRef<"Flow", 'String'>
     readonly starred: FieldRef<"Flow", 'Boolean'>
+    readonly description: FieldRef<"Flow", 'String'>
     readonly updatedAt: FieldRef<"Flow", 'DateTime'>
     readonly createdAt: FieldRef<"Flow", 'DateTime'>
   }
@@ -10509,6 +10522,7 @@ export namespace Prisma {
     projectId: 'projectId',
     name: 'name',
     starred: 'starred',
+    description: 'description',
     updatedAt: 'updatedAt',
     createdAt: 'createdAt'
   };
@@ -10891,6 +10905,7 @@ export namespace Prisma {
     projectId?: StringFilter<"Flow"> | string
     name?: StringFilter<"Flow"> | string
     starred?: BoolFilter<"Flow"> | boolean
+    description?: StringNullableFilter<"Flow"> | string | null
     updatedAt?: DateTimeFilter<"Flow"> | Date | string
     createdAt?: DateTimeFilter<"Flow"> | Date | string
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -10903,6 +10918,7 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     starred?: SortOrder
+    description?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     createdAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
@@ -10918,6 +10934,7 @@ export namespace Prisma {
     projectId?: StringFilter<"Flow"> | string
     name?: StringFilter<"Flow"> | string
     starred?: BoolFilter<"Flow"> | boolean
+    description?: StringNullableFilter<"Flow"> | string | null
     updatedAt?: DateTimeFilter<"Flow"> | Date | string
     createdAt?: DateTimeFilter<"Flow"> | Date | string
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
@@ -10930,6 +10947,7 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     starred?: SortOrder
+    description?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     createdAt?: SortOrder
     _count?: FlowCountOrderByAggregateInput
@@ -10945,6 +10963,7 @@ export namespace Prisma {
     projectId?: StringWithAggregatesFilter<"Flow"> | string
     name?: StringWithAggregatesFilter<"Flow"> | string
     starred?: BoolWithAggregatesFilter<"Flow"> | boolean
+    description?: StringNullableWithAggregatesFilter<"Flow"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"Flow"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Flow"> | Date | string
   }
@@ -11465,6 +11484,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutFlowsInput
@@ -11477,6 +11497,7 @@ export namespace Prisma {
     projectId: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     nodes?: NodeUncheckedCreateNestedManyWithoutFlowInput
@@ -11487,6 +11508,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutFlowsNestedInput
@@ -11499,6 +11521,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     nodes?: NodeUncheckedUpdateManyWithoutFlowNestedInput
@@ -11510,6 +11533,7 @@ export namespace Prisma {
     projectId: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
   }
@@ -11518,6 +11542,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11527,6 +11552,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12135,6 +12161,7 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     starred?: SortOrder
+    description?: SortOrder
     updatedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -12144,6 +12171,7 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     starred?: SortOrder
+    description?: SortOrder
     updatedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -12153,6 +12181,7 @@ export namespace Prisma {
     projectId?: SortOrder
     name?: SortOrder
     starred?: SortOrder
+    description?: SortOrder
     updatedAt?: SortOrder
     createdAt?: SortOrder
   }
@@ -13199,6 +13228,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     nodes?: NodeCreateNestedManyWithoutFlowInput
@@ -13209,6 +13239,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     nodes?: NodeUncheckedCreateNestedManyWithoutFlowInput
@@ -13291,6 +13322,7 @@ export namespace Prisma {
     projectId?: StringFilter<"Flow"> | string
     name?: StringFilter<"Flow"> | string
     starred?: BoolFilter<"Flow"> | boolean
+    description?: StringNullableFilter<"Flow"> | string | null
     updatedAt?: DateTimeFilter<"Flow"> | Date | string
     createdAt?: DateTimeFilter<"Flow"> | Date | string
   }
@@ -13484,6 +13516,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutFlowsInput
@@ -13495,6 +13528,7 @@ export namespace Prisma {
     projectId: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     edges?: EdgeUncheckedCreateNestedManyWithoutFlowInput
@@ -13520,6 +13554,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutFlowsNestedInput
@@ -13531,6 +13566,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edges?: EdgeUncheckedUpdateManyWithoutFlowNestedInput
@@ -13540,6 +13576,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutFlowsInput
@@ -13551,6 +13588,7 @@ export namespace Prisma {
     projectId: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
     nodes?: NodeUncheckedCreateNestedManyWithoutFlowInput
@@ -13576,6 +13614,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutFlowsNestedInput
@@ -13587,6 +13626,7 @@ export namespace Prisma {
     projectId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     nodes?: NodeUncheckedUpdateManyWithoutFlowNestedInput
@@ -13774,6 +13814,7 @@ export namespace Prisma {
     id?: string
     name: string
     starred?: boolean
+    description?: string | null
     updatedAt?: Date | string
     createdAt?: Date | string
   }
@@ -13782,6 +13823,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     nodes?: NodeUpdateManyWithoutFlowNestedInput
@@ -13792,6 +13834,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     nodes?: NodeUncheckedUpdateManyWithoutFlowNestedInput
@@ -13802,6 +13845,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     starred?: BoolFieldUpdateOperationsInput | boolean
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
