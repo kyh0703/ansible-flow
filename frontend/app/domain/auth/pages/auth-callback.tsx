@@ -3,6 +3,7 @@ import { useUserActions } from '@/shared/store/user'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { me } from '../services'
+import { Spinner } from '@/shared/ui/spinner'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
@@ -30,5 +31,9 @@ export default function AuthCallback() {
     }
   }, [])
 
-  return <div>인증 처리 중...</div>
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <Spinner />
+    </div>
+  )
 }

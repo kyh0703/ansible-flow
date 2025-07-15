@@ -24,6 +24,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/shared/ui/sidebar'
+import { Modal } from '@/shared/components/modal'
+import UserProfileModal from '@/shared/components/user-profile-modal'
 import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
 import {
   ChevronDown,
@@ -31,11 +33,13 @@ import {
   Home,
   LogOut,
   Search,
+  Settings,
   Star,
   SunMoon,
   Trash,
 } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
+import { overlay } from 'overlay-kit'
 
 // function ProjectsSkeleton() {
 //   return (
@@ -71,6 +75,14 @@ export default function AppSidebar() {
     }
   }
 
+  const handleProfileSettings = async () => {
+    await overlay.openAsync(({ isOpen, close, unmount }) => (
+      <Modal isOpen={isOpen} title="프로필 설정" onExit={unmount}>
+        <UserProfileModal onClose={close} />
+      </Modal>
+    ))
+  }
+
   return (
     <Sidebar className="border-border/40 bg-background/95 supports-[backdrop-filter]:bg-background/60 border-r backdrop-blur">
       <SidebarHeader className="border-border/40 border-b p-4">
@@ -80,11 +92,11 @@ export default function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="bg-muted/50 hover:bg-muted h-10 w-full justify-between rounded-lg px-3 text-sm font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded overflow-hidden">
+                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
                       {user?.profileImage ? (
-                        <img 
-                          src={user.profileImage} 
-                          alt={user.name || 'User profile'} 
+                        <img
+                          src={user.profileImage}
+                          alt={user.name || 'User profile'}
                           className="h-full w-full object-cover"
                         />
                       ) : (
@@ -99,6 +111,11 @@ export default function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
+                <DropdownMenuItem onClick={handleProfileSettings}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>프로필 설정</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="space-x-3">
                     <SunMoon className="size-4" />
