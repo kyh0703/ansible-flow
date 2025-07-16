@@ -11,16 +11,11 @@ export default function ConfirmModal({
   content,
   onClose,
 }: Readonly<ConfirmModalProps>) {
-  const handleOKClick = () => {
-    onClose?.(true)
-  }
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        onClose?.(true)
-      }
+      if (e.key === 'Enter') onClose?.(true)
     }
+
     document.addEventListener('keydown', handleKeyDown)
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
@@ -31,10 +26,10 @@ export default function ConfirmModal({
     <>
       <ModalContent>{content}</ModalContent>
       <ModalAction>
-        <Button variant="destructive" onClick={close}>
+        <Button variant="destructive" onClick={() => onClose?.(false)}>
           Cancel
         </Button>
-        <Button onClick={handleOKClick}>OK</Button>
+        <Button onClick={() => onClose?.(true)}>OK</Button>
       </ModalAction>
     </>
   )
