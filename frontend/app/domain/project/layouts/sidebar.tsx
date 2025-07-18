@@ -26,6 +26,7 @@ import {
 } from '@/shared/ui/sidebar'
 import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
 import {
+  Check,
   ChevronDown,
   Clock,
   Home,
@@ -53,7 +54,7 @@ import { Link, useLocation, useNavigate } from 'react-router'
 // }
 
 export default function AppSidebar() {
-  const { setTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const user = useUser()
   const { setUser } = useUserActions()
   const location = useLocation()
@@ -80,11 +81,11 @@ export default function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="bg-muted/50 hover:bg-muted h-10 w-full justify-between rounded-lg px-3 text-sm font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded overflow-hidden">
+                    <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
                       {user?.profileImage ? (
-                        <img 
-                          src={user.profileImage} 
-                          alt={user.name || 'User profile'} 
+                        <img
+                          src={user.profileImage}
+                          alt={user.name || 'User profile'}
                           className="h-full w-full object-cover"
                         />
                       ) : (
@@ -107,13 +108,22 @@ export default function AppSidebar() {
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       <DropdownMenuItem onClick={() => setTheme('system')}>
-                        System
+                        <div className="flex w-full items-center justify-between">
+                          <span>System</span>
+                          {theme === 'system' && <Check className="h-4 w-4" />}
+                        </div>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme('light')}>
-                        Light
+                        <div className="flex w-full items-center justify-between">
+                          <span>Light</span>
+                          {theme === 'light' && <Check className="h-4 w-4" />}
+                        </div>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setTheme('dark')}>
-                        Dark
+                        <div className="flex w-full items-center justify-between">
+                          <span>Dark</span>
+                          {theme === 'dark' && <Check className="h-4 w-4" />}
+                        </div>
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>

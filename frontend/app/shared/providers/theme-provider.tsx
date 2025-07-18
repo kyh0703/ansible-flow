@@ -48,7 +48,7 @@ export function ThemeProvider({
     root.classList.add(theme)
   }, [theme])
 
-  const value: ThemeProviderState = useMemo(
+  const value = useMemo(
     () => ({
       theme,
       setTheme: (theme: Theme) => {
@@ -56,7 +56,7 @@ export function ThemeProvider({
         setTheme(theme)
       },
     }),
-    [],
+    [theme],
   )
 
   return (
