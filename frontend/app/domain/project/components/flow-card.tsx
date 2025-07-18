@@ -88,7 +88,7 @@ export default function FlowCard({ flow }: Readonly<FlowCardProps>) {
     e.preventDefault()
     e.stopPropagation()
 
-    navigate(`/projects/${flow.projectId}/flows/${flow.id}`)
+    navigate(`/design/${flow.projectId}/${flow.id}`)
   }
 
   return (

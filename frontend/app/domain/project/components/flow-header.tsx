@@ -32,6 +32,19 @@ export default function FlowHeader({
 
   const addFlowMutation = useAddFlow()
 
+  const handleNewFlowClick = async () => {
+    const result = await overlay.openAsync(({ isOpen, close, unmount }) => (
+      <Modal isOpen={isOpen} title="New Flow" onExit={unmount}>
+        <FlowModal onClose={close} />
+      </Modal>
+    ))
+
+    if (!result) return
+
+    const newFlow = result as Flow & { id: string }
+    addFlowMutation.mutate({ projectId, flow: newFlow })
+  }
+
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 border-b backdrop-blur">
       <div className="flex h-16 items-center justify-between px-6">
@@ -98,18 +111,7 @@ export default function FlowHeader({
           <Button
             size="sm"
             className="flex h-8 items-center gap-1"
-            onClick={async () => {
-              const result = await overlay.openAsync(
-                ({ isOpen, close, unmount }) => (
-                  <Modal isOpen={isOpen} title="New Flow" onExit={unmount}>
-                    <FlowModal onClose={close} />
-                  </Modal>
-                ),
-              )
-              if (!result) return
-              const newFlow = result as Flow
-              addFlowMutation.mutate({ projectId, flow: newFlow })
-            }}
+            onClick={handleNewFlowClick}
           >
             <Plus className="size-4" />
             New Flow

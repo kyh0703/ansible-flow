@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import ProjectDashboard from '../components/project-dashboard'
 import ProjectHeader from '../components/project-header'
 
-export default function Page() {
+export function Home() {
   return (
     <div className="flex h-full w-full flex-col">
       <ProjectHeader />
