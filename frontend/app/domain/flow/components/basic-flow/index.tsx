@@ -49,7 +49,6 @@ export default function BasicFlow({
   const { theme } = useTheme()
   const editMode = useEditMode()
 
-  const [isInit, setIsInit] = useState(false)
   const [nodes, setNodes, onNodesChange, horizontalLine, verticalLine] =
     useNodesStateSynced(flowId, initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesStateSynced(
@@ -58,13 +57,10 @@ export default function BasicFlow({
   )
   const [cursors, onMouseMove] = useCursorStateSynced(flowId)
 
-  const handleInit: OnInit<AppNode, AppEdge> = () => {
-    setIsInit(true)
-  }
-
   const handleMinimapNodeClick = useCallback(
     (_: React.MouseEvent<Element, MouseEvent>, node: AppNode) => {
       // TODO: focus node
+      console.log('node', node)
     },
     [],
   )
@@ -72,7 +68,6 @@ export default function BasicFlow({
   return (
     <div
       id="main"
-      tabIndex={0}
       className={cn(
         'flow box-border h-full w-full overflow-hidden',
         getCursorClassByEditMode(editMode),
@@ -96,7 +91,9 @@ export default function BasicFlow({
         zoomOnDoubleClick={false}
         defaultEdgeOptions={defaultEdgeOptions}
         isValidConnection={isValidConnection}
-        onInit={handleInit}
+        onMouseMove={onMouseMove}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
       >
         <Background variant={BackgroundVariant.Dots} />
         <Controls />
