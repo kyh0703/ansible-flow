@@ -54,7 +54,7 @@ export default function YjsProvider({
     yDoc.gc = true
     logger.info('[YJS] Initialized', baseUrl)
 
-    provider.on('status', (event: any) => {
+    provider.on('status', (event: { status: string }) => {
       logger.info('[YJS] Status', yDoc, event.status, new Date())
       if (event.status === 'connected') {
         setIsConnected(true)

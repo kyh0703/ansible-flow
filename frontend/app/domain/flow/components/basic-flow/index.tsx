@@ -1,4 +1,6 @@
 import {
+  Background,
+  BackgroundVariant,
   Controls,
   MiniMap,
   Panel,
@@ -35,14 +37,12 @@ type FlowProps = {
   flowId: number
   initialNodes: AppNode[]
   initialEdges: AppEdge[]
-  focusNode?: string
 }
 
 export default function BasicFlow({
   flowId,
   initialNodes,
   initialEdges,
-  focusNode,
 }: Readonly<FlowProps>) {
   const flowRef = useRef<HTMLDivElement>(null)
 
@@ -98,6 +98,7 @@ export default function BasicFlow({
         isValidConnection={isValidConnection}
         onInit={handleInit}
       >
+        <Background variant={BackgroundVariant.Dots} />
         <Controls />
         <MiniMap<AppNode>
           zoomable
@@ -107,7 +108,7 @@ export default function BasicFlow({
         />
         <Cursors cursors={cursors} />
         <HelperLines horizontal={horizontalLine} vertical={verticalLine} />
-        <Panel position="top-left">
+        <Panel position="top-right">
           <IconToolbar flowId={flowId} />
         </Panel>
         {process.env.NODE_ENV === 'development' && <DevTools />}

@@ -8,8 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
+import { formatRelativeTime } from '@/shared/utils/date'
 import { Calendar, FolderOpen, MoreHorizontal, Star, Users } from 'lucide-react'
-import { Link } from 'react-router'
+import { useNavigate } from 'react-router'
 
 const getProjectColor = (id: string) => {
   const colors = [
@@ -28,10 +29,18 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
+  const navigate = useNavigate()
   const colorClass = getProjectColor(project.id)
 
+  const handleDoubleClick = () => {
+    navigate(`/projects/${project.id}/${project.name}`)
+  }
+
   return (
-    <Card className="group border-border/50 bg-card/50 hover:border-border relative flex h-full flex-col overflow-hidden border backdrop-blur-sm transition-all duration-200 hover:shadow-lg hover:shadow-black/5">
+    <Card
+      className="group border-border/50 bg-card/50 hover:border-border relative flex h-60 flex-col overflow-hidden border backdrop-blur-sm transition-all duration-200 hover:shadow-lg hover:shadow-black/5"
+      onDoubleClick={handleDoubleClick}
+    >
       <div className="from-primary/5 absolute inset-0 bg-gradient-to-br to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
       <CardHeader className="relative space-y-0 p-4">
@@ -51,7 +60,10 @@ export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
                   Active
                 </Badge>
                 <div className="text-muted-foreground flex items-center text-xs">
-                  <Calendar className="mr-1 h-3 w-3" />2 days ago
+                  <Calendar className="mr-1 h-3 w-3" />
+                  {project.updatedAt
+                    ? formatRelativeTime(project.updatedAt)
+                    : '시간 정보 없음'}
                 </div>
               </div>
             </div>
@@ -81,7 +93,7 @@ export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 p-4 pt-0">
+      <CardContent className="flex flex-1 flex-col justify-end p-4 pt-0">
         <div className="text-muted-foreground flex items-center justify-between text-xs">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
@@ -104,12 +116,6 @@ export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
           </div>
         </div>
       </CardContent>
-
-      <Link
-        to={`/projects/${project.id}/${project.name}`}
-        className="absolute inset-0 z-10"
-        aria-label={`Open ${project.name} project`}
-      />
     </Card>
   )
 }

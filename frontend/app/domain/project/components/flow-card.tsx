@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/shared/ui/card'
 import { formatRelativeTime } from '@/shared/utils/date'
-import { Edit, Star, Trash2, Workflow } from 'lucide-react'
+import { Calendar, Edit, Star, Trash2, Workflow } from 'lucide-react'
 import { overlay } from 'overlay-kit'
 import { useNavigate } from 'react-router'
 import { useRemoveFlow } from '../services/mutations/use-remove-flow'
@@ -109,6 +109,7 @@ export default function FlowCard({ flow }: Readonly<FlowCardProps>) {
                 {flow.name}
               </CardTitle>
               <div className="text-muted-foreground mt-1 text-xs">
+                <Calendar className="mr-1 h-3 w-3" />
                 {flow.updatedAt
                   ? formatRelativeTime(flow.updatedAt)
                   : '시간 정보 없음'}
