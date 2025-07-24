@@ -1,5 +1,7 @@
-import { GithubIcon, GoogleIcon, KakaoIcon } from '@/shared/components/icon'
-import { Button } from '@/shared/ui/button'
+'use client'
+
+import { GithubIcon, GoogleIcon, KakaoIcon } from '@/components/icon'
+import { Button } from '@/components/ui/button'
 
 export default function OAuthButton() {
   const redirectURL = encodeURIComponent(
@@ -7,15 +9,15 @@ export default function OAuthButton() {
   )
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google?redirect=${redirectURL}`
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google?redirect=${redirectURL}`
   }
 
   const handleKakaoLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/kakao?redirect=${redirectURL}`
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao?redirect=${redirectURL}`
   }
 
   const handleGithubLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/github?redirect=${redirectURL}`
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github?redirect=${redirectURL}`
   }
 
   return (

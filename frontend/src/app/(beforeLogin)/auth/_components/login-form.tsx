@@ -1,21 +1,24 @@
-import FormInput from '@/shared/components/form-input'
-import { useAuth } from '@/shared/providers/auth-provider'
-import { setToken } from '@/shared/services'
-import { Button } from '@/shared/ui/button'
-import { extractErrorMessage } from '@/shared/utils/errors'
-import logger from '@/shared/utils/logger'
+'use client'
+
+import FormInput from '@/components/form-input'
+import { Button } from '@/components/ui/button'
+import logger from '@/lib/logger'
+import { useAuth } from '@/providers'
+import { setAccessToken } from '@/services'
+import { login } from '@/services/auth'
+import { extractErrorMessage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import * as z from 'zod'
-import { login } from '../services'
 import OAuthButton from './oauth-button'
+import Link from 'next/link'
 
 const LoginSchema = z.object({
-  email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
+  email: z.email(),
   password: z
-    .string({ required_error: '패스워드를 입력하여 주세요' })
+    .string({ error: (issue) => issue.input === undefined ? '패스워드를 입력하여 주세요' : '형식이 맞지 않습니다' })
     .min(8, '비밀번호는 8자 이상이어야 합니다.')
     .max(32, '비밀번호는 32자 이하여야 합니다.'),
 })
@@ -23,7 +26,7 @@ const LoginSchema = z.object({
 type Login = z.infer<typeof LoginSchema>
 
 export function LoginForm() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { checkAuth } = useAuth()
 
   const {
@@ -37,9 +40,9 @@ export function LoginForm() {
   const onSubmit = async (data: Login) => {
     try {
       const res = await login(data)
-      setToken(res)
+      setAccessToken(res)
       await checkAuth()
-      navigate('/projects')
+      router.replace('/projects')
       toast.success('로그인되었습니다')
     } catch (error) {
       toast.error(extractErrorMessage(error))
@@ -80,7 +83,7 @@ export function LoginForm() {
         className="text-sm text-gray-500 hover:text-gray-700"
         variant="link"
       >
-        <Link to="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
+        <Link href="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
     </form>
   )

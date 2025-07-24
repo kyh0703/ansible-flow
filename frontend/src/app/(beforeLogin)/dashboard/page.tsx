@@ -3,7 +3,7 @@ import Footer from '../_components/footer'
 import Header from '../_components/header'
 import HeroSection from '../_components/hero-section'
 
-export default function Home() {
+export default function Page() {
   return (
     <div className="box-border flex h-full w-full flex-col overflow-auto">
       <Header />

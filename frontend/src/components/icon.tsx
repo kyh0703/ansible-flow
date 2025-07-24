@@ -1,10 +1,10 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import Github from '../../../public/icons/github.svg'
-import Google from '../../../public/icons/google.svg'
-import Kakao from '../../../public/icons/kakao.svg'
-import Logo from '../../../public/icons/logo.svg'
+import Github from '../../public/logo/github.svg'
+import Google from '../../public/logo/google.svg'
+import Kakao from '../../public/logo/kakao.svg'
+import Logo from '../../public/logo/logo.svg'
 
 export type IconButtonProps = {
   width?: number

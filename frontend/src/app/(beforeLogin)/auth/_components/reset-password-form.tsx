@@ -1,22 +1,24 @@
-import FormInput from '@/shared/components/form-input'
-import { Button } from '@/shared/ui/button'
-import { Label } from '@/shared/ui/label'
-import logger from '@/shared/utils/logger'
+'use client'
+
+import FormInput from '@/components/form-input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import logger from '@/lib/logger'
+import { resetPassword } from '@/services/auth/api/reset-password'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Lock } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 import * as z from 'zod'
-import { resetPassword } from '../services/api/reset-password'
 
 const ResetPasswordSchema = z
   .object({
     password: z
-      .string({ required_error: '새 비밀번호를 입력하여 주세요' })
+      .string({ error: (issue) => issue.input === undefined ? '새 비밀번호를 입력하여 주세요' : '형식이 맞지 않습니다' })
       .min(8, '비밀번호는 최소 8자 이상이어야 합니다'),
     passwordConfirm: z.string({
-      required_error: '비밀번호 확인을 입력하여 주세요',
+      error: (issue) => issue.input === undefined ? '비밀번호 확인을 입력하여 주세요' : '형식이 맞지 않습니다',
     }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
@@ -27,8 +29,8 @@ const ResetPasswordSchema = z
 type ResetPassword = z.infer<typeof ResetPasswordSchema>
 
 export default function ResetPasswordForm() {
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const token = searchParams.get('token')
 
   const {
@@ -51,7 +53,7 @@ export default function ResetPasswordForm() {
     try {
       await resetPassword({ token, ...data })
       toast('비밀번호가 성공적으로 변경되었습니다.')
-      navigate('/auth/login')
+      router.replace('/auth/login')
     } catch (error) {
       logger.error('비밀번호 재설정 실패:', error)
     }

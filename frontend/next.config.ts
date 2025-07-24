@@ -1,7 +1,52 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  trailingSlash: true,
+
+  reactStrictMode: true,
+  output: 'standalone',
+
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+
+    webpack: (config) => {
+    const fileLoaderRule = config.module.rules.find((rule: any) =>
+      rule.test?.test?.('.svg'),
+    )
+    if (fileLoaderRule) {
+      fileLoaderRule.exclude = /\.svg$/
+    }
+
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    })
+
+    return config
+  },
+
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
+        source: process.env.NEXT_PUBLIC_API_BASE_PATH || '',
+        destination: process.env.NEXT_PUBLIC_API_BASE_URL || '',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 export default nextConfig;
