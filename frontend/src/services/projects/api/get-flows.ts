@@ -8,7 +8,7 @@ export const getFlows = async (
   pageSize = 10,
 ) => {
   const response = await fetchExtended<ApiResponse<PaginationResponse<Flow>>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${projectId}/flows?page=${pageParam}&pageSize=${pageSize}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows?page=${pageParam}&pageSize=${pageSize}`,
     {
       method: 'GET',
     },

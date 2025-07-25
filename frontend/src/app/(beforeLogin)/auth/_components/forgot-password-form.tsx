@@ -1,15 +1,19 @@
+'use client'
+
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { forgotPassword } from '@/services/auth/api/forgot-password'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
-import { forgotPassword } from '@/services/api/forgot-password'
 
 const ForgotPasswordSchema = z.object({
-  email: z.string({ required_error: '이메일을 입력하여 주세요' }).email(),
+  email: z.email({
+    message: '이메일을 입력하여 주세요',
+  }),
 })
 
 type ForgotPassword = z.infer<typeof ForgotPasswordSchema>

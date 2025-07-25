@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseMutationOptions,
 } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { removeProject } from '../api'
 import { projectKey } from '../keys'
 

@@ -2,23 +2,36 @@
 
 import { GithubIcon, GoogleIcon, KakaoIcon } from '@/components/icon'
 import { Button } from '@/components/ui/button'
+import { useEffect, useRef, useState } from 'react'
 
 export default function OAuthButton() {
-  const redirectURL = encodeURIComponent(
-    `${window.location.origin}/auth/callback`,
-  )
+  const redirectURLRef = useRef('')
+  const [mounted, setMounted] = useState(false)
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google?redirect=${redirectURL}`
+    if (mounted) {
+      window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/google?redirect=${redirectURLRef.current}`
+    }
   }
 
   const handleKakaoLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao?redirect=${redirectURL}`
+    if (mounted) {
+      window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/kakao?redirect=${redirectURLRef.current}`
+    }
   }
 
   const handleGithubLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github?redirect=${redirectURL}`
+    if (mounted) {
+      window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/github?redirect=${redirectURLRef.current}`
+    }
   }
+
+  useEffect(() => {
+    setMounted(true)
+    redirectURLRef.current = encodeURIComponent(
+      `${window.location.origin}/auth/oauth`,
+    )
+  }, [])
 
   return (
     <div className="space-y-3">

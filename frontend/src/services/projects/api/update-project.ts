@@ -3,7 +3,7 @@ import { fetchExtended, type ApiResponse } from '@/services'
 
 export const updateProject = async (id: string, data: Partial<Project>) => {
   const response = await fetchExtended<ApiResponse<null>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${id}`,
     {
       method: 'PATCH',
       headers: {

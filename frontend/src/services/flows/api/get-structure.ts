@@ -9,7 +9,7 @@ export const getStructure = async (projectId: number, flowId: number) => {
       edges: ModelEdge[]
     }>
   >(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${projectId}/flows/${flowId}/structure`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/structure`,
     {
       method: 'GET',
     },

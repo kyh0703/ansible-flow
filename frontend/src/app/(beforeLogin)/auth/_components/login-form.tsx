@@ -18,7 +18,12 @@ import Link from 'next/link'
 const LoginSchema = z.object({
   email: z.email(),
   password: z
-    .string({ error: (issue) => issue.input === undefined ? '패스워드를 입력하여 주세요' : '형식이 맞지 않습니다' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? '패스워드를 입력하여 주세요'
+          : '형식이 맞지 않습니다',
+    })
     .min(8, '비밀번호는 8자 이상이어야 합니다.')
     .max(32, '비밀번호는 32자 이하여야 합니다.'),
 })

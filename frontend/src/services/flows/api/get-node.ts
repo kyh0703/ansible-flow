@@ -7,7 +7,7 @@ export const getNode = async (
   nodeId: number,
 ) => {
   const response = await fetchExtended<ApiResponse<ModelNode>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes/${nodeId}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes/${nodeId}`,
     {
       method: 'GET',
     },

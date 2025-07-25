@@ -7,7 +7,7 @@ export const register = async (data: {
   name: string
 }) => {
   const response = await fetchExtended<ApiResponse<string>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/auth/register`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/register`,
     {
       method: 'POST',
       headers: {

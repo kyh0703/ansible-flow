@@ -2,7 +2,7 @@ import { fetchExtended, type ApiResponse } from '@/services'
 
 export const refresh = async () => {
   const response = await fetchExtended<ApiResponse<string>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/auth/refresh`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/refresh`,
     {
       method: 'POST',
       headers: {

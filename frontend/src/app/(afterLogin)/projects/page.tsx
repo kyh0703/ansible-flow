@@ -1,10 +1,17 @@
+import { Spinner } from '@/components/ui/spinner'
+import { Suspense } from 'react'
+import ProjectHeader from './_components/project-header'
+import ProjectList from './_components/project-list'
 
-type Props = {
-}
-
-export default function Page({}: Props) {
-
-  return <div>
-    <h1>Projects</h1>
-  </div>
+export default function Page() {
+  return (
+    <div className="flex h-full w-full flex-col">
+      <ProjectHeader />
+      <div className="flex-1">
+        <Suspense fallback={<Spinner />}>
+          <ProjectList />
+        </Suspense>
+      </div>
+    </div>
+  )
 }

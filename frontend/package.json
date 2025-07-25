@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 8000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -41,6 +41,7 @@
     "return-fetch": "^0.4.8",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
+    "tailwind-scrollbar-hide": "^4.0.0",
     "uuid": "^11.1.0",
     "y-websocket": "^3.0.0",
     "yjs": "^13.6.27",

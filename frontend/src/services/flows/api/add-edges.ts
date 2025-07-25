@@ -7,7 +7,7 @@ export const addEdges = async (
   edges: ModelEdge[],
 ) => {
   const response = await fetchExtended<ApiResponse<number[]>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${projectId}/flows/${flowId}/edges`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/edges`,
     {
       method: 'POST',
       headers: {

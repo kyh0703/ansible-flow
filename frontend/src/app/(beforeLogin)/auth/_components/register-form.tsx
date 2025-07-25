@@ -1,19 +1,26 @@
-import FormInput from '@/shared/components/form-input'
-import { useAuth } from '@/shared/providers/auth-provider'
-import { setToken } from '@/shared/services'
-import { Button } from '@/shared/ui/button'
-import { extractErrorMessage } from '@/shared/utils/errors'
-import logger from '@/shared/utils/logger'
+'use client'
+
+import FormInput from '@/components/form-input'
+import { Button } from '@/components/ui/button'
+import logger from '@/lib/logger'
+import { useAuth } from '@/providers/auth-provider'
+import { setAccessToken } from '@/services'
+import { register } from '@/services/auth'
+import { extractErrorMessage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import * as z from 'zod'
-import { register } from '../services'
 
 const RegisterSchema = z
   .object({
-    email: z.string().email('유효한 이메일을 입력해 주세요.'),
+    email: z.email({
+      error: (issue) =>
+        issue.input === undefined
+          ? '이메일을 입력해 주세요'
+          : '이메일 형식이 맞지 않습니다',
+    }),
     password: z
       .string()
       .min(8, '비밀번호는 8자 이상이어야 합니다.')
@@ -29,7 +36,7 @@ const RegisterSchema = z
 export type Register = z.infer<typeof RegisterSchema>
 
 export function RegisterForm() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { checkAuth } = useAuth()
 
   const {
@@ -43,9 +50,9 @@ export function RegisterForm() {
   const onSubmit = async (data: Register) => {
     try {
       const res = await register(data)
-      setToken(res)
+      setAccessToken(res)
       await checkAuth()
-      navigate('/projects')
+      router.replace('/projects')
       toast.success('회원가입이 완료되었습니다')
     } catch (error) {
       toast.error(extractErrorMessage(error))

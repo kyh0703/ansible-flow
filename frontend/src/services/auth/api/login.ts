@@ -8,7 +8,7 @@ export const login = async ({
   password: string
 }) => {
   const response = await fetchExtended<ApiResponse<string>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/auth/login`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/login`,
     {
       method: 'POST',
       headers: {

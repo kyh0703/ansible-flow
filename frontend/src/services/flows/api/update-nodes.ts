@@ -7,7 +7,7 @@ export const updateNodes = async (
   nodes: ModelNode[],
 ) => {
   const response = await fetchExtended<ApiResponse<null>>(
-    `${process.env.NEXT_PUBLIC_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
     {
       method: 'PUT',
       headers: {

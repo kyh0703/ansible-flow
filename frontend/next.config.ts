@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   trailingSlash: true,
@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
     },
   },
 
-    webpack: (config) => {
+  webpack: (config) => {
     const fileLoaderRule = config.module.rules.find((rule: any) =>
       rule.test?.test?.('.svg'),
     )
@@ -33,6 +33,15 @@ const nextConfig: NextConfig = {
     return config
   },
 
+  async rewrites() {
+    return [
+      {
+        source: '/api/proxy/:path*',
+        destination: 'http://localhost:3000/api/v1/:path*',
+      },
+    ]
+  },
+
   async redirects() {
     return [
       {
@@ -40,13 +49,8 @@ const nextConfig: NextConfig = {
         destination: '/dashboard',
         permanent: true,
       },
-      {
-        source: process.env.NEXT_PUBLIC_API_BASE_PATH || '',
-        destination: process.env.NEXT_PUBLIC_API_BASE_URL || '',
-        permanent: true,
-      },
     ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

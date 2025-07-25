@@ -1,5 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'tailwind-scrollbar-hide/v4';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -118,5 +119,15 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  html,
+  body {
+    @apply box-border h-dvh w-dvw overflow-hidden;
+  }
+
+  @layer components {
+    .error-msg {
+      @apply text-destructive ml-2 text-center text-xs text-wrap;
+    }
   }
 }
