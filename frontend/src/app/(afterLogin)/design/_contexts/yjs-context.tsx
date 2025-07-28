@@ -20,9 +20,9 @@ type YjsState = {
 const YjsContext = createContext<YjsState | undefined>(undefined)
 
 type YjsProviderProps = {
-  projectId: number
-  flowId: number
-  baseUrl?: string
+  projectId: string
+  flowId: string
+  baseUrl: string
 } & PropsWithChildren
 
 export default function YjsProvider({
@@ -33,8 +33,10 @@ export default function YjsProvider({
 }: YjsProviderProps) {
   const yDocRef = useRef<Y.Doc>(new Y.Doc())
   const startTimeRef = useRef<number>(performance.now())
+
   const [isConnected, setIsConnected] = useState(false)
   const [isSynced, setIsSynced] = useState(false)
+
   const value = useMemo(
     () => ({ yDoc: yDocRef.current, isConnected, isSynced, projectId, flowId }),
     [isConnected, isSynced, projectId, flowId],

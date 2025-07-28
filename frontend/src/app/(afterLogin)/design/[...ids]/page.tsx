@@ -1,20 +1,9 @@
-type DesignPageProps = {
-  params: Promise<{ ids: string[] }>
-}
+import FlowPanel from '../_components/flow-panel'
 
-export default async function DesignPage({
-  params,
-}: Readonly<DesignPageProps>) {
-  const { ids } = await params
-  const [projectId, flowId] = ids
-
-  if (!projectId || !flowId) {
-    throw new Error('Invalid project or flow id')
-  }
-
+export default async function DesignPage() {
   return (
-    <div>
-      <h1>Design</h1>
+    <div className="flex h-full w-full bg-red-100">
+      <FlowPanel />
     </div>
   )
 }

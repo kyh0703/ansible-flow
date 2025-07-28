@@ -6,7 +6,7 @@ import {
   type OnNodesChange,
 } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useYjs } from '../_providers'
+import { useYjs } from '../_contexts'
 import { getHelperLines } from '../_utils'
 import useYjsData from './use-yjs-data'
 

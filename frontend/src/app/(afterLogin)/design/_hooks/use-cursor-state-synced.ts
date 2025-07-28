@@ -1,7 +1,7 @@
 import type { Cursor } from '@/types/collaboration'
 import { useReactFlow } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useYjs } from '../_providers'
+import { useYjs } from '../_contexts'
 import { stringToColor } from '../_utils'
 import useYjsData from './use-yjs-data'
 

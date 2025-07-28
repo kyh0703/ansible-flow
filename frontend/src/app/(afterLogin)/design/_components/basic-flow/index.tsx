@@ -7,10 +7,14 @@ import {
   ReactFlow,
   type AppEdge,
   type AppNode,
-  type ColorMode
+  type ColorMode,
 } from '@xyflow/react'
 import { useCallback, useRef } from 'react'
-import { useCursorStateSynced, useEdgesStateSynced, useNodesStateSynced } from '../../_hooks'
+import {
+  useCursorStateSynced,
+  useEdgesStateSynced,
+  useNodesStateSynced,
+} from '../../_hooks'
 import { getCursorClassByEditMode } from '../../_utils'
 import DevTools from '../dev/dev-tool'
 import { IconToolbar } from '../toolbar/icon-toolbar'
@@ -31,13 +35,11 @@ import { useTheme } from 'next-themes'
 import { Cursors } from '../tools/cursor'
 
 type FlowProps = {
-  flowId: number
   initialNodes: AppNode[]
   initialEdges: AppEdge[]
 }
 
 export default function BasicFlow({
-  flowId,
   initialNodes,
   initialEdges,
 }: Readonly<FlowProps>) {

@@ -3,7 +3,7 @@
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import logger from '@/lib/logger'
-import { useAuth } from '@/contexts/auth-provider'
+import { useAuth } from '@/contexts/auth-context'
 import { setToken } from '@/services'
 import { register } from '@/services/auth'
 import { extractErrorMessage } from '@/utils'
