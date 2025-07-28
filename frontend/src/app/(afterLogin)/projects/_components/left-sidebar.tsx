@@ -5,6 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuSub,
+  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -24,11 +25,7 @@ import {
 import { setToken } from '@/services'
 import { logout } from '@/services/auth'
 import { useUser, useUserActions } from '@/stores/user-store'
-import {
-  DropdownMenu,
-  DropdownMenuPortal,
-  DropdownMenuSubContent,
-} from '@radix-ui/react-dropdown-menu'
+import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
 import {
   ChevronDown,
   Clock,
@@ -39,8 +36,6 @@ import {
   SunMoon,
   Trash,
 } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import ThemeDropdown from './theme-dropdown'
@@ -60,12 +55,11 @@ import ThemeDropdown from './theme-dropdown'
 //   )
 // }
 
-export default function LeftSidebar() {
-  const { theme, setTheme } = useTheme()
+export default function AppSidebar() {
+  const router = useRouter()
   const user = useUser()
   const { setUser } = useUserActions()
   const pathname = usePathname()
-  const router = useRouter()
 
   const handleLogout = async () => {
     try {
@@ -75,7 +69,7 @@ export default function LeftSidebar() {
     } finally {
       setUser(null)
       setToken(null)
-      router.push('/')
+      router.replace('/')
     }
   }
 
@@ -90,12 +84,10 @@ export default function LeftSidebar() {
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
                       {user?.profileImage ? (
-                        <Image
+                        <img
                           src={user.profileImage}
                           alt={user.name || 'User profile'}
                           className="h-full w-full object-cover"
-                          width={24}
-                          height={24}
                         />
                       ) : (
                         <span className="text-primary text-xs font-semibold">
@@ -110,13 +102,13 @@ export default function LeftSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger className="space-x-3">
                     <SunMoon className="size-4" />
                     <span>Theme</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      <ThemeDropdown theme={theme} setTheme={setTheme} />
+                      <ThemeDropdown />
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>

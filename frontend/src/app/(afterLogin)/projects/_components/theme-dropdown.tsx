@@ -2,16 +2,11 @@
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Check } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
-interface ThemeDropdownProps {
-  theme: string | undefined
-  setTheme: (theme: string) => void
-}
+export default function ThemeDropdown() {
+  const { theme, setTheme } = useTheme()
 
-export default function ThemeDropdown({
-  theme,
-  setTheme,
-}: Readonly<ThemeDropdownProps>) {
   return (
     <>
       <DropdownMenuItem onClick={() => setTheme('system')}>

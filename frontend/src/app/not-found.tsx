@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <div className="bg-background flex min-h-screen flex-col items-center justify-center p-4">
       <div className="space-y-6 text-center">
-        <div className="mx-auto h-32 w-32">
+        <div className="mx-auto h-50 w-50">
           <NotFoundIcon className="h-full w-full" />
         </div>
         <div className="space-y-4">
