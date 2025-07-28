@@ -1,4 +1,4 @@
-import { fetchExtended, type ApiResponse } from '@/services'
+import { fetchExtended, type ApiResponse, type Token } from '@/services'
 
 export const login = async ({
   email,
@@ -7,7 +7,7 @@ export const login = async ({
   email: string
   password: string
 }) => {
-  const response = await fetchExtended<ApiResponse<string>>(
+  const response = await fetchExtended<ApiResponse<Token>>(
     `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/login`,
     {
       method: 'POST',

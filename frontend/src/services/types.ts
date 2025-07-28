@@ -1,4 +1,8 @@
-import { errorMessages, type ErrorCode } from '@/constants/http-error';
+import { errorMessages, type ErrorCode } from '@/constants/http-error'
+
+export interface Token {
+  accessToken: string
+}
 
 export interface PaginationMeta {
   total: number
@@ -20,22 +24,22 @@ export interface PaginationQuery {
 }
 
 export type ApiResponse<T> = {
-  statusCode: number;
-  message: string | string[];
-  data: T;
-  error?: string | object;
-};
+  statusCode: number
+  message: string | string[]
+  data: T
+  error?: string | object
+}
 
 export class CustomError extends Error {
-  public code: ErrorCode;
-  public message: string;
-  public status: number;
+  public code: ErrorCode
+  public message: string
+  public status: number
 
   constructor(code: number, status: number, message: string) {
-    super(message ?? errorMessages.get(code) ?? 'Unknown error');
-    this.code = code;
-    this.message = errorMessages.get(code) ?? message ?? 'Unknown error';
-    this.status = status;
-    this.name = 'CustomError';
+    super(message ?? errorMessages.get(code) ?? 'Unknown error')
+    this.code = code
+    this.message = errorMessages.get(code) ?? message ?? 'Unknown error'
+    this.status = status
+    this.name = 'CustomError'
   }
 }

@@ -4,15 +4,31 @@ import NotFoundIcon from '../../public/errors/not-found.svg'
 
 export default function NotFound() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
-      <NotFoundIcon width={500} height={500} />
-      <h3 className="text-gray-550 mt-4 mb-14 text-2xl font-medium">
-        요청하신 페이지는 존재하지 않습니다.
-      </h3>
-      <div className="flex items-center gap-2">
-        <Link href="/">
-          <Button>홈으로 돌아가기</Button>
-        </Link>
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="space-y-6 text-center">
+        <div className="mx-auto h-32 w-32">
+          <NotFoundIcon className="h-full w-full" />
+        </div>
+        <div className="space-y-4">
+          <h1 className="text-muted-foreground text-3xl font-bold">
+            페이지를 찾을 수 없습니다
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            요청하신 페이지는 존재하지 않거나 이동되었을 수 있습니다.
+          </p>
+        </div>
+        <div className="flex justify-center gap-4">
+          <Link href="/">
+            <Button size="lg">홈으로 이동</Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => window.history.back()}
+            size="lg"
+          >
+            이전 페이지
+          </Button>
+        </div>
       </div>
     </div>
   )

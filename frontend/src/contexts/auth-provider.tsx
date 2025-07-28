@@ -1,6 +1,6 @@
 import { Spinner } from '@/components/ui/spinner'
 import logger from '@/lib/logger'
-import { setAccessToken } from '@/services'
+import { setToken } from '@/services/token'
 import { me } from '@/services/auth/api'
 import { useUserActions } from '@/stores/user-store'
 import {
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
     } catch (error) {
       logger.error('User not authenticated', error)
       setUser(null)
-      setAccessToken(null)
+      setToken(null)
     } finally {
       setIsAuthLoading(false)
     }
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
   // Show loading spinner while checking authentication
   if (isAuthLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <Spinner />
       </div>
     )

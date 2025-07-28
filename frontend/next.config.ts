@@ -8,6 +8,19 @@ const nextConfig: NextConfig = {
 
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
+
   turbopack: {
     rules: {
       '*.svg': {

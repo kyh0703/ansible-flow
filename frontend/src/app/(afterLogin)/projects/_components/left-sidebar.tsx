@@ -21,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { setAccessToken } from '@/services'
+import { setToken } from '@/services'
 import { logout } from '@/services/auth'
 import { useUser, useUserActions } from '@/stores/user-store'
 import {
@@ -30,7 +30,6 @@ import {
   DropdownMenuSubContent,
 } from '@radix-ui/react-dropdown-menu'
 import {
-  Check,
   ChevronDown,
   Clock,
   Home,
@@ -40,10 +39,11 @@ import {
   SunMoon,
   Trash,
 } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import ThemeDropdown from './theme-dropdown'
-import { useTheme } from 'next-themes'
 
 // function ProjectsSkeleton() {
 //   return (
@@ -74,7 +74,7 @@ export default function LeftSidebar() {
       console.error('Logout failed:', error)
     } finally {
       setUser(null)
-      setAccessToken(null)
+      setToken(null)
       router.push('/')
     }
   }
@@ -90,10 +90,12 @@ export default function LeftSidebar() {
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
                       {user?.profileImage ? (
-                        <img
+                        <Image
                           src={user.profileImage}
                           alt={user.name || 'User profile'}
                           className="h-full w-full object-cover"
+                          width={24}
+                          height={24}
                         />
                       ) : (
                         <span className="text-primary text-xs font-semibold">

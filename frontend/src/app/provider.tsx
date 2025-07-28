@@ -1,7 +1,7 @@
 'use client'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { AuthProvider } from '@/providers'
+import { AuthProvider } from '@/contexts'
 import QueryProvider from '@/providers/query-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { OverlayProvider } from 'overlay-kit'

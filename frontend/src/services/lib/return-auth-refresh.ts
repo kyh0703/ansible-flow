@@ -1,7 +1,7 @@
 import type { ReturnFetch } from 'return-fetch'
 import returnFetch from 'return-fetch'
-import type { ApiResponse } from '.'
-import { setAccessToken } from '../token'
+import type { ApiResponse, Token } from '.'
+import { setToken } from '../token'
 
 let retryCount = 0
 let refreshing = false
@@ -23,7 +23,7 @@ export const returnFetchAuthRefresh: ReturnFetch = (args) =>
 
         refreshing = true
         refreshPromise = fetch(
-          `${process.env.NEXT_PUBLIC_BASE_PATH}/auth/refresh`,
+          `${process.env.NEXT_PUBLIC_API_BASE_PATH}/auth/refresh`,
           {
             method: 'POST',
             headers: {
@@ -37,9 +37,9 @@ export const returnFetchAuthRefresh: ReturnFetch = (args) =>
             }
 
             const newToken =
-              (await responseToRefresh.json()) as ApiResponse<string>
+              (await responseToRefresh.json()) as ApiResponse<Token>
 
-            setAccessToken(newToken.data)
+            setToken(newToken.data)
 
             retryCount += 1
             console.log(

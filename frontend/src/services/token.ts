@@ -1,9 +1,11 @@
-let accessToken: string | null = null
+import type { Token } from './types'
 
-export const getAccessToken = (): string | null => {
-  return accessToken
+let token: Token | null = null
+
+export const getToken = (): Token | null => {
+  return token
 }
 
-export const setAccessToken = (newToken: string | null) => {
-  accessToken = newToken
+export const setToken = (newToken: Token | null) => {
+  token = newToken
 }

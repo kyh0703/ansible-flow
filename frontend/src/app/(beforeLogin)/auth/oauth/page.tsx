@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Spinner } from '@/components/ui/spinner'
+import { setToken } from '@/services'
 import { me } from '@/services/auth'
 import { useUserActions } from '@/stores/user-store'
-import { setAccessToken } from '@/services'
-import { Spinner } from '@/components/ui/spinner'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function OAuthPage() {
   const router = useRouter()
@@ -22,7 +22,7 @@ export default function OAuthPage() {
     }
 
     if (token) {
-      setAccessToken(token)
+      setToken({ accessToken: token })
       setUserInfo()
       router.replace('/projects')
     } else {

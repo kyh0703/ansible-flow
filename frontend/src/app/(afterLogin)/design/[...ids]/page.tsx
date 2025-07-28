@@ -1,11 +1,16 @@
 type DesignPageProps = {
-  params: { ids: string[] }
+  params: Promise<{ ids: string[] }>
 }
 
-export default function DesignPage({ params }: Readonly<DesignPageProps>) {
-  const { ids } = params
+export default async function DesignPage({
+  params,
+}: Readonly<DesignPageProps>) {
+  const { ids } = await params
+  const [projectId, flowId] = ids
 
-  console.log(ids)
+  if (!projectId || !flowId) {
+    throw new Error('Invalid project or flow id')
+  }
 
   return (
     <div>

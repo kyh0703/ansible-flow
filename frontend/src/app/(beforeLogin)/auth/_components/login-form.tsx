@@ -3,8 +3,7 @@
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import logger from '@/lib/logger'
-import { useAuth } from '@/providers'
-import { setAccessToken } from '@/services'
+import { setToken } from '@/services'
 import { login } from '@/services/auth'
 import { extractErrorMessage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,6 +13,7 @@ import { toast } from 'sonner'
 import * as z from 'zod'
 import OAuthButton from './oauth-button'
 import Link from 'next/link'
+import { useAuth } from '@/contexts'
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -45,7 +45,7 @@ export function LoginForm() {
   const onSubmit = async (data: Login) => {
     try {
       const res = await login(data)
-      setAccessToken(res)
+      setToken(res)
       await checkAuth()
       router.replace('/projects')
       toast.success('로그인되었습니다')

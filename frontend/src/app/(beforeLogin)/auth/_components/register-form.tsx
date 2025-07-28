@@ -3,8 +3,8 @@
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
 import logger from '@/lib/logger'
-import { useAuth } from '@/providers/auth-provider'
-import { setAccessToken } from '@/services'
+import { useAuth } from '@/contexts/auth-provider'
+import { setToken } from '@/services'
 import { register } from '@/services/auth'
 import { extractErrorMessage } from '@/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -50,7 +50,7 @@ export function RegisterForm() {
   const onSubmit = async (data: Register) => {
     try {
       const res = await register(data)
-      setAccessToken(res)
+      setToken(res)
       await checkAuth()
       router.replace('/projects')
       toast.success('회원가입이 완료되었습니다')
