@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { LoginForm } from '../_components/login-form'
 
-export default function Page() {
+export default function LoginPage() {
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4 py-12 text-base sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">

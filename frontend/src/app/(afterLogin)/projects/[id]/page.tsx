@@ -3,22 +3,25 @@ import { Suspense } from 'react'
 import FlowHeader from '../_components/flow-header'
 import FlowList from '../_components/flow-list'
 
-type Props = {
+type ProjectPageProps = {
   params: Promise<{ projectId: string }>
-  searchParams: Promise<{ projectName: string }>
+  searchParams: Promise<{ name: string }>
 }
 
-export default async function Page({params, searchParams}: Readonly<Props>) {
-  const {projectId} = await params
-  const {projectName} = await searchParams
+export default async function ProjectPage({
+  params,
+  searchParams,
+}: Readonly<ProjectPageProps>) {
+  const { projectId } = await params
+  const { name } = await searchParams
 
-  if (!projectId || !projectName) {
+  if (!projectId || !name) {
     return <div>Project ID not found</div>
   }
 
   return (
     <div className="flex h-full w-full flex-col">
-      <FlowHeader projectId={projectId} projectName={projectName} />
+      <FlowHeader projectId={projectId} projectName={name} />
       <main className="flex-1">
         <Suspense
           fallback={

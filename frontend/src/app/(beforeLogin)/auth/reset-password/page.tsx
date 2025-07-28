@@ -9,7 +9,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Suspense } from 'react'
 import ResetPasswordForm from '../_components/reset-password-form'
 
-export default function Page() {
+export default function ResetPasswordPage() {
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">

@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
@@ -24,8 +24,13 @@ import {
 import { setAccessToken } from '@/services'
 import { logout } from '@/services/auth'
 import { useUser, useUserActions } from '@/stores/user-store'
-import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
 import {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
+} from '@radix-ui/react-dropdown-menu'
+import {
+  Check,
   ChevronDown,
   Clock,
   Home,
@@ -33,11 +38,12 @@ import {
   Search,
   Star,
   SunMoon,
-  Trash
+  Trash,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import ThemeDropdown from './theme-dropdown'
+import { useTheme } from 'next-themes'
 
 // function ProjectsSkeleton() {
 //   return (
@@ -55,6 +61,7 @@ import ThemeDropdown from './theme-dropdown'
 // }
 
 export default function LeftSidebar() {
+  const { theme, setTheme } = useTheme()
   const user = useUser()
   const { setUser } = useUserActions()
   const pathname = usePathname()
@@ -101,12 +108,14 @@ export default function LeftSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="space-x-3">
+                  <DropdownMenuSubTrigger>
                     <SunMoon className="size-4" />
                     <span>Theme</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <ThemeDropdown />
+                    <DropdownMenuSubContent>
+                      <ThemeDropdown theme={theme} setTheme={setTheme} />
+                    </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
@@ -133,10 +142,7 @@ export default function LeftSidebar() {
           <SidebarGroupContent className="pt-2">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === '/projects'}
-                >
+                <SidebarMenuButton asChild isActive={pathname === '/projects'}>
                   <Link
                     href="/projects"
                     className="flex items-center gap-3 px-3 py-2 text-sm"

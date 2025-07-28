@@ -30,10 +30,7 @@ export default function ProjectHeader() {
         <ProjectModal onClose={close} />
       </Modal>
     ))
-    if (!result) {
-      return
-    }
-
+    if (!result) return
     const newProject = result as Project
     addProjectMutation.mutate(newProject)
   }
@@ -74,9 +71,7 @@ export default function ProjectHeader() {
               <Crown className="size-3" />
             </Badge>
 
-            <span className="text-muted-foreground text-sm">
-              Pro
-            </span>
+            <span className="text-muted-foreground text-sm">Pro</span>
           </div>
 
           <Button

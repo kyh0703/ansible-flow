@@ -1,8 +1,8 @@
-type Props = {
+type DesignPageProps = {
   params: { ids: string[] }
 }
 
-export default function Page({ params }: Readonly<Props>) {
+export default function DesignPage({ params }: Readonly<DesignPageProps>) {
   const { ids } = params
 
   console.log(ids)

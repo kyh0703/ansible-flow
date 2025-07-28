@@ -33,7 +33,7 @@ export default function ProjectCard({ project }: Readonly<ProjectCardProps>) {
   const colorClass = getProjectColor(project.id)
 
   const handleDoubleClick = () => {
-    router.push(`/projects/${project.id}/${project.name}`)
+    router.push(`/projects/${project.id}?name=${project.name}`)
   }
 
   return (

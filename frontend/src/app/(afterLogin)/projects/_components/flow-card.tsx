@@ -51,7 +51,6 @@ export default function FlowCard({ flow }: Readonly<FlowCardProps>) {
       )
     })
     if (!result) return
-
     const updateFlow = result as Flow
     updateFlowMutation.mutate({
       projectId: flow.projectId,
