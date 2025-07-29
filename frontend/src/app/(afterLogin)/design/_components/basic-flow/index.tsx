@@ -1,3 +1,7 @@
+'use client'
+
+import { cn } from '@/lib'
+import { useCursor } from '@/stores/flow-store'
 import {
   Background,
   BackgroundVariant,
@@ -5,20 +9,24 @@ import {
   MiniMap,
   Panel,
   ReactFlow,
+  useReactFlow,
   type AppEdge,
   type AppNode,
   type ColorMode,
+  type CustomNodeType,
 } from '@xyflow/react'
-import { useCallback, useRef } from 'react'
+import { useTheme } from 'next-themes'
+import { useRef, type DragEventHandler } from 'react'
 import {
   useCursorStateSynced,
   useEdgesStateSynced,
   useNodesStateSynced,
 } from '../../_hooks'
-import { getCursorClassByEditMode } from '../../_utils'
-import DevTools from '../dev/dev-tool'
-import { IconToolbar } from '../toolbar/icon-toolbar'
+import { getCursorClass } from '../../_utils'
+import DevTools from '../dev-tool/dev-tool'
+import { IconToolbar } from '../toolbar/icon-toolbar/icon-toolbar'
 import { ConnectionLine } from '../tools/connection-line'
+import { Cursors } from '../tools/cursor'
 import { HelperLines } from '../tools/helper-line'
 import { isValidConnection } from '../tools/validator'
 import {
@@ -28,11 +36,9 @@ import {
   viewPort,
 } from './options'
 
-import { cn } from '@/lib'
-import { useEditMode } from '@/stores/flow-store'
 import '@xyflow/react/dist/style.css'
-import { useTheme } from 'next-themes'
-import { Cursors } from '../tools/cursor'
+import { useAddNodes, useUpdateEdges, useUpdateNodes } from '@/services/flows'
+import logger from '@/lib/logger'
 
 type FlowProps = {
   initialNodes: AppNode[]
@@ -46,30 +52,52 @@ export default function BasicFlow({
   const flowRef = useRef<HTMLDivElement>(null)
 
   const { theme } = useTheme()
-  const editMode = useEditMode()
+  const cursorMode = useCursor()
+
+  const { screenToFlowPosition } = useReactFlow<AppNode, AppEdge>()
+  const { nodeFactory } = useNodes
 
   const [nodes, setNodes, onNodesChange, horizontalLine, verticalLine] =
-    useNodesStateSynced(flowId, initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesStateSynced(
-    flowId,
-    initialEdges,
-  )
-  const [cursors, onMouseMove] = useCursorStateSynced(flowId)
+    useNodesStateSynced(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesStateSynced(initialEdges)
+  const [cursors, onMouseMove] = useCursorStateSynced()
 
-  const handleMinimapNodeClick = useCallback(
-    (_: React.MouseEvent<Element, MouseEvent>, node: AppNode) => {
-      // TODO: focus node
-      console.log('node', node)
-    },
-    [],
-  )
+
+  const { mutateAsync: addNodesMutate } = useAddNodes()
+  const { mutateAsync: updateNodesMutate } = useUpdateNodes()
+  const { mutateAsync: updateEdgesMutate } = useUpdateEdges()
+
+  const handleDrop: DragEventHandler<HTMLDivElement> = async (e) => {
+    logger.debug('onDrop', e)
+    e.preventDefault()
+
+    const reactData = e.dataTransfer.getData('application/xyflow')
+    if (reactData.length === 0) return
+
+    const nodeType = reactData as CustomNodeType
+    const position = screenToFlowPosition({
+      x: e.clientX,
+      y: e.clientY,
+    })
+
+    const createdNode = nodeFactory(position, nodeType)
+
+    try {
+      const res = await addNodesMutate({
+        projectId: 1,
+        flowId: 1,
+        nodes: [{
+          id:
+        }]
+      })
+    }
+  }
 
   return (
     <div
-      id="main"
       className={cn(
         'flow box-border h-full w-full overflow-hidden',
-        getCursorClassByEditMode(editMode),
+        getCursorClass(cursorMode),
       )}
     >
       <ReactFlow
@@ -93,19 +121,15 @@ export default function BasicFlow({
         onMouseMove={onMouseMove}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onDrop={handleDrop}
       >
         <Background variant={BackgroundVariant.Dots} />
         <Controls />
-        <MiniMap<AppNode>
-          zoomable
-          pannable
-          zoomStep={1.2}
-          onNodeClick={handleMinimapNodeClick}
-        />
+        <MiniMap<AppNode> zoomable pannable zoomStep={1.2} />
         <Cursors cursors={cursors} />
         <HelperLines horizontal={horizontalLine} vertical={verticalLine} />
-        <Panel position="top-right">
-          <IconToolbar flowId={flowId} />
+        <Panel position="bottom-center">
+          <IconToolbar />
         </Panel>
         {process.env.NODE_ENV === 'development' && <DevTools />}
       </ReactFlow>

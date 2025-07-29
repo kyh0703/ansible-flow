@@ -1,5 +1,10 @@
-import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable'
 import type { PropsWithChildren } from 'react'
+import { LeftSidebar } from '../_components/left-sidebar'
 import Provider from './provider'
 
 type DesignLayoutProps = {
@@ -18,12 +23,17 @@ export default async function DesignLayout({
   }
 
   return (
-    <Provider projectId={projectId} flowId={flowId}>
+    <Provider
+      projectId={projectId}
+      flowId={flowId}
+      yjsUrl={process.env.YJS_BASE_URL ?? ''}
+    >
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel>
-          <div>sidebar</div>
+        <ResizablePanel defaultSize={15} maxSize={30}>
+          <LeftSidebar />
         </ResizablePanel>
-        <ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={85}>
           <div className="flex h-full w-full">{children}</div>
         </ResizablePanel>
       </ResizablePanelGroup>

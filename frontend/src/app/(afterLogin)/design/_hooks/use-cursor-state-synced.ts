@@ -7,14 +7,11 @@ import useYjsData from './use-yjs-data'
 
 const MAX_IDLE_TIME = 10000
 
-export function useCursorStateSynced(flowId: number) {
-  const [cursors, setCursors] = useState<Cursor[]>([])
+export function useCursorStateSynced() {
   const { yDoc } = useYjs()
-  const { getCursorsMap } = useYjsData(yDoc)
-  const cursorsMap = useMemo(
-    () => getCursorsMap(flowId),
-    [getCursorsMap, flowId],
-  )
+  const { yCursorsMap } = useYjsData(yDoc)
+
+  const [cursors, setCursors] = useState<Cursor[]>([])
   const clientId = yDoc.clientID.toString()
   const { screenToFlowPosition } = useReactFlow()
   const cursorColor = stringToColor(clientId)
@@ -23,12 +20,12 @@ export function useCursorStateSynced(flowId: number) {
   const flush = useCallback(() => {
     const now = Date.now()
 
-    for (const [id, cursor] of cursorsMap) {
+    for (const [id, cursor] of yCursorsMap) {
       if (now - cursor.timestamp > MAX_IDLE_TIME) {
-        cursorsMap.delete(id)
+        yCursorsMap.delete(id)
       }
     }
-  }, [cursorsMap])
+  }, [yCursorsMap])
 
   const onMouseMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -37,7 +34,7 @@ export function useCursorStateSynced(flowId: number) {
         y: event.clientY,
       })
 
-      cursorsMap.set(clientId, {
+      yCursorsMap.set(clientId, {
         id: clientId,
         color: cursorColor,
         x: position.x,
@@ -45,24 +42,24 @@ export function useCursorStateSynced(flowId: number) {
         timestamp: Date.now(),
       })
     },
-    [clientId, cursorColor, cursorsMap, screenToFlowPosition],
+    [clientId, cursorColor, yCursorsMap, screenToFlowPosition],
   )
 
   useEffect(() => {
     const timer = window.setInterval(flush, MAX_IDLE_TIME)
     const observer = () => {
-      setCursors([...cursorsMap.values()])
+      setCursors([...yCursorsMap.values()])
     }
 
     flush()
-    setCursors([...cursorsMap.values()])
-    cursorsMap.observe(observer)
+    setCursors([...yCursorsMap.values()])
+    yCursorsMap.observe(observer)
 
     return () => {
-      cursorsMap.unobserve(observer)
+      yCursorsMap.unobserve(observer)
       window.clearInterval(timer)
     }
-  }, [cursorsMap, flush])
+  }, [yCursorsMap, flush])
 
   const cursorsWithoutSelf = useMemo(
     () => cursors.filter(({ id }) => id !== clientId),

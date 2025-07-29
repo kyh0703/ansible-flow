@@ -15,6 +15,8 @@ type YjsState = {
   yDoc: Y.Doc
   isConnected: boolean
   isSynced: boolean
+  projectId: string
+  flowId: string
 }
 
 const YjsContext = createContext<YjsState | undefined>(undefined)

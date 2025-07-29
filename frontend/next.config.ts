@@ -2,12 +2,9 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   trailingSlash: true,
-
   reactStrictMode: true,
   output: 'standalone',
-
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
-
   images: {
     remotePatterns: [
       {
@@ -20,7 +17,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
   turbopack: {
     rules: {
       '*.svg': {
@@ -29,11 +25,11 @@ const nextConfig: NextConfig = {
       },
     },
   },
-
   webpack: (config) => {
     const fileLoaderRule = config.module.rules.find((rule: any) =>
       rule.test?.test?.('.svg'),
     )
+
     if (fileLoaderRule) {
       fileLoaderRule.exclude = /\.svg$/
     }
@@ -45,7 +41,6 @@ const nextConfig: NextConfig = {
 
     return config
   },
-
   async rewrites() {
     return [
       {
@@ -54,7 +49,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-
   async redirects() {
     return [
       {

@@ -1,45 +1,37 @@
 import { createStore } from '@/lib/store'
-import type { CustomNodeType, Viewport } from '@xyflow/react'
 
-export type EditMode = 'grab' | 'pointer' | 'link'
-
-export type SelectedNode = {
-  projectId: number
-  databaseId: number
-  nodeId: string
-  nodeType: CustomNodeType
-}
-
-type History = {
-  selectedNode: SelectedNode | null
-  viewPort: Viewport | null
-}
+export type CursorMode = 'grab' | 'pointer' | 'link'
 
 interface FlowState {
-  editMode: EditMode
-  history: Record<number, History>
+  selectedNode: string | null
+  cursorMode: CursorMode
   actions: {
-    setEditMode: (mode: EditMode) => void
+    setCursorMode: (mode: CursorMode) => void
   }
 }
 
 const useFlowStore = createStore<FlowState>(
   (set) => ({
-    editMode: 'grab',
-    history: {},
+    selectedNode: null,
+    cursorMode: 'grab',
     actions: {
-      setEditMode: (mode: EditMode) =>
+      setCursorMode: (mode: CursorMode) =>
         set(
           (state) => {
-            state.editMode = mode
+            state.cursorMode = mode
           },
           false,
-          'setEditMode',
+          'setCursorMode',
         ),
+      setSelectedNode: (node: string | null) =>
+        set((state) => {
+          state.selectedNode = node
+        }),
     },
   }),
   { name: 'FlowStore' },
 )
 
-export const useEditMode = () => useFlowStore((state) => state.editMode)
+export const useSelectedNode = () => useFlowStore((state) => state.selectedNode)
+export const useCursor = () => useFlowStore((state) => state.cursorMode)
 export const useFlowActions = () => useFlowStore((state) => state.actions)

@@ -5,13 +5,12 @@ import {
   type HelperLine,
   type OnNodesChange,
 } from '@xyflow/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useYjs } from '../_contexts'
 import { getHelperLines } from '../_utils'
 import useYjsData from './use-yjs-data'
 
 export function useNodesStateSynced(
-  flowId: number,
   initialNodes: AppNode[],
 ): [
   AppNode[],
@@ -21,9 +20,7 @@ export function useNodesStateSynced(
   HelperLine | undefined,
 ] {
   const { yDoc } = useYjs()
-  const { getNodesMap, getEdgesMap } = useYjsData(yDoc)
-  const nodesMap = useMemo(() => getNodesMap(flowId), [getNodesMap, flowId])
-  const edgesMap = useMemo(() => getEdgesMap(flowId), [getEdgesMap, flowId])
+  const { yNodesMap, yEdgesMap } = useYjsData(yDoc)
 
   const [nodes, setNodes] = useState<AppNode[]>([])
   const [verticalLine, setVerticalLine] = useState<HelperLine>(undefined)
@@ -33,22 +30,22 @@ export function useNodesStateSynced(
     (nodesOrUpdater: React.SetStateAction<AppNode[]>) => {
       const next =
         typeof nodesOrUpdater === 'function'
-          ? nodesOrUpdater([...nodesMap.values()])
+          ? nodesOrUpdater([...yNodesMap.values()])
           : nodesOrUpdater
       const seen = new Set<string>()
 
       next.forEach((node) => {
         seen.add(node.id)
-        nodesMap.set(node.id, node)
+        yNodesMap.set(node.id, node)
       })
 
-      for (const node of nodesMap.values()) {
+      for (const node of yNodesMap.values()) {
         if (!seen.has(node.id)) {
-          nodesMap.delete(node.id)
+          yNodesMap.delete(node.id)
         }
       }
     },
-    [nodesMap],
+    [yNodesMap],
   )
 
   const makeHelperLine: OnNodesChange<AppNode> = useCallback(
@@ -83,7 +80,7 @@ export function useNodesStateSynced(
   // When the changes are applied to the map, the observer will be triggered and updates the nodes state.
   const onNodesChanges: OnNodesChange<AppNode> = useCallback(
     (changes) => {
-      const nodes = Array.from(nodesMap.values())
+      const nodes = Array.from(yNodesMap.values())
       makeHelperLine(changes)
       const nextNodes = applyNodeChanges(changes, nodes)
 
@@ -91,51 +88,51 @@ export function useNodesStateSynced(
         switch (change.type) {
           case 'add':
           case 'replace':
-            nodesMap.set(change.item.id, change.item)
+            yNodesMap.set(change.item.id, change.item)
             break
           case 'remove':
-            if (nodesMap.has(change.id)) {
-              const deletedNode = nodesMap.get(change.id)!
-              nodesMap.delete(change.id)
+            if (yNodesMap.has(change.id)) {
+              const deletedNode = yNodesMap.get(change.id)!
+              yNodesMap.delete(change.id)
               const connectedEdges = getConnectedEdges(
                 [deletedNode],
-                [...edgesMap.values()],
+                [...yEdgesMap.values()],
               )
-              connectedEdges.forEach((edge) => edgesMap.delete(edge.id))
+              connectedEdges.forEach((edge) => yEdgesMap.delete(edge.id))
             }
             break
           default:
-            nodesMap.set(change.id, nextNodes.find((n) => n.id === change.id)!)
+            yNodesMap.set(change.id, nextNodes.find((n) => n.id === change.id)!)
             break
         }
       }
     },
-    [edgesMap, makeHelperLine, nodesMap],
+    [yEdgesMap, makeHelperLine, yNodesMap],
   )
 
   // here we are observing the nodesMap and updating the nodes state whenever the map changes.
   useEffect(() => {
     const observer = () => {
-      setNodes(Array.from(nodesMap.values()))
+      setNodes(Array.from(yNodesMap.values()))
     }
 
     const appNodeIds = new Set(initialNodes.map((node) => node.id))
     initialNodes.forEach((node) => {
-      nodesMap.set(node.id, { ...nodesMap.get(node.id), ...node })
+      yNodesMap.set(node.id, { ...yNodesMap.get(node.id), ...node })
     })
-    for (const nodeId of nodesMap.keys()) {
+    for (const nodeId of yNodesMap.keys()) {
       if (!appNodeIds.has(nodeId)) {
-        nodesMap.delete(nodeId)
+        yNodesMap.delete(nodeId)
       }
     }
 
-    setNodes(Array.from(nodesMap.values()))
-    nodesMap.observe(observer)
+    setNodes(Array.from(yNodesMap.values()))
+    yNodesMap.observe(observer)
 
     return () => {
-      nodesMap.unobserve(observer)
+      yNodesMap.unobserve(observer)
     }
-  }, [initialNodes, nodesMap])
+  }, [initialNodes, yNodesMap])
 
   return [nodes, setNodesSynced, onNodesChanges, horizontalLine, verticalLine]
 }

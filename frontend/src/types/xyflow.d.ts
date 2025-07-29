@@ -26,11 +26,7 @@ declare module '@xyflow/react' {
   }
 
   type CustomNodeData = {
-    flowId: number
-    databaseId: number
     label: string
-    group: Partial<Group>
-    description: string
     updateAt: string
     createAt: string
   }

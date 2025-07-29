@@ -3,12 +3,11 @@ import {
   type AppEdge,
   type OnEdgesChange,
 } from '@xyflow/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useYjs } from '../_contexts'
 import useYjsData from './use-yjs-data'
 
 export function useEdgesStateSynced(
-  flowId: number,
   initialEdges: AppEdge[],
 ): [
   AppEdge[],
@@ -16,79 +15,79 @@ export function useEdgesStateSynced(
   OnEdgesChange<AppEdge>,
 ] {
   const { yDoc } = useYjs()
-  const { getEdgesMap } = useYjsData(yDoc)
-  const edgesMap = useMemo(() => getEdgesMap(flowId), [getEdgesMap, flowId])
+  const { yEdgesMap } = useYjsData(yDoc)
+
   const [edges, setEdges] = useState<AppEdge[]>([])
 
   const setEdgesSynced = useCallback(
     (edgesOrUpdater: React.SetStateAction<AppEdge[]>) => {
       const next =
         typeof edgesOrUpdater === 'function'
-          ? edgesOrUpdater([...edgesMap.values()])
+          ? edgesOrUpdater([...yEdgesMap.values()])
           : edgesOrUpdater
       const seen = new Set<string>()
 
       next.forEach((edge) => {
         seen.add(edge.id)
-        edgesMap.set(edge.id, edge)
+        yEdgesMap.set(edge.id, edge)
       })
 
-      for (const edge of edgesMap.values()) {
+      for (const edge of yEdgesMap.values()) {
         if (!seen.has(edge.id)) {
-          edgesMap.delete(edge.id)
+          yEdgesMap.delete(edge.id)
         }
       }
     },
-    [edgesMap],
+    [yEdgesMap],
   )
 
   const onEdgesChange: OnEdgesChange<AppEdge> = useCallback(
     (changes) => {
-      const edges = Array.from(edgesMap.values())
+      const edges = Array.from(yEdgesMap.values())
       const nextEdges = applyEdgeChanges(changes, edges)
 
       for (const change of changes) {
         switch (change.type) {
           case 'add':
           case 'replace':
-            edgesMap.set(change.item.id, change.item)
+            yEdgesMap.set(change.item.id, change.item)
             break
           case 'remove':
-            if (edgesMap.has(change.id)) {
-              edgesMap.delete(change.id)
+            if (yEdgesMap.has(change.id)) {
+              yEdgesMap.delete(change.id)
             }
             break
           default:
-            edgesMap.set(change.id, nextEdges.find((n) => n.id === change.id)!)
+            yEdgesMap.set(change.id, nextEdges.find((n) => n.id === change.id)!)
             break
         }
       }
     },
-    [edgesMap],
+    [yEdgesMap],
   )
 
   useEffect(() => {
     const observer = () => {
-      setEdges(Array.from(edgesMap.values()))
+      setEdges(Array.from(yEdgesMap.values()))
     }
 
     const appEdgeIds = new Set(initialEdges.map((edge) => edge.id))
     initialEdges.forEach((edge) => {
-      edgesMap.set(edge.id, { ...edgesMap.get(edge.id), ...edge })
+      yEdgesMap.set(edge.id, { ...yEdgesMap.get(edge.id), ...edge })
     })
-    for (const edgeId of edgesMap.keys()) {
+    for (const edgeId of yEdgesMap.keys()) {
       if (!appEdgeIds.has(edgeId)) {
-        edgesMap.delete(edgeId)
+        yEdgesMap.delete(edgeId)
       }
     }
 
-    setEdges(Array.from(edgesMap.values()))
-    edgesMap.observe(observer)
+    setEdges(Array.from(yEdgesMap.values()))
+    yEdgesMap.observe(observer)
 
     return () => {
-      edgesMap.unobserve(observer)
+      yEdgesMap.unobserve(observer)
     }
-  }, [edgesMap, initialEdges])
+  }, [yEdgesMap, initialEdges])
 
   return [edges, setEdgesSynced, onEdgesChange]
 }

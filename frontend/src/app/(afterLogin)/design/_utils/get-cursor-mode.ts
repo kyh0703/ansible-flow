@@ -1,6 +1,6 @@
-import type { EditMode } from '@/stores/flow-store'
+import type { CursorMode } from '@/stores/flow-store'
 
-export const getCursorClassByEditMode = (mode: EditMode) => {
+export const getCursorClass = (mode: CursorMode) => {
   switch (mode) {
     case 'grab':
       return 'cursor-grab'

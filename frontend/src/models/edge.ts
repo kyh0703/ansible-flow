@@ -1,18 +1,44 @@
+import type { AppEdge } from '@xyflow/react'
+
 export interface ModelEdge {
-  id: number;
-  uuid: string;
-  flowId: number;
-  source: string;
-  target: string;
-  type: string;
-  label: string;
-  hidden: boolean;
+  id: number
+  uuid: string
+  flowId: number
+  source: string
+  target: string
+  type: string
+  label: string
+  hidden: boolean
   markerEnd?: {
-    width: number;
-    height: number;
-    type: string;
-    color: string;
-  };
-  updateAt?: string;
-  createAt?: string;
+    width: number
+    height: number
+    type: string
+    color: string
+  }
+  updateAt?: string
+  createAt?: string
+}
+
+export function toEdge(edge: AppEdge): ModelEdge {
+  const modelEdge: ModelEdge = {
+    id: edge.data?.databaseId!,
+    type: edge.type,
+    source: edge.source,
+    target: edge.target,
+    label: edge.data?.condition || '',
+    hidden: edge.hidden || false,
+    uuid: edge.id,
+    flowId: edge.data?.flowId!,
+  }
+
+  if (edge.markerEnd && typeof edge.markerEnd === 'object') {
+    modelEdge.markerEnd = {
+      width: edge.markerEnd.width!,
+      height: edge.markerEnd.height!,
+      type: edge.markerEnd.type,
+      color: edge.markerEnd.color!,
+    }
+  }
+
+  return modelEdge
 }
