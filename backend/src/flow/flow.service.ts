@@ -47,20 +47,17 @@ export class FlowService {
     id: string,
     updateFlowDto: UpdateFlowDto,
   ): Promise<Flow> {
-    const flow = await this.findOne(projectId, id)
+    await this.findOne(projectId, id)
     return this.prisma.flow.update({ where: { id }, data: updateFlowDto })
   }
 
   async delete(projectId: string, id: string): Promise<Flow> {
-    const flow = await this.findOne(projectId, id)
+    await this.findOne(projectId, id)
     return this.prisma.flow.delete({ where: { id } })
   }
 
-  // 플로우 구조 조회 (예시)
   async findStructure(projectId: string, id: string) {
-    // 실제 구조 반환 로직은 도메인에 맞게 구현 필요
-    const flow = await this.findOne(projectId, id)
-    // 예시: 노드/에지 포함 구조 반환
+    await this.findOne(projectId, id)
     return this.prisma.flow.findFirst({
       where: { id, projectId },
       include: { nodes: true, edges: true },

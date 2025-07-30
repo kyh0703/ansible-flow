@@ -2,11 +2,11 @@ import type { ModelNode } from '@/models/node'
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const addNodes = async (
-  projectId: number,
-  flowId: number,
+  projectId: string,
+  flowId: string,
   nodes: ModelNode[],
 ) => {
-  const response = await fetchExtended<ApiResponse<number[]>>(
+  const response = await fetchExtended<ApiResponse<string[]>>(
     `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
     {
       method: 'POST',

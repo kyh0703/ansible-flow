@@ -1,4 +1,5 @@
 export * from './use-cursor-state-synced'
 export * from './use-edges-state-synced'
+export * from './use-node-operations'
 export * from './use-nodes-state-synced'
 export * from './use-yjs-data'

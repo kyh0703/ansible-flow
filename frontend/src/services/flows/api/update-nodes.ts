@@ -2,8 +2,8 @@ import type { ModelNode } from '@/models/node'
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const updateNodes = async (
-  projectId: number,
-  flowId: number,
+  projectId: string,
+  flowId: string,
   nodes: ModelNode[],
 ) => {
   const response = await fetchExtended<ApiResponse<null>>(

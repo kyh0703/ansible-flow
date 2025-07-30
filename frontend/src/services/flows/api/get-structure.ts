@@ -2,7 +2,7 @@ import type { ModelEdge } from '@/models/edge'
 import type { ModelNode } from '@/models/node'
 import { fetchExtended, type ApiResponse } from '@/services'
 
-export const getStructure = async (projectId: number, flowId: number) => {
+export const getStructure = async (projectId: string, flowId: string) => {
   const response = await fetchExtended<
     ApiResponse<{
       nodes: ModelNode[]

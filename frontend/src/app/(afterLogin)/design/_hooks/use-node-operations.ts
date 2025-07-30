@@ -8,14 +8,15 @@ import {
 import { useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-export function useNodesUtils() {
-  const { getNode, getNodes } = useReactFlow<AppNode, AppEdge>()
+export function useNodeOperations() {
+  const { setNodes } = useReactFlow<AppNode, AppEdge>()
 
   const nodeFactory = useCallback(
     (position: XYPosition, type: CustomNodeType) => {
-      let newNode: AppNode = {
+      const newNode: AppNode = {
         id: uuidv4(),
         position,
+        zIndex: 0,
         type,
         data: {
           label: '',
@@ -26,7 +27,17 @@ export function useNodesUtils() {
     },
     [],
   )
+
+  const setLabel = useCallback((id: string, label: string) => {
+    setNodes((nodes) => {
+      return nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, label } } : node,
+      )
+    })
+  }, [])
+
   return {
     nodeFactory,
+    setLabel,
   }
 }

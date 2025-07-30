@@ -1,6 +1,8 @@
 'use client'
 
 import { cn } from '@/lib'
+import logger from '@/lib/logger'
+import { useAddNodes, useUpdateEdges, useUpdateNodes } from '@/services/flows'
 import { useCursor } from '@/stores/flow-store'
 import {
   Background,
@@ -17,9 +19,11 @@ import {
 } from '@xyflow/react'
 import { useTheme } from 'next-themes'
 import { useRef, type DragEventHandler } from 'react'
+import { useYjs } from '../../_contexts/yjs-context'
 import {
   useCursorStateSynced,
   useEdgesStateSynced,
+  useNodeOperations,
   useNodesStateSynced,
 } from '../../_hooks'
 import { getCursorClass } from '../../_utils'
@@ -37,8 +41,6 @@ import {
 } from './options'
 
 import '@xyflow/react/dist/style.css'
-import { useAddNodes, useUpdateEdges, useUpdateNodes } from '@/services/flows'
-import logger from '@/lib/logger'
 
 type FlowProps = {
   initialNodes: AppNode[]
@@ -49,19 +51,20 @@ export default function BasicFlow({
   initialNodes,
   initialEdges,
 }: Readonly<FlowProps>) {
+  const { projectId, flowId } = useYjs()
+
   const flowRef = useRef<HTMLDivElement>(null)
 
   const { theme } = useTheme()
   const cursorMode = useCursor()
 
   const { screenToFlowPosition } = useReactFlow<AppNode, AppEdge>()
-  const { nodeFactory } = useNodes
+  const { nodeFactory } = useNodeOperations()
 
   const [nodes, setNodes, onNodesChange, horizontalLine, verticalLine] =
     useNodesStateSynced(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesStateSynced(initialEdges)
   const [cursors, onMouseMove] = useCursorStateSynced()
-
 
   const { mutateAsync: addNodesMutate } = useAddNodes()
   const { mutateAsync: updateNodesMutate } = useUpdateNodes()
@@ -80,16 +83,16 @@ export default function BasicFlow({
       y: e.clientY,
     })
 
-    const createdNode = nodeFactory(position, nodeType)
+    const newNode = nodeFactory(position, nodeType)
 
     try {
-      const res = await addNodesMutate({
-        projectId: 1,
-        flowId: 1,
-        nodes: [{
-          id:
-        }]
+      await addNodesMutate({
+        projectId,
+        flowId,
+        nodes: [newNode],
       })
+    } catch (error) {
+      logger.error(error)
     }
   }
 

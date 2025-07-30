@@ -2,8 +2,8 @@ import type { ModelEdge } from '@/models/edge'
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const updateEdges = async (
-  projectId: number,
-  flowId: number,
+  projectId: string,
+  flowId: string,
   edges: ModelEdge[],
 ) => {
   const response = await fetchExtended<ApiResponse<null>>(

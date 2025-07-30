@@ -3,8 +3,10 @@
         "kakao",
         "pannable",
         "reactflow",
+        "reconnectable",
         "sonner",
         "turbopack",
+        "uuidv",
         "xyflow",
         "zoomable"
     ]

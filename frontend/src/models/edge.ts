@@ -1,9 +1,7 @@
 import type { AppEdge } from '@xyflow/react'
 
 export interface ModelEdge {
-  id: number
-  uuid: string
-  flowId: number
+  id: string
   source: string
   target: string
   type: string
@@ -21,14 +19,12 @@ export interface ModelEdge {
 
 export function toEdge(edge: AppEdge): ModelEdge {
   const modelEdge: ModelEdge = {
-    id: edge.data?.databaseId!,
+    id: edge.id,
     type: edge.type,
     source: edge.source,
     target: edge.target,
-    label: edge.data?.condition || '',
-    hidden: edge.hidden || false,
-    uuid: edge.id,
-    flowId: edge.data?.flowId!,
+    label: edge.data?.condition ?? '',
+    hidden: edge.hidden ?? false,
   }
 
   if (edge.markerEnd && typeof edge.markerEnd === 'object') {

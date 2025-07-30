@@ -1,9 +1,9 @@
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const removeNodes = async (
-  projectId: number,
-  flowId: number,
-  removeIds: number[],
+  projectId: string,
+  flowId: string,
+  removeIds: string[],
 ) => {
   const response = await fetchExtended<ApiResponse<null>>(
     `${process.env.NEXT_PUBLIC_API_BASE_PATH}/projects/${projectId}/flows/${flowId}/nodes`,
