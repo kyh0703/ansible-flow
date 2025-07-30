@@ -10,7 +10,6 @@ export class FlowService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  // 플로우 목록(페이징)
   async findAll(params: {
     projectId: string
     skip: number
@@ -31,8 +30,8 @@ export class FlowService {
     return { items, total }
   }
 
-  async findOne(projectId: string, id: string): Promise<Flow> {
-    const flow = await this.prisma.flow.findFirst({ where: { id, projectId } })
+  async findOne(id: string): Promise<Flow> {
+    const flow = await this.prisma.flow.findFirst({ where: { id } })
     if (!flow) throw new NotFoundException('Flow not found')
     return flow
   }
@@ -42,25 +41,22 @@ export class FlowService {
     return this.prisma.flow.create({ data: { ...createFlowDto, projectId } })
   }
 
-  async update(
-    projectId: string,
-    id: string,
-    updateFlowDto: UpdateFlowDto,
-  ): Promise<Flow> {
-    await this.findOne(projectId, id)
+  async update(id: string, updateFlowDto: UpdateFlowDto): Promise<Flow> {
     return this.prisma.flow.update({ where: { id }, data: updateFlowDto })
   }
 
-  async delete(projectId: string, id: string): Promise<Flow> {
-    await this.findOne(projectId, id)
+  async delete(id: string): Promise<Flow> {
     return this.prisma.flow.delete({ where: { id } })
   }
 
-  async findStructure(projectId: string, id: string) {
-    await this.findOne(projectId, id)
-    return this.prisma.flow.findFirst({
-      where: { id, projectId },
+  async findStructure(id: string) {
+    const flow = await this.prisma.flow.findFirst({
+      where: { id },
       include: { nodes: true, edges: true },
     })
+    return {
+      nodes: flow?.nodes ?? [],
+      edges: flow?.edges ?? [],
+    }
   }
 }

@@ -1,4 +1,4 @@
-import type { ModelEdge } from '@/models/edge'
+import { toEdge, type ModelEdge } from '@/models/edge'
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const getEdge = async (
@@ -13,5 +13,5 @@ export const getEdge = async (
     },
   )
 
-  return response.body.data
+  return toEdge(response.body.data)
 }

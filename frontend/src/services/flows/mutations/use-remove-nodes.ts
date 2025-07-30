@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { removeNodes } from '..'
 
 type Response = ApiResponse<null>
-type Variables = { projectId: number; flowId: number; nodeIds: number[] }
+type Variables = { projectId: string; flowId: string; ids: string[] }
 type MutationOptions = UseMutationOptions<
   Response,
   ApiResponse<null>,
@@ -14,8 +14,8 @@ type MutationOptions = UseMutationOptions<
 export const useRemoveNodes = (options?: MutationOptions) => {
   return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
-    mutationFn: ({ projectId, flowId, nodeIds }) => {
-      return removeNodes(projectId, flowId, nodeIds)
+    mutationFn: ({ projectId, flowId, ids }) => {
+      return removeNodes(projectId, flowId, ids)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {

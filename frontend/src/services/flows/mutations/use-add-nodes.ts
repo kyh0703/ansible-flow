@@ -1,9 +1,9 @@
+import { fromNode } from '@/models/node'
 import type { ApiResponse } from '@/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
-import { addNodes } from '..'
 import { toast } from 'sonner'
-import { toNode } from '@/models/node'
+import { addNodes } from '..'
 
 type Response = string[]
 type Variables = { projectId: string; flowId: string; nodes: AppNode[] }
@@ -20,7 +20,7 @@ export const useAddNodes = (options?: MutationOptions) => {
       return addNodes(
         projectId,
         flowId,
-        nodes.map((node) => toNode(node)),
+        nodes.map((node) => fromNode(node)),
       )
     },
     onSuccess: (data, variables, context) => {

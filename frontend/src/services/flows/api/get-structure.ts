@@ -1,5 +1,5 @@
-import type { ModelEdge } from '@/models/edge'
-import type { ModelNode } from '@/models/node'
+import { toEdge, type ModelEdge } from '@/models/edge'
+import { toNode, type ModelNode } from '@/models/node'
 import { fetchExtended, type ApiResponse } from '@/services'
 
 export const getStructure = async (projectId: string, flowId: string) => {
@@ -15,5 +15,8 @@ export const getStructure = async (projectId: string, flowId: string) => {
     },
   )
 
-  return response.body.data
+  return {
+    nodes: response.body.data.nodes.map((node) => toNode(node)),
+    edges: response.body.data.edges.map((edge) => toEdge(edge)),
+  }
 }

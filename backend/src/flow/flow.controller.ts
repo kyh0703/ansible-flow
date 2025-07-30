@@ -1,23 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post,
   Query,
   UseGuards,
-  Logger,
 } from '@nestjs/common'
-import { FlowService } from './flow.service'
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
+import { ProjectMembershipGuard } from 'src/project/guards/project-membership.guard'
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
 import { CreateFlowDto } from './dto/create-flow.dto'
 import { FlowPaginationResponseDto } from './dto/flow-pagination-response.dto'
 import { UpdateFlowDto } from './dto/update-flow.dto'
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto'
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
-import { ProjectMembershipGuard } from 'src/project/guards/project-membership.guard'
+import { FlowService } from './flow.service'
 
 @ApiTags('flows')
 @Controller('projects/:projectId/flows')
@@ -66,11 +66,8 @@ export class FlowController {
   @ApiParam({ name: 'id', description: '플로우 ID' })
   @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id')
-  async findOne(
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-  ) {
-    return this.flowService.findOne(projectId, id)
+  async findOne(@Param('id') id: string) {
+    return this.flowService.findOne(id)
   }
 
   @ApiOperation({ summary: '플로우 생성' })
@@ -92,12 +89,8 @@ export class FlowController {
   @ApiParam({ name: 'id', description: '플로우 ID' })
   @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Patch(':id')
-  async update(
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-    @Body() updateFlowDto: UpdateFlowDto,
-  ) {
-    return this.flowService.update(projectId, id, updateFlowDto)
+  async update(@Param('id') id: string, @Body() updateFlowDto: UpdateFlowDto) {
+    return this.flowService.update(id, updateFlowDto)
   }
 
   @ApiOperation({ summary: '플로우 삭제' })
@@ -106,8 +99,8 @@ export class FlowController {
   @ApiParam({ name: 'id', description: '플로우 ID' })
   @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Delete(':id')
-  async delete(@Param('projectId') projectId: string, @Param('id') id: string) {
-    return this.flowService.delete(projectId, id)
+  async delete(@Param('id') id: string) {
+    return this.flowService.delete(id)
   }
 
   @ApiOperation({ summary: '플로우 구조 조회' })
@@ -116,10 +109,7 @@ export class FlowController {
   @ApiParam({ name: 'id', description: '플로우 ID' })
   @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id/structure')
-  async findStructure(
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-  ) {
-    return this.flowService.findStructure(projectId, id)
+  async findStructure(@Param('id') id: string) {
+    return this.flowService.findStructure(id)
   }
 }

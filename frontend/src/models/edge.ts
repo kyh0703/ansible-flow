@@ -17,7 +17,19 @@ export interface ModelEdge {
   createAt?: string
 }
 
-export function toEdge(edge: AppEdge): ModelEdge {
+export function toEdge(edge: ModelEdge): AppEdge {
+  const appEdge: AppEdge = {
+    id: edge.id,
+    type: edge.type,
+    source: edge.source,
+    target: edge.target,
+    label: edge.label,
+    hidden: edge.hidden ?? false,
+  }
+  return appEdge
+}
+
+export function fromEdge(edge: AppEdge): ModelEdge {
   const modelEdge: ModelEdge = {
     id: edge.id,
     type: edge.type,

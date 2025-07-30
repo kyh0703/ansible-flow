@@ -11,18 +11,7 @@ export interface ModelNode {
   createAt?: string
 }
 
-export function toNode(node: AppNode): ModelNode {
-  return {
-    id: node.id,
-    type: node.type,
-    position: node.position,
-    width: node.measured?.width ?? 0,
-    height: node.measured?.height ?? 0,
-    hidden: node.hidden ?? false,
-  }
-}
-
-export function fromNode(node: ModelNode): AppNode {
+export function toNode(node: ModelNode): AppNode {
   return {
     id: node.id,
     type: node.type as CustomNodeType,
@@ -34,5 +23,16 @@ export function fromNode(node: ModelNode): AppNode {
       updateAt: node.updateAt,
       createAt: node.createAt,
     },
+  }
+}
+
+export function fromNode(node: AppNode): ModelNode {
+  return {
+    id: node.id,
+    type: node.type,
+    position: node.position,
+    width: node.measured?.width ?? 0,
+    height: node.measured?.height ?? 0,
+    hidden: node.hidden ?? false,
   }
 }

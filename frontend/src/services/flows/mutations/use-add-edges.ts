@@ -1,12 +1,12 @@
-import { toModelEdge } from '@/acl/edge'
+import { fromEdge } from '@/models/edge'
 import type { ApiResponse } from '@/services'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppEdge } from '@xyflow/react'
-import { toast } from 'react-toastify'
 import { addEdges } from '..'
+import { toast } from 'sonner'
 
-type Response = number[]
-type Variables = { projectId: number; flowId: number; edges: AppEdge[] }
+type Response = string[]
+type Variables = { projectId: string; flowId: string; edges: AppEdge[] }
 type MutationOptions = UseMutationOptions<
   Response,
   ApiResponse<null>,
@@ -20,7 +20,7 @@ export const useAddEdges = (options?: MutationOptions) => {
       return addEdges(
         projectId,
         flowId,
-        edges.map((edge) => toModelEdge(edge)),
+        edges.map((edge) => fromEdge(edge)),
       )
     },
     onSuccess: (data, variables, context) => {

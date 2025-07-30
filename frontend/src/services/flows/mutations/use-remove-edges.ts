@@ -1,10 +1,10 @@
-import type { ApiResponse } from '@/services/types';
-import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { removeEdges } from '../api/remove-edges';
+import type { ApiResponse } from '@/services/types'
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { removeEdges } from '../api/remove-edges'
 
 type Response = ApiResponse<null>
-type Variables = { projectId: number; flowId: number; edgeIds: number[] }
+type Variables = { projectId: string; flowId: string; ids: string[] }
 type MutationOptions = UseMutationOptions<
   Response,
   ApiResponse<null>,
@@ -14,8 +14,8 @@ type MutationOptions = UseMutationOptions<
 export const useRemoveEdges = (options?: MutationOptions) => {
   return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
-    mutationFn: ({ projectId, flowId, edgeIds }) => {
-      return removeEdges(projectId, flowId, edgeIds)
+    mutationFn: ({ projectId, flowId, ids }) => {
+      return removeEdges(projectId, flowId, ids)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {

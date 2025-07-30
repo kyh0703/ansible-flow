@@ -1,4 +1,3 @@
-import { toModelNode } from '@/acl/node'
 import type { ApiResponse } from '@/services/types'
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query'
 import type { AppNode } from '@xyflow/react'
@@ -7,9 +6,9 @@ import { updateNodes } from '..'
 
 type Response = ApiResponse<null>
 type Variables = {
-  projectId: number
-  flowId: number
-  nodes: Partial<AppNode>[]
+  projectId: string
+  flowId: string
+  nodes: AppNode[]
 }
 type MutationOptions = UseMutationOptions<
   Response,
@@ -21,11 +20,7 @@ export const useUpdateNodes = (options?: MutationOptions) => {
   return useMutation<Response, ApiResponse<null>, Variables>({
     ...options,
     mutationFn: ({ projectId, flowId, nodes }) => {
-      return updateNodes(
-        projectId,
-        flowId,
-        nodes.map((node) => toModelNode(node as AppNode)),
-      )
+      return updateNodes(projectId, flowId, nodes)
     },
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {
