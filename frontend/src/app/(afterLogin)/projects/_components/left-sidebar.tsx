@@ -36,6 +36,7 @@ import {
   SunMoon,
   Trash,
 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import ThemeDropdown from './theme-dropdown'
@@ -84,10 +85,12 @@ export default function AppSidebar() {
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
                       {user?.profileImage ? (
-                        <img
+                        <Image
                           src={user.profileImage}
                           alt={user.name || 'User profile'}
                           className="h-full w-full object-cover"
+                          width={24}
+                          height={24}
                         />
                       ) : (
                         <span className="text-primary text-xs font-semibold">
