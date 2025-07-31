@@ -27,12 +27,12 @@ type YjsProviderProps = {
   baseUrl: string
 } & PropsWithChildren
 
-export default function YjsProvider({
+export const YjsProvider = ({
   projectId,
   flowId,
   baseUrl,
   children,
-}: YjsProviderProps) {
+}: YjsProviderProps) => {
   const yDocRef = useRef<Y.Doc>(new Y.Doc())
   const startTimeRef = useRef<number>(performance.now())
 

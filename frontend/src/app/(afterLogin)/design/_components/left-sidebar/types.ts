@@ -8,7 +8,13 @@ import {
   Zap,
 } from 'lucide-react'
 
-export const components = [
+export type Component = {
+  type: string
+  icon: React.ElementType
+  color: string
+}
+
+export const components: Component[] = [
   { type: 'input', icon: Circle, color: 'bg-blue-500' },
   { type: 'default', icon: Square, color: 'bg-green-500' },
   { type: 'output', icon: Triangle, color: 'bg-red-500' },

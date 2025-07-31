@@ -2,7 +2,7 @@
 
 import { useSelectedNode } from '@/stores/flow-store'
 import { useYjs } from '../../_contexts'
-import BasicFlow from '../basic-flow'
+import BasicFlow from '../design-flow'
 import { useQueryStructure } from '@/services/flows'
 import { useSuspenseQuery } from '@tanstack/react-query'
 

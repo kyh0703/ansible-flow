@@ -1,5 +1,9 @@
 import { type EdgeTypes } from '@xyflow/react'
 
+export const defaultEdgeOptions = {
+  style: { strokeWidth: 1, opacity: 0.7 },
+}
+
 export enum Algorithm {
   Linear = 'linear',
   CatmullRom = 'catmull-rom',

@@ -2,7 +2,7 @@
 
 import { ReactFlowProvider } from '@xyflow/react'
 import type { PropsWithChildren } from 'react'
-import YjsProvider from '../_contexts/yjs-context'
+import { YjsProvider } from '../_contexts'
 
 type Props = {
   projectId: string

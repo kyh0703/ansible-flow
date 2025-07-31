@@ -36,7 +36,7 @@ export class UpdateNodeDto {
   @ApiPropertyOptional({ description: '노드 스타일 정보' })
   @IsOptional()
   @IsObject()
-  styles?: object
+  style?: object
 
   @ApiPropertyOptional({ description: '노드 너비' })
   @IsOptional()

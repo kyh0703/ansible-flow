@@ -6,91 +6,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Circle,
-  Database,
-  Diamond,
-  Eye,
-  EyeOff,
-  FileText,
-  Lock,
-  Plus,
-  Search,
-  Square,
-  Triangle,
-  Unlock,
-  Zap,
-} from 'lucide-react'
+import type { CustomNodeType } from '@xyflow/react'
+import { Circle, Search } from 'lucide-react'
 import { useState } from 'react'
-import { components } from './types'
+import { DragItem } from './drag-item'
 
-const nodeTypes = [
-  { type: 'input', name: 'Input', icon: Circle, color: 'bg-blue-500' },
-  { type: 'default', name: 'Process', icon: Square, color: 'bg-green-500' },
-  { type: 'output', name: 'Output', icon: Triangle, color: 'bg-red-500' },
-  {
-    type: 'condition',
-    name: 'Condition',
-    icon: Diamond,
-    color: 'bg-yellow-500',
-  },
-  { type: 'api', name: 'API Call', icon: Zap, color: 'bg-purple-500' },
-  {
-    type: 'database',
-    name: 'Database',
-    icon: Database,
-    color: 'bg-indigo-500',
-  },
-  {
-    type: 'document',
-    name: 'Document',
-    icon: FileText,
-    color: 'bg-orange-500',
-  },
-]
-
-const mockLayers = [
-  { id: '1', name: 'Background', visible: true, locked: false },
-  { id: '2', name: 'Main Flow', visible: true, locked: false },
-  { id: '3', name: 'Annotations', visible: false, locked: true },
-]
+const nodeTypes = [{ type: 'start', name: 'Start', icon: Circle }]
 
 export function LeftSidebar() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [layers, setLayers] = useState(mockLayers)
-
-  const toggleLayerVisibility = (id: string) => {
-    setLayers(
-      layers.map((layer) =>
-        layer.id === id ? { ...layer, visible: !layer.visible } : layer,
-      ),
-    )
-  }
-
-  const toggleLayerLock = (id: string) => {
-    setLayers(
-      layers.map((layer) =>
-        layer.id === id ? { ...layer, locked: !layer.locked } : layer,
-      ),
-    )
-  }
-
-  const filteredComponents = components.filter((component) =>
-    component.type.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    nodeType: string,
-  ) => {
-    console.log('nodeType', nodeType)
-    e.dataTransfer.setData('application/xyflow', nodeType)
-    e.dataTransfer.effectAllowed = 'move'
-  }
 
   return (
     <Accordion type="single" collapsible>
@@ -131,78 +58,16 @@ export function LeftSidebar() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="grid grid-cols-2 gap-2 pt-2">
-                    {nodeTypes.map((nodeType) => {
-                      const IconComponent = nodeType.icon
-                      return (
-                        <div
-                          key={nodeType.type}
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, nodeType.type)}
-                          className="hover:bg-muted/50 flex cursor-grab items-center gap-2 rounded-md p-2 active:cursor-grabbing"
-                        >
-                          <div
-                            className={`${nodeType.color} h-3 w-3 rounded-full`}
-                          />
-                          <span className="text-xs">{nodeType.name}</span>
-                        </div>
-                      )
-                    })}
+                    {nodeTypes.map((nodeType) => (
+                      <DragItem
+                        key={nodeType.type}
+                        type={nodeType.type as CustomNodeType}
+                        icon={nodeType.icon}
+                      />
+                    ))}
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="layers" className="m-0 flex-1 space-y-0 p-4 pt-4">
-            <div className="space-y-2">
-              <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
-                  Layers
-                </h3>
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                  <Plus className="h-3 w-3" />
-                </Button>
-              </div>
-
-              <div className="space-y-1">
-                {layers.map((layer) => (
-                  <div
-                    key={layer.id}
-                    className="hover:bg-muted/50 group flex items-center gap-2 rounded-md p-2"
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-5 w-5 p-0"
-                      onClick={() => toggleLayerVisibility(layer.id)}
-                    >
-                      {layer.visible ? (
-                        <Eye className="h-3 w-3" />
-                      ) : (
-                        <EyeOff className="text-muted-foreground h-3 w-3" />
-                      )}
-                    </Button>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-5 w-5 p-0"
-                      onClick={() => toggleLayerLock(layer.id)}
-                    >
-                      {layer.locked ? (
-                        <Lock className="text-muted-foreground h-3 w-3" />
-                      ) : (
-                        <Unlock className="h-3 w-3" />
-                      )}
-                    </Button>
-
-                    <div className="bg-primary/20 h-3 w-3 flex-shrink-0 rounded" />
-                    <span className="flex-1 truncate text-sm">
-                      {layer.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
             </div>
           </TabsContent>
 

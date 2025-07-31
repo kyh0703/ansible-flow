@@ -26,7 +26,7 @@ export class CreateNodeDto {
 
   @ApiProperty({ description: '노드 스타일 정보' })
   @IsObject()
-  styles: object
+  style?: object
 
   @ApiProperty({ description: '노드 너비' })
   @IsInt()

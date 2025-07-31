@@ -3,16 +3,17 @@ import { createStore } from '@/lib/store'
 export type CursorMode = 'grab' | 'pointer' | 'link'
 
 interface FlowState {
-  selectedNode: string | null
+  selectedNodeId: string | null
   cursorMode: CursorMode
   actions: {
     setCursorMode: (mode: CursorMode) => void
+    setSelectedNodeId: (nodeId: string | null) => void
   }
 }
 
 const useFlowStore = createStore<FlowState>(
   (set) => ({
-    selectedNode: null,
+    selectedNodeId: null,
     cursorMode: 'grab',
     actions: {
       setCursorMode: (mode: CursorMode) =>
@@ -23,15 +24,20 @@ const useFlowStore = createStore<FlowState>(
           false,
           'setCursorMode',
         ),
-      setSelectedNode: (node: string | null) =>
-        set((state) => {
-          state.selectedNode = node
-        }),
+      setSelectedNodeId: (nodeId: string | null) =>
+        set(
+          (state) => {
+            state.selectedNodeId = nodeId
+          },
+          false,
+          'setSelectedNodeId',
+        ),
     },
   }),
   { name: 'FlowStore' },
 )
 
-export const useSelectedNode = () => useFlowStore((state) => state.selectedNode)
+export const useSelectedNodeId = () =>
+  useFlowStore((state) => state.selectedNodeId)
 export const useCursor = () => useFlowStore((state) => state.cursorMode)
 export const useFlowActions = () => useFlowStore((state) => state.actions)

@@ -70,7 +70,7 @@ export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetT
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -316,8 +316,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.11.1
-   * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
+   * Prisma Client JS version: 6.13.0
+   * Query Engine version: 361e86d0ea4987e9f53a565309b3eed797a6bcbd
    */
   export type PrismaVersion = {
     client: string
@@ -1363,16 +1363,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -1421,10 +1429,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -6186,7 +6199,6 @@ export namespace Prisma {
     flowId: number
     type: number
     position: number
-    styles: number
     width: number
     height: number
     hidden: number
@@ -6236,7 +6248,6 @@ export namespace Prisma {
     flowId?: true
     type?: true
     position?: true
-    styles?: true
     width?: true
     height?: true
     hidden?: true
@@ -6337,7 +6348,6 @@ export namespace Prisma {
     flowId: string
     type: string
     position: JsonValue
-    styles: JsonValue
     width: number
     height: number
     hidden: boolean
@@ -6370,7 +6380,6 @@ export namespace Prisma {
     flowId?: boolean
     type?: boolean
     position?: boolean
-    styles?: boolean
     width?: boolean
     height?: boolean
     hidden?: boolean
@@ -6385,7 +6394,6 @@ export namespace Prisma {
     flowId?: boolean
     type?: boolean
     position?: boolean
-    styles?: boolean
     width?: boolean
     height?: boolean
     hidden?: boolean
@@ -6400,7 +6408,6 @@ export namespace Prisma {
     flowId?: boolean
     type?: boolean
     position?: boolean
-    styles?: boolean
     width?: boolean
     height?: boolean
     hidden?: boolean
@@ -6415,7 +6422,6 @@ export namespace Prisma {
     flowId?: boolean
     type?: boolean
     position?: boolean
-    styles?: boolean
     width?: boolean
     height?: boolean
     hidden?: boolean
@@ -6424,7 +6430,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type NodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "flowId" | "type" | "position" | "styles" | "width" | "height" | "hidden" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["node"]>
+  export type NodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "flowId" | "type" | "position" | "width" | "height" | "hidden" | "description" | "updatedAt" | "createdAt", ExtArgs["result"]["node"]>
   export type NodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     flow?: boolean | FlowDefaultArgs<ExtArgs>
   }
@@ -6445,7 +6451,6 @@ export namespace Prisma {
       flowId: string
       type: string
       position: Prisma.JsonValue
-      styles: Prisma.JsonValue
       width: number
       height: number
       hidden: boolean
@@ -6880,7 +6885,6 @@ export namespace Prisma {
     readonly flowId: FieldRef<"Node", 'String'>
     readonly type: FieldRef<"Node", 'String'>
     readonly position: FieldRef<"Node", 'Json'>
-    readonly styles: FieldRef<"Node", 'Json'>
     readonly width: FieldRef<"Node", 'Int'>
     readonly height: FieldRef<"Node", 'Int'>
     readonly hidden: FieldRef<"Node", 'Boolean'>
@@ -10535,7 +10539,6 @@ export namespace Prisma {
     flowId: 'flowId',
     type: 'type',
     position: 'position',
-    styles: 'styles',
     width: 'width',
     height: 'height',
     hidden: 'hidden',
@@ -10976,7 +10979,6 @@ export namespace Prisma {
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
-    styles?: JsonFilter<"Node">
     width?: IntFilter<"Node"> | number
     height?: IntFilter<"Node"> | number
     hidden?: BoolFilter<"Node"> | boolean
@@ -10991,7 +10993,6 @@ export namespace Prisma {
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
-    styles?: SortOrder
     width?: SortOrder
     height?: SortOrder
     hidden?: SortOrder
@@ -11009,7 +11010,6 @@ export namespace Prisma {
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
-    styles?: JsonFilter<"Node">
     width?: IntFilter<"Node"> | number
     height?: IntFilter<"Node"> | number
     hidden?: BoolFilter<"Node"> | boolean
@@ -11024,7 +11024,6 @@ export namespace Prisma {
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
-    styles?: SortOrder
     width?: SortOrder
     height?: SortOrder
     hidden?: SortOrder
@@ -11046,7 +11045,6 @@ export namespace Prisma {
     flowId?: StringWithAggregatesFilter<"Node"> | string
     type?: StringWithAggregatesFilter<"Node"> | string
     position?: JsonWithAggregatesFilter<"Node">
-    styles?: JsonWithAggregatesFilter<"Node">
     width?: IntWithAggregatesFilter<"Node"> | number
     height?: IntWithAggregatesFilter<"Node"> | number
     hidden?: BoolWithAggregatesFilter<"Node"> | boolean
@@ -11561,7 +11559,6 @@ export namespace Prisma {
     id?: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -11576,7 +11573,6 @@ export namespace Prisma {
     flowId: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -11589,7 +11585,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -11604,7 +11599,6 @@ export namespace Prisma {
     flowId?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -11618,7 +11612,6 @@ export namespace Prisma {
     flowId: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -11631,7 +11624,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -11645,7 +11637,6 @@ export namespace Prisma {
     flowId?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -12225,7 +12216,6 @@ export namespace Prisma {
     flowId?: SortOrder
     type?: SortOrder
     position?: SortOrder
-    styles?: SortOrder
     width?: SortOrder
     height?: SortOrder
     hidden?: SortOrder
@@ -13354,7 +13344,6 @@ export namespace Prisma {
     id?: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -13367,7 +13356,6 @@ export namespace Prisma {
     id?: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -13471,7 +13459,6 @@ export namespace Prisma {
     flowId?: StringFilter<"Node"> | string
     type?: StringFilter<"Node"> | string
     position?: JsonFilter<"Node">
-    styles?: JsonFilter<"Node">
     width?: IntFilter<"Node"> | number
     height?: IntFilter<"Node"> | number
     hidden?: BoolFilter<"Node"> | boolean
@@ -13854,7 +13841,6 @@ export namespace Prisma {
     id?: string
     type: string
     position: JsonNullValueInput | InputJsonValue
-    styles: JsonNullValueInput | InputJsonValue
     width: number
     height: number
     hidden?: boolean
@@ -13879,7 +13865,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -13892,7 +13877,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean
@@ -13905,7 +13889,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     position?: JsonNullValueInput | InputJsonValue
-    styles?: JsonNullValueInput | InputJsonValue
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     hidden?: BoolFieldUpdateOperationsInput | boolean

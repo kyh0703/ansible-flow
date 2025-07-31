@@ -77,7 +77,6 @@ model Node {
   flowId       String
   type         String
   position     Json
-  styles       Json
   width        Int
   height       Int
   hidden       Boolean   @default(false)
