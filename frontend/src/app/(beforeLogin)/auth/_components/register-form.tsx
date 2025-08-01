@@ -2,8 +2,8 @@
 
 import FormInput from '@/components/form-input'
 import { Button } from '@/components/ui/button'
-import logger from '@/lib/logger'
 import { useAuth } from '@/contexts/auth-context'
+import logger from '@/lib/logger'
 import { setToken } from '@/services'
 import { register } from '@/services/auth'
 import { extractErrorMessage } from '@/utils'
@@ -49,8 +49,8 @@ export function RegisterForm() {
 
   const onSubmit = async (data: Register) => {
     try {
-      const res = await register(data)
-      setToken(res)
+      const response = await register(data)
+      setToken(response)
       await checkAuth()
       router.replace('/projects')
       toast.success('회원가입이 완료되었습니다')

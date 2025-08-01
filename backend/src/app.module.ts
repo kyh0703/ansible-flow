@@ -9,6 +9,7 @@ import authConfig from './config/auth.config'
 import dbConfig from './config/db.config'
 import emailConfig from './config/email.config'
 import { validate } from './config/env.validation'
+import { EdgeModule } from './edge/edge.module'
 import { FlowModule } from './flow/flow.module'
 import { MailModule } from './mail/mail.module'
 import { NodeModule } from './node/node.module'
@@ -46,6 +47,7 @@ import { UserModule } from './user/user.module'
     ProjectModule,
     FlowModule,
     NodeModule,
+    EdgeModule,
     UserModule,
     MailModule,
   ],

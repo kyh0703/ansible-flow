@@ -28,6 +28,14 @@ export function useNodeOperations() {
     [],
   )
 
+  const getNodeType = useCallback(
+    (id: string): CustomNodeType | undefined => {
+      const node = getNodes().find((node) => node.id === id)
+      return node?.type
+    },
+    [getNodes],
+  )
+
   const getSelectedNodes = useCallback(() => {
     const nodeMap = new Map<string, AppNode>()
 
@@ -51,6 +59,7 @@ export function useNodeOperations() {
   return {
     nodeFactory,
     setLabel,
+    getNodeType,
     getSelectedNodes,
   }
 }

@@ -1,28 +1,31 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
+  Controller,
   Delete,
-  Param,
+  Get,
   Logger,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common'
-import { NodeService } from './node.service'
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
+import { ProjectMembershipGuard } from 'src/project/guards/project-membership.guard'
 import { CreateNodeDto } from './dto/create-node.dto'
 import { UpdateNodeDto } from './dto/update-node.dto'
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-  ApiParam,
-} from '@nestjs/swagger'
+import { NodeService } from './node.service'
 
 @ApiTags('nodes')
 @Controller('projects/:projectId/flows/:flowId/nodes')
 export class NodeController {
-  private logger = new Logger(NodeController.name)
+  private readonly logger = new Logger(NodeController.name)
 
   constructor(private readonly nodeService: NodeService) {}
 
@@ -31,6 +34,7 @@ export class NodeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [CreateNodeDto] })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Post()
   async createMany(
     @Param('projectId') projectId: string,
@@ -45,6 +49,7 @@ export class NodeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiParam({ name: 'id', description: '노드 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id')
   async findOne(
     @Param('projectId') projectId: string,
@@ -59,6 +64,7 @@ export class NodeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [UpdateNodeDto] })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Patch()
   async updateMany(
     @Param('projectId') projectId: string,
@@ -77,6 +83,7 @@ export class NodeController {
       properties: { ids: { type: 'array', items: { type: 'string' } } },
     },
   })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Delete()
   async deleteMany(
     @Param('projectId') projectId: string,

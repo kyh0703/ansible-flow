@@ -1,13 +1,19 @@
 'use client'
 
 import logger from '@/lib/logger'
-import { useAddNodes, useUpdateEdges, useUpdateNodes } from '@/services/flows'
+import {
+  useAddEdges,
+  useAddNodes,
+  useUpdateEdges,
+  useUpdateNodes,
+} from '@/services/flows'
 import {
   useCursor,
   useFlowActions,
   useSelectedNodeId,
 } from '@/stores/flow-store'
 import {
+  addEdge,
   Background,
   BackgroundVariant,
   Controls,
@@ -19,6 +25,7 @@ import {
   type AppNode,
   type ColorMode,
   type CustomNodeType,
+  type OnConnect,
   type OnNodesDelete,
 } from '@xyflow/react'
 import { useTheme } from 'next-themes'
@@ -26,6 +33,7 @@ import { useCallback, useRef, type DragEventHandler } from 'react'
 import { useYjs } from '../../_contexts/yjs-context'
 import {
   useCursorStateSynced,
+  useEdgeOperations,
   useEdgesStateSynced,
   useNodeOperations,
   useNodesStateSynced,
@@ -65,7 +73,8 @@ export default function DrawingFlow({
   const { setSelectedNodeId } = useFlowActions()
 
   const { theme } = useTheme()
-  const { nodeFactory } = useNodeOperations()
+  const { nodeFactory, getNodeType } = useNodeOperations()
+  const { getEdgeBySource, edgeFactory } = useEdgeOperations()
 
   const [nodes, setNodes, onNodesChange, horizontalLine, verticalLine] =
     useNodesStateSynced(initialNodes)
@@ -75,6 +84,7 @@ export default function DrawingFlow({
   const { mutateAsync: addNodesMutate } = useAddNodes()
   const { mutateAsync: updateNodesMutate } = useUpdateNodes()
   const { mutateAsync: updateEdgesMutate } = useUpdateEdges()
+  const { mutateAsync: addEdgesMutate } = useAddEdges()
 
   const handleDragOver: DragEventHandler<HTMLDivElement> = useCallback((e) => {
     e.preventDefault()
@@ -109,10 +119,38 @@ export default function DrawingFlow({
 
   const handleNodesDelete: OnNodesDelete<AppNode> = useCallback(
     (deleteNodes) => {
-      if (deleteNodes.some((node) => node.id === selectedNodeId))
+      if (deleteNodes.some((node) => node.id === selectedNodeId)) {
         setSelectedNodeId(null)
+      }
     },
     [selectedNodeId, setSelectedNodeId],
+  )
+
+  const handleConnect: OnConnect = useCallback(
+    async (connection) => {
+      logger.debug('onConnect', connection)
+
+      const edgeType = getNodeType(connection.source)
+      if (!edgeType) return
+
+      try {
+        const oldEdge = getEdgeBySource(connection.source)
+        if (oldEdge) {
+        } else {
+          const newEdge = edgeFactory(connection, edgeType, 'next')
+          if (!newEdge) return
+          await addEdgesMutate({
+            projectId,
+            flowId,
+            edges: [newEdge],
+          })
+          setEdges((edges) => addEdge(newEdge, edges))
+        }
+      } catch (error) {
+        logger.error(error)
+      }
+    },
+    [updateEdgesMutate],
   )
 
   return (
@@ -141,6 +179,7 @@ export default function DrawingFlow({
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onNodesDelete={handleNodesDelete}
+        onConnect={handleConnect}
       >
         <Background variant={BackgroundVariant.Dots} />
         <Controls />

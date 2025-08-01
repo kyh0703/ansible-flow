@@ -44,8 +44,8 @@ export function LoginForm() {
 
   const onSubmit = async (data: Login) => {
     try {
-      const res = await login(data)
-      setToken(res)
+      const response = await login(data)
+      setToken(response)
       await checkAuth()
       router.replace('/projects')
       toast.success('로그인되었습니다')
@@ -81,15 +81,15 @@ export function LoginForm() {
       <Button className="w-full" type="submit" disabled={isSubmitting}>
         {isSubmitting ? '로그인 중...' : '로그인'}
       </Button>
-      <section className="flex gap-2">
-        <OAuthButton />
-      </section>
       <Button
         className="text-sm text-gray-500 hover:text-gray-700"
         variant="link"
       >
         <Link href="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
       </Button>
+      <section className="flex gap-2">
+        <OAuthButton />
+      </section>
     </form>
   )
 }

@@ -1,4 +1,5 @@
 import { type EdgeTypes } from '@xyflow/react'
+import { EasyConnectionEdge } from '../_components/edge'
 
 export const defaultEdgeOptions = {
   style: { strokeWidth: 1, opacity: 0.7 },
@@ -12,4 +13,6 @@ export enum Algorithm {
 
 export const defaultAlgorithm = Algorithm.Linear
 
-export const edgeTypes: EdgeTypes = {}
+export const edgeTypes: EdgeTypes = {
+  start: EasyConnectionEdge,
+}

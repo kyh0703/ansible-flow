@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBody,
@@ -15,6 +16,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
+import { ProjectMembershipGuard } from 'src/project/guards/project-membership.guard'
 import { CreateEdgeDto } from './dto/create-edge.dto'
 import { UpdateEdgeDto } from './dto/update-edge.dto'
 import { EdgeService } from './edge.service'
@@ -31,6 +34,7 @@ export class EdgeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [CreateEdgeDto] })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Post()
   async createMany(
     @Param('projectId') projectId: string,
@@ -45,6 +49,7 @@ export class EdgeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({ type: [UpdateEdgeDto] })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Patch()
   async updateMany(
     @Param('projectId') projectId: string,
@@ -63,6 +68,7 @@ export class EdgeController {
       properties: { ids: { type: 'array', items: { type: 'string' } } },
     },
   })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Delete()
   async deleteMany(
     @Param('projectId') projectId: string,
@@ -77,6 +83,7 @@ export class EdgeController {
   @ApiParam({ name: 'projectId', description: '프로젝트 ID' })
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiParam({ name: 'id', description: '에지 ID' })
+  @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
   @Get(':id')
   async findOne(
     @Param('projectId') projectId: string,

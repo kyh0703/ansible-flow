@@ -22,9 +22,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { setToken } from '@/services'
+import { useAuth } from '@/contexts'
 import { logout } from '@/services/auth'
-import { useUser, useUserActions } from '@/stores/user-store'
 import { DropdownMenu, DropdownMenuPortal } from '@radix-ui/react-dropdown-menu'
 import {
   ChevronDown,
@@ -58,8 +57,7 @@ import ThemeDropdown from './theme-dropdown'
 
 export default function AppSidebar() {
   const router = useRouter()
-  const user = useUser()
-  const { setUser } = useUserActions()
+  const { authUser, clearAuth } = useAuth()
   const pathname = usePathname()
 
   const handleLogout = async () => {
@@ -68,8 +66,7 @@ export default function AppSidebar() {
     } catch (error) {
       console.error('Logout failed:', error)
     } finally {
-      setUser(null)
-      setToken(null)
+      clearAuth()
       router.replace('/')
     }
   }
@@ -84,21 +81,21 @@ export default function AppSidebar() {
                 <SidebarMenuButton className="bg-muted/50 hover:bg-muted h-10 w-full justify-between rounded-lg px-3 text-sm font-medium">
                   <div className="flex items-center gap-2">
                     <div className="bg-primary/10 flex h-6 w-6 items-center justify-center overflow-hidden rounded">
-                      {user?.profileImage ? (
+                      {authUser?.profileImage ? (
                         <Image
-                          src={user.profileImage}
-                          alt={user.name || 'User profile'}
+                          src={authUser.profileImage}
+                          alt={authUser.name || 'User profile'}
                           className="h-full w-full object-cover"
                           width={24}
                           height={24}
                         />
                       ) : (
                         <span className="text-primary text-xs font-semibold">
-                          {user?.name?.charAt(0)?.toUpperCase() ?? 'U'}
+                          {authUser?.name?.charAt(0)?.toUpperCase() ?? 'U'}
                         </span>
                       )}
                     </div>
-                    <span>{user?.name}</span>
+                    <span>{authUser?.name}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 opacity-60" />
                 </SidebarMenuButton>

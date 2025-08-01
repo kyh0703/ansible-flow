@@ -1,4 +1,4 @@
-export * from './use-copy'
+export * from './use-copy-paste'
 export * from './use-cursor-state-synced'
 export * from './use-edge-operations'
 export * from './use-edges-state-synced'

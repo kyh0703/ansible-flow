@@ -1,8 +1,8 @@
 import { Spinner } from '@/components/ui/spinner'
 import logger from '@/lib/logger'
-import { setToken } from '@/services/token'
+import type { User } from '@/models'
 import { me } from '@/services/auth/api'
-import { useUserActions } from '@/stores/user-store'
+import { setToken } from '@/services/token'
 import {
   createContext,
   useCallback,
@@ -14,30 +14,37 @@ import {
 } from 'react'
 
 interface AuthContextType {
-  isAuthLoading: boolean
+  authUser: User | null
+  isLoggedIn: boolean
   checkAuth: () => Promise<void>
+  clearAuth: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
-  const [isAuthLoading, setIsAuthLoading] = useState(true)
-  const { setUser } = useUserActions()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [authUser, setAuthUser] = useState<User | null>(null)
 
   const checkAuth = useCallback(async () => {
     try {
-      // Try to get user info from server using httpOnly cookie
       const userData = await me()
-      setUser(userData)
-      logger.info('User authenticated successfully')
+      setAuthUser(userData)
+      setIsLoggedIn(true)
+      logger.info('User login successfully')
     } catch (error) {
-      logger.error('User not authenticated', error)
-      setUser(null)
-      setToken(null)
+      logger.error('User login failed', error)
+      clearAuth()
     } finally {
-      setIsAuthLoading(false)
+      setIsLoggedIn(false)
     }
-  }, [setUser])
+  }, [setAuthUser])
+
+  const clearAuth = useCallback(() => {
+    setAuthUser(null)
+    setToken(null)
+    setIsLoggedIn(false)
+  }, [setAuthUser])
 
   useEffect(() => {
     checkAuth()
@@ -45,14 +52,18 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
 
   const value: AuthContextType = useMemo(
     () => ({
-      isAuthLoading,
+      authUser,
+      setAuthUser,
+      isLoggedIn,
+      setIsLoggedIn,
       checkAuth,
+      clearAuth,
     }),
-    [isAuthLoading, checkAuth],
+    [],
   )
 
   // Show loading spinner while checking authentication
-  if (isAuthLoading) {
+  if (isLoggedIn) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Spinner />
