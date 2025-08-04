@@ -1,3 +1,5 @@
+'use client'
+
 import { Panel, useStore } from '@xyflow/react'
 
 export default function ViewportLogger() {
@@ -8,5 +10,9 @@ export default function ViewportLogger() {
       )}, zoom: ${s.transform[2].toFixed(2)}`,
   )
 
-  return <Panel position="top-right">{viewport}</Panel>
+  return (
+    <Panel position="top-right" className="text-xs">
+      {viewport}
+    </Panel>
+  )
 }

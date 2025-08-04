@@ -4,9 +4,9 @@ import { useQueryStructure } from '@/services/flows'
 import { useSelectedNodeId } from '@/stores/flow-store'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useYjs } from '../../_contexts'
-import BasicFlow from '../design-flow'
+import { Flow } from './flow'
 
-export default function FlowPanel() {
+export function Panel() {
   const { projectId, flowId } = useYjs()
 
   const selectedNodeId = useSelectedNodeId()
@@ -15,7 +15,7 @@ export default function FlowPanel() {
 
   return (
     <div className="flex h-full w-full bg-blue-100">
-      <BasicFlow initialNodes={data.nodes} initialEdges={data.edges} />
+      <Flow initialNodes={data.nodes} initialEdges={data.edges} />
       {selectedNodeId && <div>Selected Node: {selectedNodeId}</div>}
     </div>
   )

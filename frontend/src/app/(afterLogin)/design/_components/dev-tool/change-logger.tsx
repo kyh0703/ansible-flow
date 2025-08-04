@@ -1,10 +1,15 @@
+'use client'
+
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   type NodeChange,
   type OnNodesChange,
+  Panel,
   useStore,
   useStoreApi,
 } from '@xyflow/react'
 import { useEffect, useRef, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 type ChangeLoggerProps = {
   color?: string
@@ -20,7 +25,7 @@ function ChangeInfo({ change }: Readonly<ChangeInfoProps>) {
   const { type } = change
 
   return (
-    <div style={{ marginBottom: 4 }}>
+    <div>
       <div>node id: {id}</div>
       <div>
         {type === 'add' ? JSON.stringify(change.item, null, 2) : null}
@@ -42,6 +47,7 @@ function ChangeInfo({ change }: Readonly<ChangeInfoProps>) {
 export default function ChangeLogger({
   limit = 20,
 }: Readonly<ChangeLoggerProps>) {
+  const scrollRef = useRef<HTMLDivElement>(null)
   const [changes, setChanges] = useState<NodeChange[]>([])
   const onNodesChangeIntercepted = useRef(false)
   const onNodesChange = useStore((s) => s.onNodesChange)
@@ -64,16 +70,38 @@ export default function ChangeLogger({
     store.setState({ onNodesChange: onNodesChangeLogger })
   }, [onNodesChange, limit, store])
 
+  useEffect(() => {
+    const scrollContainer = scrollRef.current?.querySelector(
+      '[data-radix-scroll-area-viewport]',
+    )
+
+    const scrollToBottom = () => {
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollHeight,
+          behavior: 'smooth',
+        })
+      }
+    }
+
+    scrollToBottom()
+  }, [changes])
+
   return (
-    <div className="react-flow__devtools-changelogger mt-16 text-xs">
+    <Panel
+      position="top-left"
+      className="react-flow__devtools-changelogger text-xs"
+    >
       <div className="react-flow__devtools-title">🏷️Change Logger🏷️</div>
       {changes.length === 0 ? (
         <>no changes triggered</>
       ) : (
-        changes.map((change, index) => (
-          <ChangeInfo key={index} change={change} />
-        ))
+        <ScrollArea ref={scrollRef} className="h-[200px]">
+          {changes.map((change) => (
+            <ChangeInfo key={change.type + uuidv4()} change={change} />
+          ))}
+        </ScrollArea>
       )}
-    </div>
+    </Panel>
   )
 }

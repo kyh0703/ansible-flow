@@ -1,1 +1,2 @@
-export * from './base-node'
+export * from './context-menu'
+export * from './icon-node'

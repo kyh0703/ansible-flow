@@ -124,10 +124,26 @@
   body {
     @apply box-border h-dvh w-dvw overflow-hidden;
   }
+}
 
-  @layer components {
-    .error-msg {
-      @apply text-destructive ml-2 text-center text-xs text-wrap;
-    }
+@layer components {
+  .error-message {
+    margin-left: 0.5rem;
+    text-align: center;
+    font-size: var(--text-xs);
+    text-wrap: wrap;
+    color: var(--color-destructive);
+  }
+
+  .node-handle {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border: none;
+    opacity: 0;
+    border-radius: 0;
   }
 }

@@ -16,6 +16,8 @@ export function useNodeOperations() {
       const newNode: AppNode = {
         id: uuidv4(),
         position,
+        width: 40,
+        height: 40,
         zIndex: 0,
         type,
         data: {

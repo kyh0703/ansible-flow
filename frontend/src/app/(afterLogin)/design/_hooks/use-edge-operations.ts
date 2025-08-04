@@ -1,4 +1,5 @@
 import {
+  MarkerType,
   useReactFlow,
   type AppEdge,
   type AppNode,
@@ -28,6 +29,9 @@ export function useEdgeOperations() {
         },
         zIndex: 10,
         reconnectable: false,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
       }
 
       return newEdge

@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ConnectionLineComponentProps,
   getStraightPath,
@@ -8,7 +10,7 @@ export function ConnectionLine({
   fromY,
   toX,
   toY,
-}: ConnectionLineComponentProps) {
+}: Readonly<ConnectionLineComponentProps>) {
   const [edgePath] = getStraightPath({
     sourceX: fromX,
     sourceY: fromY,

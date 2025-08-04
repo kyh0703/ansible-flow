@@ -52,16 +52,14 @@ import {
 } from './options'
 
 import '@xyflow/react/dist/style.css'
+import { edgeTypes, nodeTypes } from '../../_constants'
 
 type FlowProps = {
   initialNodes: AppNode[]
   initialEdges: AppEdge[]
 }
 
-export default function DrawingFlow({
-  initialNodes,
-  initialEdges,
-}: Readonly<FlowProps>) {
+export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
   const { projectId, flowId } = useYjs()
 
   const flowRef = useRef<HTMLDivElement>(null)
@@ -161,6 +159,8 @@ export default function DrawingFlow({
         colorMode={theme as ColorMode}
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         minZoom={0.1}
         maxZoom={3}
         fitView={!viewPort}

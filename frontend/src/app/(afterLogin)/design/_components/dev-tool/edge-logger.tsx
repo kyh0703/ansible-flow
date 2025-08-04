@@ -1,19 +1,48 @@
-import { useEdges } from '@xyflow/react'
+'use client'
 
-export default function EdgeLogger() {
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Panel, useEdges } from '@xyflow/react'
+
+type EdgeInfoProps = {
+  id: string
+  type?: string
+  source: string
+  target: string
+}
+
+function EdgeInfo({ id, type, source, target }: Readonly<EdgeInfoProps>) {
+  return (
+    <div className="react-flow__devtools-edgeinfo text-xs">
+      <div>
+        👣 {type} {id}
+      </div>
+      <div>source: {source}</div>
+      <div>target: {target}</div>
+    </div>
+  )
+}
+
+export function EdgeInspector() {
   const edges = useEdges()
 
   return (
-    <div className="react-flow__devtools-Edgechangelogger absolute top-10 right-0 text-xs">
-      <div className="react-flow__devtools-title">🏷️Edge Logger🏷️</div>
-      <div>총개수: {edges.length}</div>
-      <div>
-        {edges.map((edge) => (
-          <div key={edge.id}>
-            {edge.source} → {edge.target}
-          </div>
-        ))}
-      </div>
-    </div>
+    <Panel position="center-left">
+      <ScrollArea className="h-[200px]">
+        {edges.map((edge) => {
+          const source = edge.source
+          const target = edge.target
+
+          return (
+            <EdgeInfo
+              key={edge.id}
+              id={edge.id}
+              type={edge.type}
+              source={source}
+              target={target}
+            />
+          )
+        })}
+      </ScrollArea>
+    </Panel>
   )
 }

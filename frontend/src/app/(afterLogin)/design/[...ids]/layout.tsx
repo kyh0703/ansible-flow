@@ -6,6 +6,7 @@ import {
 import type { PropsWithChildren } from 'react'
 import { LeftSidebar } from '../_components/left-sidebar'
 import Provider from './provider'
+import { RightSidebar } from '../_components/right-sidebar'
 
 type DesignLayoutProps = {
   params: Promise<{ ids: string[] }>
@@ -34,7 +35,13 @@ export default async function DesignLayout({
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={85}>
-          <div className="flex h-full w-full">{children}</div>
+          <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel defaultSize={85}>{children}</ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={15}>
+              <RightSidebar />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
     </Provider>

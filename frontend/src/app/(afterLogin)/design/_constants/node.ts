@@ -1,6 +1,6 @@
 import type { NodeTypes } from '@xyflow/react'
-import { BaseNode } from '../_components/node/base-node'
+import { IconNode } from '../_components/node'
 
 export const nodeTypes: NodeTypes = {
-  start: BaseNode,
+  start: IconNode,
 }
