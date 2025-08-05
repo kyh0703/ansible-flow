@@ -15,7 +15,6 @@ import {
 
 interface AuthContextType {
   authUser: User | null
-  isLoggedIn: boolean
   checkAuth: () => Promise<void>
   clearAuth: () => void
 }
@@ -23,27 +22,22 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [authUser, setAuthUser] = useState<User | null>(null)
 
   const checkAuth = useCallback(async () => {
     try {
       const userData = await me()
       setAuthUser(userData)
-      setIsLoggedIn(true)
       logger.info('User login successfully')
     } catch (error) {
       logger.error('User login failed', error)
       clearAuth()
-    } finally {
-      setIsLoggedIn(false)
     }
   }, [setAuthUser])
 
   const clearAuth = useCallback(() => {
     setAuthUser(null)
     setToken(null)
-    setIsLoggedIn(false)
   }, [setAuthUser])
 
   useEffect(() => {
@@ -54,8 +48,6 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
     () => ({
       authUser,
       setAuthUser,
-      isLoggedIn,
-      setIsLoggedIn,
       checkAuth,
       clearAuth,
     }),
@@ -63,7 +55,7 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
   )
 
   // Show loading spinner while checking authentication
-  if (isLoggedIn) {
+  if (!authUser) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Spinner />

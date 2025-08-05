@@ -32,7 +32,7 @@ function NodeInfo({
 
   return (
     <div
-      className="react-flow__devtools-nodeinfo text-xs"
+      className="text-xs"
       style={{
         position: 'absolute',
         transform: `translate(${x}px, ${y + height}px)`,
@@ -59,7 +59,7 @@ export function NodeInspector() {
 
   return (
     <EdgeLabelRenderer>
-      <ScrollArea className="react-flow__devtools-nodeinspector">
+      <ScrollArea>
         {nodes.map((node) => {
           const x = node.position.x || 0
           const y = node.position.y || 0

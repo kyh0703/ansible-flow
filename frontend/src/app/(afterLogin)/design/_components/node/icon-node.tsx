@@ -10,6 +10,7 @@ import {
 } from '@xyflow/react'
 import type { ComponentType } from 'react'
 import { useNodeDimensions } from '../../_hooks'
+import { StartIcon } from '../icon'
 
 const withNodeIconStyle = (
   Icon: ComponentType<IconButtonProps>,
@@ -78,3 +79,5 @@ const withNodeIconStyle = (
 
   return WithIcon
 }
+
+export const StartNode = withNodeIconStyle(StartIcon)

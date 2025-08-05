@@ -52,7 +52,8 @@ import {
 } from './options'
 
 import '@xyflow/react/dist/style.css'
-import { edgeTypes, nodeTypes } from '../../_constants'
+import { edgeTypes } from '../edge'
+import { nodeTypes } from '../node'
 
 type FlowProps = {
   initialNodes: AppNode[]

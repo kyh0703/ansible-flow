@@ -6,13 +6,13 @@ import { useEffect } from 'react'
 
 export function AuthRedirect() {
   const router = useRouter()
-  const { isLoggedIn } = useAuth()
+  const { authUser } = useAuth()
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (authUser) {
       router.push('/projects')
     }
-  }, [isLoggedIn])
+  }, [authUser])
 
   return null
 }

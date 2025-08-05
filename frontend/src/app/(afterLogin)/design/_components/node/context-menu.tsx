@@ -1,3 +1,5 @@
+'use client'
+
 import ContextMenu from '@/components/context-menu'
 import {
   DropdownMenu,
@@ -6,46 +8,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  useReactFlow,
-  useStoreApi,
-  type AppEdge,
-  type AppNode,
-} from '@xyflow/react'
+import { useReactFlow, type AppEdge, type AppNode } from '@xyflow/react'
 import {
   AlignHorizontalSpaceAroundIcon,
   AlignVerticalSpaceAroundIcon,
   TrashIcon,
 } from 'lucide-react'
-import { useCallback } from 'react'
+import { useRemove } from '../../_hooks'
 
 export type NodeContextMenuProps = {
   id: string
-  mouse: {
-    x: number
-    y: number
-  }
+  mouse: { x: number; y: number }
   onClick?: () => void
 }
 
-export function NodeContextMenu({ id, ...props }: NodeContextMenuProps) {
-  const store = useStoreApi()
-
-  const { getNode, getNodes, setNodes } = useReactFlow<AppNode, AppEdge>()
+export function NodeContextMenu({
+  id,
+  ...props
+}: Readonly<NodeContextMenuProps>) {
+  const { getNode } = useReactFlow<AppNode, AppEdge>()
   const targetNode = getNode(id)!
-
-  const selectedNodes = getNodes().filter((node) => node.selected)
-
-  const handleDelete = useCallback(async () => {
-    await removeNode(id)
-  }, [removeNode, id])
-
-  const handleAlign = useCallback(
-    async (orientation: 'middle' | 'center') => {
-      await alignNode(targetNode, selectedNodes, orientation)
-    },
-    [alignNode, selectedNodes, targetNode],
-  )
+  const { removeNodeById } = useRemove()
 
   return (
     <ContextMenu left={props.mouse.x} top={props.mouse.y}>
@@ -54,10 +37,8 @@ export function NodeContextMenu({ id, ...props }: NodeContextMenuProps) {
         <DropdownMenuContent>
           <DropdownMenuItem
             className="flex gap-3 text-xs"
-            disabled={
-              targetNode.type === 'Start' || targetNode.type === 'Ghost'
-            }
-            onSelect={handleDelete}
+            disabled={targetNode.type === 'start'}
+            onSelect={() => removeNodeById(id)}
           >
             <TrashIcon size={12} />
             Delete
@@ -65,16 +46,16 @@ export function NodeContextMenu({ id, ...props }: NodeContextMenuProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex gap-3 text-xs"
-            disabled={!canAlignNode}
-            onSelect={() => handleAlign('center')}
+            disabled={false}
+            onSelect={() => {}}
           >
             <AlignHorizontalSpaceAroundIcon size={12} />
             Align Center
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex gap-3 text-xs"
-            disabled={!canAlignNode}
-            onSelect={() => handleAlign('middle')}
+            disabled={false}
+            onSelect={() => {}}
           >
             <AlignVerticalSpaceAroundIcon size={12} />
             Align Middle

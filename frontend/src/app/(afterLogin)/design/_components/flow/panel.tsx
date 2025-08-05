@@ -2,9 +2,9 @@
 
 import { useQueryStructure } from '@/services/flows'
 import { useSelectedNodeId } from '@/stores/flow-store'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { useYjs } from '../../_contexts'
 import { Flow } from './flow'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
 export function Panel() {
   const { projectId, flowId } = useYjs()

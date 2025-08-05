@@ -12,7 +12,7 @@ type EdgeInfoProps = {
 
 function EdgeInfo({ id, type, source, target }: Readonly<EdgeInfoProps>) {
   return (
-    <div className="react-flow__devtools-edgeinfo text-xs">
+    <div className="text-xs">
       <div>
         👣 {type} {id}
       </div>

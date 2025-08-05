@@ -88,11 +88,8 @@ export default function ChangeLogger({
   }, [changes])
 
   return (
-    <Panel
-      position="top-left"
-      className="react-flow__devtools-changelogger text-xs"
-    >
-      <div className="react-flow__devtools-title">🏷️Change Logger🏷️</div>
+    <Panel position="top-left">
+      <div>🏷️Change Logger🏷️</div>
       {changes.length === 0 ? (
         <>no changes triggered</>
       ) : (

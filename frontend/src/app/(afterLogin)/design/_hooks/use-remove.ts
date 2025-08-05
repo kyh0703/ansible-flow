@@ -23,7 +23,6 @@ export function useRemove() {
       try {
         const node = getNode(nodeId)
         if (!node) return
-
         deleteElements({ nodes: [node] })
       } catch (error) {
         logger.error(error)
@@ -36,7 +35,6 @@ export function useRemove() {
     try {
       const selectedNodes = getSelectedNodes()
       if (selectedNodes.length === 0) return
-
       deleteElements({ nodes: selectedNodes })
     } catch (error) {
       logger.error(error)

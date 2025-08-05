@@ -11,7 +11,7 @@ import {
   type SetStateAction,
 } from 'react'
 import ChangeLogger from './change-logger'
-import { EdgeInspector } from './edge-logger'
+import { EdgeInspector } from './edge-inspector'
 import { NodeInspector } from './node-inspector'
 import ViewportLogger from './viewport-logger'
 
@@ -22,7 +22,7 @@ export default function DevTools() {
   const [viewportLoggerActive, setViewportLoggerActive] = useState(true)
 
   return (
-    <div className="react-flow__devtools text-xxs">
+    <div className="text-xxs">
       <Panel position="top-center">
         <DevToolButton
           setActive={setChangeLoggerActive}
