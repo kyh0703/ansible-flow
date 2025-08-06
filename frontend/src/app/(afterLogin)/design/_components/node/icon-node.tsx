@@ -10,7 +10,7 @@ import {
 } from '@xyflow/react'
 import type { ComponentType } from 'react'
 import { useNodeDimensions } from '../../_hooks'
-import { StartIcon } from '../icon'
+import { Start } from '../icon/start'
 
 const withNodeIconStyle = (
   Icon: ComponentType<IconButtonProps>,
@@ -24,7 +24,7 @@ const withNodeIconStyle = (
     return (
       <div
         className={cn(
-          'relative cursor-pointer outline-none',
+          'relative cursor-pointer bg-red-50 outline-none',
           selected && 'outline-dashed',
         )}
         style={{ width, height }}
@@ -80,4 +80,4 @@ const withNodeIconStyle = (
   return WithIcon
 }
 
-export const StartNode = withNodeIconStyle(StartIcon)
+export const StartNode = withNodeIconStyle(Start)

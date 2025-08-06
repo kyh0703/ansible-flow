@@ -4,7 +4,7 @@ export function useNodeDimensions(id: string) {
   const node = useInternalNode(id)
 
   return {
-    width: node?.measured?.width ?? 0,
-    height: node?.measured?.height ?? 0,
+    width: node?.measured?.width ?? 40,
+    height: node?.measured?.height ?? 40,
   }
 }

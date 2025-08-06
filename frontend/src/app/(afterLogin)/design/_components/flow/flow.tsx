@@ -25,11 +25,12 @@ import {
   type AppNode,
   type ColorMode,
   type CustomNodeType,
+  type NodeMouseHandler,
   type OnConnect,
   type OnNodesDelete,
 } from '@xyflow/react'
 import { useTheme } from 'next-themes'
-import { useCallback, useRef, type DragEventHandler } from 'react'
+import { useCallback, useRef, useState, type DragEventHandler } from 'react'
 import { useYjs } from '../../_contexts/yjs-context'
 import {
   useCursorStateSynced,
@@ -53,7 +54,7 @@ import {
 
 import '@xyflow/react/dist/style.css'
 import { edgeTypes } from '../edge'
-import { nodeTypes } from '../node'
+import { NodeContextMenu, NodeContextMenuProps, nodeTypes } from '../node'
 
 type FlowProps = {
   initialNodes: AppNode[]
@@ -79,27 +80,32 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
     useNodesStateSynced(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesStateSynced(initialEdges)
   const [cursors, onMouseMove] = useCursorStateSynced()
+  const [nodeContextMenu, setNodeContextMenu] =
+    useState<NodeContextMenuProps | null>(null)
 
   const { mutateAsync: addNodesMutate } = useAddNodes()
   const { mutateAsync: updateNodesMutate } = useUpdateNodes()
   const { mutateAsync: updateEdgesMutate } = useUpdateEdges()
   const { mutateAsync: addEdgesMutate } = useAddEdges()
 
-  const handleDragOver: DragEventHandler<HTMLDivElement> = useCallback((e) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-  }, [])
+  const handleDragOver: DragEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
+    },
+    [],
+  )
 
-  const handleDrop: DragEventHandler<HTMLDivElement> = async (e) => {
+  const handleDrop: DragEventHandler<HTMLDivElement> = async (event) => {
     logger.debug('onDrop')
-    e.preventDefault()
+    event.preventDefault()
 
-    const nodeType = e.dataTransfer.getData('application/xyflow')
+    const nodeType = event.dataTransfer.getData('application/xyflow')
     if (!nodeType) return
 
     const position = screenToFlowPosition({
-      x: e.clientX,
-      y: e.clientY,
+      x: event.clientX,
+      y: event.clientY,
     })
 
     const newNode = nodeFactory(position, nodeType as CustomNodeType)
@@ -152,6 +158,22 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
     [updateEdgesMutate],
   )
 
+  const handleNodeContextMenu: NodeMouseHandler<AppNode> = useCallback(
+    (event, node) => {
+      event.preventDefault()
+      event.stopPropagation()
+
+      setNodeContextMenu({
+        id: node.id,
+        mouse: {
+          x: event.clientX,
+          y: event.clientY,
+        },
+      })
+    },
+    [],
+  )
+
   return (
     <div className="flow box-border h-full w-full overflow-hidden">
       <ReactFlow
@@ -180,6 +202,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onNodesDelete={handleNodesDelete}
+        onNodeContextMenu={handleNodeContextMenu}
         onConnect={handleConnect}
       >
         <Background variant={BackgroundVariant.Dots} />
@@ -190,6 +213,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         <Panel position="bottom-center">
           <IconToolbar />
         </Panel>
+        {nodeContextMenu && <NodeContextMenu {...nodeContextMenu} />}
         {process.env.NODE_ENV === 'development' && <DevTools />}
       </ReactFlow>
     </div>
