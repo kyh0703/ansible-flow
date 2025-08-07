@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react'
 
 export function useShortcut(keyCode: KeyCode, callback: Function): void {
   const [didRun, setDidRun] = useState(false)
-  const shouldRun = useKeyPress(keyCode)
+  const shouldRun = useKeyPress(keyCode, {
+    target: window.document.getElementById('design-flow'),
+  })
 
   useEffect(() => {
     if (shouldRun && !didRun) {

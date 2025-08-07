@@ -7,6 +7,6 @@ export enum Algorithm {
   BezierCatmullRom = 'bezier-catmull-rom',
 }
 
-export const edgeTypes: EdgeTypes = {
-  start: EasyConnectionEdge,
-}
+// export const edgeTypes: EdgeTypes = {
+//   start: EasyConnectionEdge,
+// }

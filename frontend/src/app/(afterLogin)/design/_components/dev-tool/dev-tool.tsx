@@ -16,27 +16,27 @@ import { NodeInspector } from './node-inspector'
 import ViewportLogger from './viewport-logger'
 
 export default function DevTools() {
+  const [viewportLoggerActive, setViewportLoggerActive] = useState(true)
+  const [changeLoggerActive, setChangeLoggerActive] = useState(true)
   const [nodeInspectorActive, setNodeInspectorActive] = useState(true)
   const [edgeInspectorActive, setEdgeInspectorActive] = useState(true)
-  const [changeLoggerActive, setChangeLoggerActive] = useState(true)
-  const [viewportLoggerActive, setViewportLoggerActive] = useState(true)
 
   return (
     <div className="text-xxs">
       <Panel position="top-center">
-        <DevToolButton
-          setActive={setChangeLoggerActive}
-          active={changeLoggerActive}
-          title="Toggle Change Logger"
-        >
-          Change Logger
-        </DevToolButton>
         <DevToolButton
           setActive={setViewportLoggerActive}
           active={viewportLoggerActive}
           title="Toggle Viewport Logger"
         >
           Viewport Logger
+        </DevToolButton>
+        <DevToolButton
+          setActive={setChangeLoggerActive}
+          active={changeLoggerActive}
+          title="Toggle Change Logger"
+        >
+          Change Logger
         </DevToolButton>
         <DevToolButton
           setActive={setNodeInspectorActive}
@@ -53,10 +53,10 @@ export default function DevTools() {
           Edge Inspector
         </DevToolButton>
       </Panel>
-      {changeLoggerActive && <ChangeLogger />}
-      {edgeInspectorActive && <EdgeInspector />}
-      {nodeInspectorActive && <NodeInspector />}
       {viewportLoggerActive && <ViewportLogger />}
+      {changeLoggerActive && <ChangeLogger />}
+      {nodeInspectorActive && <NodeInspector />}
+      {edgeInspectorActive && <EdgeInspector />}
     </div>
   )
 }

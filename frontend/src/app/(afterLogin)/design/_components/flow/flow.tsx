@@ -30,12 +30,19 @@ import {
   type OnNodesDelete,
 } from '@xyflow/react'
 import { useTheme } from 'next-themes'
-import { useCallback, useRef, useState, type DragEventHandler } from 'react'
+import {
+  useCallback,
+  useRef,
+  useState,
+  type DragEventHandler,
+  type MouseEventHandler,
+} from 'react'
 import { useYjs } from '../../_contexts/yjs-context'
 import {
   useCursorStateSynced,
   useEdgeOperations,
   useEdgesStateSynced,
+  useKeyBind,
   useNodeOperations,
   useNodesStateSynced,
 } from '../../_hooks'
@@ -53,7 +60,6 @@ import {
 } from './options'
 
 import '@xyflow/react/dist/style.css'
-import { edgeTypes } from '../edge'
 import { NodeContextMenu, NodeContextMenuProps, nodeTypes } from '../node'
 
 type FlowProps = {
@@ -72,6 +78,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
   const selectedNodeId = useSelectedNodeId()
   const { setSelectedNodeId } = useFlowActions()
 
+  useKeyBind()
   const { theme } = useTheme()
   const { nodeFactory, getNodeType } = useNodeOperations()
   const { getEdgeBySource, edgeFactory } = useEdgeOperations()
@@ -115,12 +122,20 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         flowId,
         nodes: [newNode],
       })
-
       setNodes((nodes) => [...nodes, newNode])
     } catch (error) {
       logger.error(error)
     }
   }
+
+  const handlePaneClick: MouseEventHandler = useCallback(
+    (event) => {
+      logger.debug('onPaneClick', event)
+      setSelectedNodeId(null)
+      setNodeContextMenu(null)
+    },
+    [setSelectedNodeId],
+  )
 
   const handleNodesDelete: OnNodesDelete<AppNode> = useCallback(
     (deleteNodes) => {
@@ -158,8 +173,20 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
     [updateEdgesMutate],
   )
 
+  const handleNodeClick: NodeMouseHandler<AppNode> = useCallback(
+    (event, node) => {
+      logger.debug('onNodeClick', node)
+      event.preventDefault()
+      event.stopPropagation()
+
+      setNodeContextMenu(null)
+    },
+    [],
+  )
+
   const handleNodeContextMenu: NodeMouseHandler<AppNode> = useCallback(
     (event, node) => {
+      logger.debug('onNodeContextMenu', node)
       event.preventDefault()
       event.stopPropagation()
 
@@ -175,7 +202,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
   )
 
   return (
-    <div className="flow box-border h-full w-full overflow-hidden">
+    <div className="design-flow box-border h-full w-full overflow-hidden">
       <ReactFlow
         ref={flowRef}
         proOptions={proOptions}
@@ -183,7 +210,6 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
         minZoom={0.1}
         maxZoom={3}
         fitView={!viewPort}
@@ -199,9 +225,11 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         onMouseMove={onMouseMove}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onDrop={handleDrop}
         onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onPaneClick={handlePaneClick}
         onNodesDelete={handleNodesDelete}
+        onNodeClick={handleNodeClick}
         onNodeContextMenu={handleNodeContextMenu}
         onConnect={handleConnect}
       >

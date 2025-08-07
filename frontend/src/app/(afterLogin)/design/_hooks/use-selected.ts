@@ -7,7 +7,7 @@ export function useSelect() {
     AppEdge
   >()
 
-  const getSelectedAll = useCallback(() => {
+  const selectAll = useCallback(() => {
     setNodes((nodes) => nodes.map((node) => ({ ...node, selected: true })))
     setEdges((edges) => edges.map((edge) => ({ ...edge, selected: true })))
   }, [setEdges, setNodes])
@@ -32,7 +32,7 @@ export function useSelect() {
   }, [getEdges, getNodes])
 
   return {
-    getSelectedAll,
+    selectAll,
     deselectNode,
     checkSelected,
   }

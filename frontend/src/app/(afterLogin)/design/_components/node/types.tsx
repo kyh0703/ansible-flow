@@ -1,5 +1,5 @@
 import type { NodeTypes } from '@xyflow/react'
-import { StartNode } from './icon-node'
+import { StartNode } from '.'
 
 const DEFAULT_COMMAND_NODE_WIDTH = 40
 const DEFAULT_COMMAND_NODE_HEIGHT = 40
