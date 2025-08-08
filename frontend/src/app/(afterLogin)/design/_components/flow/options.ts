@@ -1,4 +1,9 @@
-import type { FitViewOptions, ProOptions, Viewport } from '@xyflow/react'
+import {
+  MarkerType,
+  type FitViewOptions,
+  type ProOptions,
+  type Viewport,
+} from '@xyflow/react'
 
 const proOptions: ProOptions = {
   account: 'paid-pro',
@@ -17,7 +22,23 @@ const viewPort: Viewport = {
 }
 
 const defaultEdgeOptions = {
-  style: { strokeWidth: 1, opacity: 0.7 },
+  style: { strokeWidth: 3, stroke: 'black' },
+  type: 'floating',
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    color: 'black',
+  },
 }
 
-export { proOptions, fitViewOptions, viewPort, defaultEdgeOptions }
+const connectionLineStyle = {
+  strokeWidth: 3,
+  stroke: 'black',
+}
+
+export {
+  connectionLineStyle,
+  defaultEdgeOptions,
+  fitViewOptions,
+  proOptions,
+  viewPort,
+}

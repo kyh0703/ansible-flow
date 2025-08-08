@@ -13,7 +13,10 @@ import { Circle, Search } from 'lucide-react'
 import { useState } from 'react'
 import { DragItem } from './drag-item'
 
-const nodeTypes = [{ type: 'start', name: 'Start', icon: Circle }]
+const nodeTypes = [
+  { type: 'default', name: 'default', icon: Circle },
+  { type: 'start', name: 'start', icon: Circle },
+]
 
 export function LeftSidebar() {
   const [searchTerm, setSearchTerm] = useState('')

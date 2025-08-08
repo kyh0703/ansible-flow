@@ -13,9 +13,18 @@ export class NodeService {
     flowId: string,
     createNodeDtos: CreateNodeDto[],
   ): Promise<Node[]> {
-    const data = createNodeDtos.map((dto) => ({ ...dto, flowId }))
-    await this.prisma.node.createMany({ data })
-    return this.findMany(projectId, flowId)
+    return await this.prisma.$transaction(async (tx) => {
+      const data = createNodeDtos.map((dto) => ({ ...dto, flowId }))
+
+      // 일괄 생성
+      await tx.node.createMany({ data })
+
+      // 생성된 노드들을 조회하여 반환
+      return await tx.node.findMany({
+        where: { flowId, flow: { projectId } },
+        orderBy: { createdAt: 'desc' },
+      })
+    })
   }
 
   async updateMany(
@@ -23,18 +32,27 @@ export class NodeService {
     flowId: string,
     updateNodeDtos: UpdateNodeDto[],
   ): Promise<Node[]> {
-    const results: Node[] = []
-    for (const dto of updateNodeDtos) {
-      if (!dto.id) throw new NotFoundException('id is required for update')
-      // flowId, projectId 일치 검증
-      const node = await this.findOne(projectId, flowId, dto.id)
-      const updated = await this.prisma.node.update({
-        where: { id: dto.id },
-        data: dto,
-      })
-      results.push(updated)
-    }
-    return results
+    return await this.prisma.$transaction(async (tx) => {
+      const results: Node[] = []
+
+      for (const dto of updateNodeDtos) {
+        if (!dto.id) throw new NotFoundException('id is required for update')
+
+        // flowId, projectId 일치 검증
+        const node = await tx.node.findFirst({
+          where: { id: dto.id, flowId, flow: { projectId } },
+        })
+        if (!node) throw new NotFoundException('Node not found')
+
+        const updated = await tx.node.update({
+          where: { id: dto.id },
+          data: dto,
+        })
+        results.push(updated)
+      }
+
+      return results
+    })
   }
 
   async deleteMany(
@@ -42,12 +60,22 @@ export class NodeService {
     flowId: string,
     ids: string[],
   ): Promise<string[]> {
-    // 소유권 검증
-    for (const id of ids) {
-      await this.findOne(projectId, flowId, id)
-    }
-    await this.prisma.node.deleteMany({ where: { id: { in: ids }, flowId } })
-    return ids
+    return await this.prisma.$transaction(async (tx) => {
+      // 소유권 검증 - 트랜잭션 내에서 수행
+      for (const id of ids) {
+        const node = await tx.node.findFirst({
+          where: { id, flowId, flow: { projectId } },
+        })
+        if (!node) throw new NotFoundException(`Node with id ${id} not found`)
+      }
+
+      // 검증 완료 후 일괄 삭제
+      await tx.node.deleteMany({
+        where: { id: { in: ids }, flowId },
+      })
+
+      return ids
+    })
   }
 
   async findOne(projectId: string, flowId: string, id: string): Promise<Node> {

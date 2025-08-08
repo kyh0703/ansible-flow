@@ -7,11 +7,7 @@ import {
   useUpdateEdges,
   useUpdateNodes,
 } from '@/services/flows'
-import {
-  useCursor,
-  useFlowActions,
-  useSelectedNodeId,
-} from '@/stores/flow-store'
+import { useFlowActions, useSelectedNodeId } from '@/stores/flow-store'
 import {
   addEdge,
   Background,
@@ -48,11 +44,10 @@ import {
 } from '../../_hooks'
 import DevTools from '../dev-tool/dev-tool'
 import { IconToolbar } from '../toolbar/icon-toolbar/icon-toolbar'
-import { ConnectionLine } from '../tools/connection-line'
 import { Cursors } from '../tools/cursor'
 import { HelperLines } from '../tools/helper-line'
-import { isValidConnection } from '../tools/validator'
 import {
+  connectionLineStyle,
   defaultEdgeOptions,
   fitViewOptions,
   proOptions,
@@ -60,7 +55,10 @@ import {
 } from './options'
 
 import '@xyflow/react/dist/style.css'
+import { isValidConnection } from '../../_utils/validator'
+import { edgeTypes } from '../edge'
 import { NodeContextMenu, NodeContextMenuProps, nodeTypes } from '../node'
+import { ConnectionLine } from '../tools'
 
 type FlowProps = {
   initialNodes: AppNode[]
@@ -74,7 +72,6 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
 
   const { screenToFlowPosition } = useReactFlow<AppNode, AppEdge>()
 
-  const cursorMode = useCursor()
   const selectedNodeId = useSelectedNodeId()
   const { setSelectedNodeId } = useFlowActions()
 
@@ -139,6 +136,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
 
   const handleNodesDelete: OnNodesDelete<AppNode> = useCallback(
     (deleteNodes) => {
+      logger.debug('onNodesDelete', deleteNodes)
       if (deleteNodes.some((node) => node.id === selectedNodeId)) {
         setSelectedNodeId(null)
       }
@@ -210,6 +208,7 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         minZoom={0.1}
         maxZoom={3}
         fitView={!viewPort}
@@ -218,20 +217,21 @@ export function Flow({ initialNodes, initialEdges }: Readonly<FlowProps>) {
         deleteKeyCode={null}
         disableKeyboardA11y={true}
         selectNodesOnDrag={false}
-        connectionLineComponent={ConnectionLine}
         zoomOnDoubleClick={false}
         defaultEdgeOptions={defaultEdgeOptions}
         isValidConnection={isValidConnection}
+        connectionLineComponent={ConnectionLine}
+        connectionLineStyle={connectionLineStyle}
         onMouseMove={onMouseMove}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onPaneClick={handlePaneClick}
+        onConnect={handleConnect}
+        onNodesChange={onNodesChange}
         onNodesDelete={handleNodesDelete}
         onNodeClick={handleNodeClick}
         onNodeContextMenu={handleNodeContextMenu}
-        onConnect={handleConnect}
+        onEdgesChange={onEdgesChange}
       >
         <Background variant={BackgroundVariant.Dots} />
         <Controls />

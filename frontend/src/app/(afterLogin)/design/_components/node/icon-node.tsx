@@ -28,7 +28,11 @@ const withNodeIconStyle = (
           'relative cursor-pointer outline-none',
           selected && 'outline-dashed',
         )}
-        style={{ width, height }}
+        style={{
+          width,
+          height,
+          borderStyle: isTarget ? 'dashed' : 'solid',
+        }}
       >
         <div
           className={cn(
@@ -40,7 +44,7 @@ const withNodeIconStyle = (
         >
           {!connection.inProgress && (
             <Handle
-              className="h-1/3! w-1/3! -translate-x-full! border-none! opacity-0!"
+              className="top-1/2! left-1/2! h-1/3! w-1/3! -translate-x-1/2! -translate-y-1/2! transform! opacity-0!"
               style={{ zIndex: 2 }}
               position={Position.Right}
               type="source"
@@ -48,7 +52,7 @@ const withNodeIconStyle = (
           )}
           {(!connection.inProgress || isTarget) && (
             <Handle
-              className="h-1/3! w-1/3! -translate-x-full! border-none! opacity-0!"
+              className="top-1/2! left-1/2! h-1/3! w-1/3! -translate-x-1/2! -translate-y-1/2! transform! opacity-0!"
               style={targetHandleStyle}
               position={Position.Left}
               type="target"
@@ -63,7 +67,7 @@ const withNodeIconStyle = (
             'h-full w-full',
           )}
         >
-          <Icon className="rounded bg-gray-500" width={width} height={height} />
+          <Icon className="rounded" width={width} height={height} />
         </div>
         <div
           className="pointer-events-none absolute left-1/2 flex w-max max-w-[90px] -translate-x-1/2 transform flex-col items-center justify-center gap-1"
@@ -77,7 +81,6 @@ const withNodeIconStyle = (
       </div>
     )
   }
-
   return WithIcon
 }
 

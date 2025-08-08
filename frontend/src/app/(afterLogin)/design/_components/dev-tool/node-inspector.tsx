@@ -32,7 +32,6 @@ function NodeInfo({
 
   return (
     <div
-      className="text-xs"
       style={{
         position: 'absolute',
         transform: `translate(${x}px, ${y + height}px)`,

@@ -1,2 +1,2 @@
-export * from './easy-connection-edge'
+export * from './easy-connecting-edge'
 export * from './types'

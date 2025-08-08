@@ -1,3 +1,5 @@
+'use client'
+
 import { type ReactFlowState, useStore } from '@xyflow/react'
 import { useEffect, useRef } from 'react'
 
@@ -12,7 +14,10 @@ type HelperLinesProps = {
   vertical?: number
 }
 
-export function HelperLines({ horizontal, vertical }: HelperLinesProps) {
+export function HelperLines({
+  horizontal,
+  vertical,
+}: Readonly<HelperLinesProps>) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { width, height, transform } = useStore(storeSelector)
 

@@ -1,5 +1,5 @@
 import type { EdgeTypes } from '@xyflow/react'
-import { EasyConnectionEdge } from './easy-connection-edge'
+import { EasyConnectingEdge } from './easy-connecting-edge'
 
 export enum Algorithm {
   Linear = 'linear',
@@ -7,6 +7,6 @@ export enum Algorithm {
   BezierCatmullRom = 'bezier-catmull-rom',
 }
 
-// export const edgeTypes: EdgeTypes = {
-//   start: EasyConnectionEdge,
-// }
+export const edgeTypes: EdgeTypes = {
+  start: EasyConnectingEdge,
+}

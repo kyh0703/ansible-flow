@@ -1,5 +1,5 @@
 import type { NodeTypes } from '@xyflow/react'
-import { StartNode } from '.'
+import { EdgeNode, StartNode } from '.'
 
 const DEFAULT_COMMAND_NODE_WIDTH = 40
 const DEFAULT_COMMAND_NODE_HEIGHT = 40
@@ -29,4 +29,5 @@ export {
 
 export const nodeTypes: NodeTypes = {
   start: StartNode,
+  edge: EdgeNode,
 }

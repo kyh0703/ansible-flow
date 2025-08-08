@@ -13,9 +13,18 @@ export class EdgeService {
     flowId: string,
     createEdgeDtos: CreateEdgeDto[],
   ): Promise<Edge[]> {
-    const data = createEdgeDtos.map((dto) => ({ ...dto, flowId }))
-    await this.prisma.edge.createMany({ data })
-    return this.findMany(projectId, flowId)
+    return await this.prisma.$transaction(async (tx) => {
+      const data = createEdgeDtos.map((dto) => ({ ...dto, flowId }))
+
+      // 일괄 생성
+      await tx.edge.createMany({ data })
+
+      // 생성된 에지들을 조회하여 반환
+      return await tx.edge.findMany({
+        where: { flowId, flow: { projectId } },
+        orderBy: { createdAt: 'desc' },
+      })
+    })
   }
 
   async updateMany(
@@ -23,17 +32,27 @@ export class EdgeService {
     flowId: string,
     updateEdgeDtos: UpdateEdgeDto[],
   ): Promise<Edge[]> {
-    const results: Edge[] = []
-    for (const dto of updateEdgeDtos) {
-      if (!dto.id) throw new NotFoundException('id is required for update')
-      const edge = await this.findOne(projectId, flowId, dto.id)
-      const updated = await this.prisma.edge.update({
-        where: { id: dto.id },
-        data: dto,
-      })
-      results.push(updated)
-    }
-    return results
+    return await this.prisma.$transaction(async (tx) => {
+      const results: Edge[] = []
+
+      for (const dto of updateEdgeDtos) {
+        if (!dto.id) throw new NotFoundException('id is required for update')
+
+        // flowId, projectId 일치 검증
+        const edge = await tx.edge.findFirst({
+          where: { id: dto.id, flowId, flow: { projectId } },
+        })
+        if (!edge) throw new NotFoundException('Edge not found')
+
+        const updated = await tx.edge.update({
+          where: { id: dto.id },
+          data: dto,
+        })
+        results.push(updated)
+      }
+
+      return results
+    })
   }
 
   async deleteMany(
@@ -41,12 +60,22 @@ export class EdgeService {
     flowId: string,
     ids: string[],
   ): Promise<string[]> {
-    // 소유권 검증
-    for (const id of ids) {
-      await this.findOne(projectId, flowId, id)
-    }
-    await this.prisma.edge.deleteMany({ where: { id: { in: ids }, flowId } })
-    return ids
+    return await this.prisma.$transaction(async (tx) => {
+      // 소유권 검증 - 트랜잭션 내에서 수행
+      for (const id of ids) {
+        const edge = await tx.edge.findFirst({
+          where: { id, flowId, flow: { projectId } },
+        })
+        if (!edge) throw new NotFoundException(`Edge with id ${id} not found`)
+      }
+
+      // 검증 완료 후 일괄 삭제
+      await tx.edge.deleteMany({
+        where: { id: { in: ids }, flowId },
+      })
+
+      return ids
+    })
   }
 
   async findOne(projectId: string, flowId: string, id: string): Promise<Edge> {

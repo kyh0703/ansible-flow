@@ -65,7 +65,8 @@ export class EdgeController {
   @ApiParam({ name: 'flowId', description: '플로우 ID' })
   @ApiBody({
     schema: {
-      properties: { ids: { type: 'array', items: { type: 'string' } } },
+      type: 'array',
+      items: { type: 'string' },
     },
   })
   @UseGuards(JwtAuthGuard, ProjectMembershipGuard)
@@ -73,7 +74,7 @@ export class EdgeController {
   async deleteMany(
     @Param('projectId') projectId: string,
     @Param('flowId') flowId: string,
-    @Body('ids') ids: string[],
+    @Body() ids: string[],
   ) {
     return this.edgeService.deleteMany(projectId, flowId, ids)
   }
