@@ -6,7 +6,7 @@ import {
 } from '@xyflow/react'
 
 const proOptions: ProOptions = {
-  account: 'paid-pro',
+  account: process.env.PRO_OPTION,
   hideAttribution: true,
 }
 
