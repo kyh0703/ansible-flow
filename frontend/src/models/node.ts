@@ -31,8 +31,8 @@ export function fromNode(node: AppNode): ModelNode {
     id: node.id,
     type: node.type,
     position: node.position,
-    width: node.measured?.width ?? 0,
-    height: node.measured?.height ?? 0,
+    width: node.width ?? 0,
+    height: node.height ?? 0,
     hidden: node.hidden ?? false,
   }
 }

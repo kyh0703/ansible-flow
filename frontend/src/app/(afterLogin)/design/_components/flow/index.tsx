@@ -1,2 +1,2 @@
 export * from './flow'
-export * from './panel'
+export * from './flow-panel'

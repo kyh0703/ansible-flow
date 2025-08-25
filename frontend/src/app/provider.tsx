@@ -4,7 +4,6 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/contexts'
 import QueryProvider from '@/providers/query-provider'
 import { ThemeProvider } from '@/providers/theme-provider'
-import { OverlayProvider } from 'overlay-kit'
 
 export default function Provider({
   children,
@@ -16,13 +15,11 @@ export default function Provider({
       enableSystem
       disableTransitionOnChange
     >
-      <OverlayProvider>
-        <QueryProvider>
-          <AuthProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </AuthProvider>
-        </QueryProvider>
-      </OverlayProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthProvider>
+      </QueryProvider>
     </ThemeProvider>
   )
 }

@@ -1,4 +1,3 @@
-import { Spinner } from '@/components/ui/spinner'
 import logger from '@/lib/logger'
 import type { User } from '@/models'
 import { me } from '@/services/auth/api'
@@ -53,15 +52,6 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
     }),
     [],
   )
-
-  // Show loading spinner while checking authentication
-  if (!authUser) {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <Spinner />
-      </div>
-    )
-  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

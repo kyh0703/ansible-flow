@@ -3,6 +3,7 @@
 import { ReactFlowProvider } from '@xyflow/react'
 import type { PropsWithChildren } from 'react'
 import { YjsProvider } from '../_contexts'
+import { OverlayProvider } from 'overlay-kit'
 
 type Props = {
   projectId: string
@@ -18,7 +19,9 @@ export default function Provider({
 }: Readonly<Props>) {
   return (
     <YjsProvider projectId={projectId} flowId={flowId} baseUrl={yjsUrl}>
-      <ReactFlowProvider>{children}</ReactFlowProvider>
+      <ReactFlowProvider>
+        <OverlayProvider>{children}</OverlayProvider>
+      </ReactFlowProvider>
     </YjsProvider>
   )
 }

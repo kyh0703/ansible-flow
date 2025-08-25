@@ -6,7 +6,7 @@ import { useYjs } from '../../_contexts'
 import { Flow } from './flow'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
-export function Panel() {
+export function FlowPanel() {
   const { projectId, flowId } = useYjs()
 
   const selectedNodeId = useSelectedNodeId()

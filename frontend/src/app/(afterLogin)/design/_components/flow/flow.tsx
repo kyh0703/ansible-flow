@@ -56,9 +56,8 @@ import {
 
 import '@xyflow/react/dist/style.css'
 import { isValidConnection } from '../../_utils/validator'
-import { edgeTypes } from '../edge'
+import { ConnectionLine, edgeTypes } from '../edge'
 import { NodeContextMenu, NodeContextMenuProps, nodeTypes } from '../node'
-import { ConnectionLine } from '../tools'
 
 type FlowProps = {
   initialNodes: AppNode[]
